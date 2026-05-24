@@ -1,8 +1,3 @@
 /** @type {import('next').NextConfig} */
-const nextConfig = {
-  output: 'standalone',
-  experimental: {
-    outputFileTracingRoot: undefined,
-  }
-}
+const nextConfig = {}
 module.exports = nextConfig
