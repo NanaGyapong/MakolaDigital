@@ -1,9 +1,12 @@
+import axios from "axios";
+const api = axios.create({ baseURL: "http://localhost:4000/api/v1" });
+"use client";
+import { Suspense } from "react";
 "use client";
 // app/checkout/page.jsx
 "use client";
 import { useState, useEffect } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
-import { api } from "@/lib/auth.service";
 
 const CURRENCIES = [
   { code: "GHS", symbol: "GH₵", flag: "🇬🇭", name: "Ghana Cedis", gateway: "paystack" },

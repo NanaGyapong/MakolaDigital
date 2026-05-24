@@ -1,8 +1,9 @@
+import axios from "axios";
+const api = axios.create({ baseURL: "http://localhost:4000/api/v1" });
 "use client";
 // app/notifications/page.jsx
 "use client";
 import { useState, useEffect } from "react";
-import { api } from "@/lib/auth.service";
 
 const ICONS = {
   new_message:      "💬",

@@ -1,9 +1,10 @@
+import axios from "axios";
+const api = axios.create({ baseURL: "http://localhost:4000/api/v1" });
 "use client";
 // app/sell/page.jsx
 "use client";
 import { useState, useCallback } from "react";
 import { useRouter } from "next/navigation";
-import { api } from "@/lib/auth.service";
 
 // ── Constants ─────────────────────────────────────────────────
 const STEPS = ["Type","Details","Pricing","Photos","Location","Extras","Review"];

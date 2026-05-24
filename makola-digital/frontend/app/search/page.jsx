@@ -1,9 +1,12 @@
+import axios from "axios";
+const api = axios.create({ baseURL: "http://localhost:4000/api/v1" });
+"use client";
+import { Suspense } from "react";
 "use client";
 // app/search/page.jsx
 "use client";
 import { useState, useEffect, useCallback, useRef } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { api } from "@/lib/auth.service";
 
 // ── Hooks ──────────────────────────────────────────────────────
 function useDebounce(value, delay = 400) {

@@ -1,4 +1,6 @@
 "use client";
+import { Suspense } from "react";
+"use client";
 import { useState, useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import axios from "axios";
