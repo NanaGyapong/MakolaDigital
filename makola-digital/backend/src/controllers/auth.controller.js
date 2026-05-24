@@ -39,7 +39,7 @@ export async function register(req, res) {
     const user = result.rows[0];
 
     // Store OTP in Redis
-    await req.redis.setex(`otp:${email}`, 600, otp);
+    await req.redis.set(`otp:${email}`, otp, { EX: 600 });
 
     // Queue verification email
     await emailQueue.add("verify-email", { to: email, name: fullName, otp });
@@ -141,7 +141,7 @@ export async function resendOtp(req, res) {
     if (attempts > 3) return res.status(429).json({ message: "Too many attempts. Please wait 15 minutes." });
 
     const otp = Math.floor(100000 + Math.random() * 900000).toString();
-    await req.redis.setex(`otp:${email}`, 600, otp);
+    await req.redis.set(`otp:${email}`, otp, { EX: 600 });
     await emailQueue.add("verify-email", { to: email, name: result.rows[0].full_name, otp });
 
     res.json({ message: "Verification code resent" });
