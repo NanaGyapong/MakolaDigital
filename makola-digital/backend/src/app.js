@@ -3,7 +3,7 @@ import cors from "cors";
 import helmet from "helmet";
 import dotenv from "dotenv";
 dotenv.config();
-
+import { redis } from "./config/redis.js";
 import authRoutes from "./routes/auth.routes.js";
 
 const app = express();
@@ -21,6 +21,7 @@ app.use(cors({
   credentials: true
 }));
 app.use(express.json());
+app.use((req, res, next) => { req.redis = redis; next(); });
 
 app.get("/api/v1/health", (req, res) => res.json({ status: "ok", platform: "Makola Digital", version: "1.0.0" }));
 app.use("/api/v1/auth", authRoutes);
