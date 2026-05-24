@@ -1,0 +1,64 @@
+version: "3.9"
+
+# Development override — hot reload, exposed ports, no SSL
+networks:
+  makola_net:
+    driver: bridge
+
+volumes:
+  postgres_data:
+  redis_data:
+
+services:
+  postgres:
+    image: postgis/postgis:16-3.4-alpine
+    container_name: makola_postgres_dev
+    environment:
+      POSTGRES_DB: makola_db
+      POSTGRES_USER: makola
+      POSTGRES_PASSWORD: devpassword
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports: ["5432:5432"]
+    networks: [makola_net]
+
+  redis:
+    image: redis:7-alpine
+    container_name: makola_redis_dev
+    command: redis-server --maxmemory 256mb
+    ports: ["6379:6379"]
+    networks: [makola_net]
+
+  api:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+      target: development
+    container_name: makola_api_dev
+    volumes:
+      - ./backend/src:/app/src   # Hot reload
+      - /app/node_modules
+    environment:
+      NODE_ENV: development
+      DATABASE_URL: postgresql://makola:devpassword@postgres:5432/makola_db
+      REDIS_URL: redis://redis:6379
+      PORT: 4000
+    env_file: .env.dev
+    ports: ["4000:4000"]
+    networks: [makola_net]
+    depends_on: [postgres, redis]
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile.dev
+    container_name: makola_frontend_dev
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+      - /app/.next
+    environment:
+      NEXT_PUBLIC_API_URL: http://localhost:4000/api/v1
+    ports: ["3000:3000"]
+    networks: [makola_net]
+    depends_on: [api]

@@ -1,0 +1,790 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Makola Digital — Admin Panel</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --red:#E8533A;--gold:#C47F17;--green:#2D9E6B;--blue:#3B7DD8;--purple:#7C5CBF;
+  --bg:#08090A;--bg2:#0E0F11;--bg3:#141618;--bg4:rgba(255,255,255,0.04);
+  --border:rgba(255,255,255,0.07);--border2:rgba(255,255,255,0.12);
+  --text:rgba(240,237,232,0.5);--white:#F0EDE8;
+  --sidebar:200px;
+}
+html{scroll-behavior:smooth}
+body{font-family:'Syne',sans-serif;background:var(--bg);color:var(--white);min-height:100vh;display:flex;flex-direction:column}
+button,input,select,textarea{font-family:'Syne',sans-serif;cursor:pointer}
+::-webkit-scrollbar{width:3px;height:3px}
+::-webkit-scrollbar-thumb{background:#222;border-radius:2px}
+code,pre,.mono{font-family:'DM Mono',monospace}
+
+/* ── TOP BAR ── */
+.topbar{height:52px;background:var(--bg2);border-bottom:1px solid var(--border);
+  display:flex;align-items:center;justify-content:space-between;padding:0 24px;
+  position:sticky;top:0;z-index:200;flex-shrink:0}
+.topbar-left{display:flex;align-items:center;gap:14px}
+.logo{display:flex;align-items:center;gap:8px;font-weight:800;font-size:16px;letter-spacing:-.03em}
+.logo-icon{width:28px;height:28px;border-radius:7px;background:linear-gradient(135deg,var(--red),var(--gold));
+  display:flex;align-items:center;justify-content:center;font-size:13px}
+.logo span{color:var(--red)}
+.admin-badge{background:rgba(124,92,191,0.18);border:1px solid rgba(124,92,191,0.35);
+  color:#A78BFA;font-size:10px;font-weight:700;padding:2px 8px;border-radius:5px;
+  letter-spacing:.06em;text-transform:uppercase}
+.topbar-right{display:flex;align-items:center;gap:12px}
+.notif-btn{background:var(--bg4);border:1px solid var(--border);border-radius:8px;
+  width:32px;height:32px;display:flex;align-items:center;justify-content:center;
+  font-size:14px;position:relative}
+.notif-dot{position:absolute;top:6px;right:6px;width:7px;height:7px;background:var(--red);border-radius:50%;border:1.5px solid var(--bg2)}
+.admin-user{display:flex;align-items:center;gap:8px;background:var(--bg4);
+  border:1px solid var(--border);border-radius:9px;padding:5px 10px}
+.admin-av{width:22px;height:22px;border-radius:6px;background:linear-gradient(135deg,var(--purple),var(--blue));
+  display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:800}
+.admin-name{font-size:12px;font-weight:700}
+
+/* ── LAYOUT ── */
+.app-body{display:flex;flex:1;overflow:hidden}
+
+/* ── SIDEBAR ── */
+.sidebar{width:var(--sidebar);background:var(--bg2);border-right:1px solid var(--border);
+  display:flex;flex-direction:column;flex-shrink:0;overflow-y:auto}
+.sb-section{padding:16px 0 8px}
+.sb-label{font-size:9px;font-weight:700;color:rgba(240,237,232,0.22);letter-spacing:.1em;
+  text-transform:uppercase;padding:0 16px;margin-bottom:4px}
+.sb-item{display:flex;align-items:center;gap:9px;padding:9px 16px;font-size:12.5px;
+  font-weight:600;color:var(--text);transition:all .15s;border-left:2px solid transparent;
+  position:relative}
+.sb-item:hover{color:var(--white);background:rgba(255,255,255,0.04)}
+.sb-item.active{color:var(--white);background:rgba(255,255,255,0.06);border-left-color:var(--red)}
+.sb-icon{font-size:15px;width:18px;text-align:center;flex-shrink:0}
+.sb-badge{margin-left:auto;background:var(--red);color:#fff;font-size:9px;font-weight:800;
+  padding:1px 6px;border-radius:10px;min-width:18px;text-align:center}
+.sb-badge.gold{background:var(--gold)}
+.sb-badge.green{background:var(--green)}
+
+/* ── MAIN ── */
+.main{flex:1;overflow-y:auto;display:flex;flex-direction:column}
+.page{display:none;padding:24px;flex-direction:column;gap:20px}
+.page.active{display:flex}
+
+/* PAGE HEADER */
+.page-hdr{display:flex;align-items:flex-start;justify-content:space-between;gap:12px}
+.page-title{font-size:20px;font-weight:800;letter-spacing:-.03em}
+.page-sub{font-size:12px;color:var(--text);margin-top:3px}
+.hdr-actions{display:flex;gap:8px;align-items:center;flex-shrink:0}
+.btn{padding:8px 16px;border-radius:9px;font-size:12.5px;font-weight:700;border:none;transition:all .15s}
+.btn-ghost{background:var(--bg4);border:1px solid var(--border);color:var(--white)}
+.btn-ghost:hover{border-color:var(--border2);background:rgba(255,255,255,0.08)}
+.btn-primary{background:var(--red);color:#fff;box-shadow:0 2px 12px rgba(232,83,58,.25)}
+.btn-primary:hover{opacity:.88}
+.btn-green{background:var(--green);color:#fff}
+.btn-green:hover{opacity:.88}
+
+/* METRICS ROW */
+.metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+.metric{background:var(--bg3);border:1px solid var(--border);border-radius:13px;padding:16px 18px;
+  display:flex;flex-direction:column;gap:8px}
+.metric-top{display:flex;align-items:center;justify-content:space-between}
+.metric-icon{width:34px;height:34px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:16px}
+.metric-chg{font-size:11px;font-weight:700;padding:2px 7px;border-radius:5px}
+.chg-up{background:rgba(45,158,107,.15);color:var(--green)}
+.chg-dn{background:rgba(232,83,58,.15);color:var(--red)}
+.chg-neu{background:rgba(255,255,255,.08);color:var(--text)}
+.metric-val{font-size:26px;font-weight:800;letter-spacing:-.03em}
+.metric-lbl{font-size:11px;color:var(--text);font-weight:600;text-transform:uppercase;letter-spacing:.05em}
+
+/* TABS */
+.tab-bar{display:flex;gap:4px;background:var(--bg3);border:1px solid var(--border);
+  border-radius:11px;padding:4px;width:fit-content}
+.tab-btn{padding:7px 16px;border-radius:8px;font-size:12px;font-weight:700;border:none;
+  background:none;color:var(--text);transition:all .15s}
+.tab-btn.active{background:var(--bg2);color:var(--white);box-shadow:0 1px 4px rgba(0,0,0,.4)}
+.tab-btn:hover:not(.active){color:var(--white)}
+
+/* FILTERS ROW */
+.filters{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.search-inp{background:var(--bg3);border:1px solid var(--border);border-radius:9px;
+  padding:9px 14px;color:var(--white);font-size:13px;outline:none;width:240px}
+.search-inp:focus{border-color:rgba(232,83,58,.4)}
+.search-inp::placeholder{color:rgba(240,237,232,.28)}
+.filter-sel{background:var(--bg3);border:1px solid var(--border);border-radius:9px;
+  padding:9px 14px;color:var(--white);font-size:12.5px;outline:none;appearance:none;
+  padding-right:28px;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10' viewBox='0 0 10 10'%3E%3Cpath fill='rgba(240,237,232,0.35)' d='M5 7L0 2h10z'/%3E%3C/svg%3E");
+  background-repeat:no-repeat;background-position:right 10px center}
+.filter-sel option{background:#1a1a1a}
+
+/* TABLE */
+.table-wrap{background:var(--bg3);border:1px solid var(--border);border-radius:13px;overflow:hidden}
+.table-hdr{display:flex;align-items:center;justify-content:space-between;
+  padding:14px 20px;border-bottom:1px solid var(--border)}
+.table-title{font-size:13.5px;font-weight:800}
+.tbl{width:100%;border-collapse:collapse}
+.tbl th{font-size:10px;color:rgba(240,237,232,.28);font-weight:700;text-transform:uppercase;
+  letter-spacing:.07em;padding:11px 20px;text-align:left;border-bottom:1px solid rgba(255,255,255,.05)}
+.tbl td{padding:13px 20px;font-size:12.5px;border-bottom:1px solid rgba(255,255,255,.04);vertical-align:middle}
+.tbl tr:last-child td{border-bottom:none}
+.tbl tr:hover td{background:rgba(255,255,255,.02)}
+.tbl-name{font-weight:700;font-size:13px}
+.tbl-email{font-size:11px;color:var(--text);margin-top:2px;font-family:'DM Mono',monospace}
+
+/* PILLS */
+.pill{display:inline-flex;align-items:center;gap:4px;padding:3px 9px;border-radius:6px;font-size:10.5px;font-weight:700}
+.pill-pending{background:rgba(196,127,23,.15);color:var(--gold)}
+.pill-verified{background:rgba(45,158,107,.15);color:var(--green)}
+.pill-rejected{background:rgba(232,83,58,.15);color:var(--red)}
+.pill-active{background:rgba(45,158,107,.15);color:var(--green)}
+.pill-suspended{background:rgba(232,83,58,.15);color:var(--red)}
+.pill-flagged{background:rgba(196,127,23,.15);color:var(--gold)}
+.pill-seller{background:rgba(59,125,216,.15);color:var(--blue)}
+.pill-buyer{background:rgba(255,255,255,.08);color:var(--text)}
+
+/* ACTION BTNS */
+.act-btn{background:none;border:1px solid var(--border);color:var(--text);
+  padding:5px 11px;border-radius:7px;font-size:11px;font-weight:700;transition:all .15s}
+.act-btn:hover{border-color:var(--border2);color:var(--white)}
+.act-btn.approve{border-color:rgba(45,158,107,.4);color:var(--green)}
+.act-btn.approve:hover{background:rgba(45,158,107,.12)}
+.act-btn.reject{border-color:rgba(232,83,58,.4);color:var(--red)}
+.act-btn.reject:hover{background:rgba(232,83,58,.12)}
+.act-btn.view{border-color:rgba(59,125,216,.4);color:var(--blue)}
+.act-btn.view:hover{background:rgba(59,125,216,.12)}
+
+/* MODAL */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.75);backdrop-filter:blur(4px);
+  z-index:500;display:none;align-items:center;justify-content:center;padding:20px}
+.modal-overlay.open{display:flex}
+.modal{background:var(--bg2);border:1px solid var(--border2);border-radius:18px;
+  width:100%;max-width:680px;max-height:90vh;overflow-y:auto;
+  box-shadow:0 24px 80px rgba(0,0,0,.6)}
+.modal-hdr{display:flex;align-items:center;justify-content:space-between;
+  padding:20px 24px;border-bottom:1px solid var(--border)}
+.modal-title{font-size:16px;font-weight:800;letter-spacing:-.02em}
+.modal-close{background:var(--bg4);border:1px solid var(--border);border-radius:8px;
+  width:30px;height:30px;display:flex;align-items:center;justify-content:center;
+  font-size:14px;color:var(--text)}
+.modal-close:hover{color:var(--white)}
+.modal-body{padding:24px}
+.modal-footer{padding:16px 24px;border-top:1px solid var(--border);display:flex;gap:10px;justify-content:flex-end}
+
+/* KYC DETAIL */
+.kyc-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:20px}
+.kyc-field{background:var(--bg3);border:1px solid var(--border);border-radius:11px;padding:14px}
+.kyc-field-label{font-size:10px;font-weight:700;color:rgba(240,237,232,.3);text-transform:uppercase;letter-spacing:.07em;margin-bottom:5px}
+.kyc-field-value{font-size:13.5px;font-weight:700}
+.doc-preview{background:var(--bg3);border:1px solid var(--border);border-radius:11px;
+  padding:18px;text-align:center;cursor:pointer;transition:all .15s}
+.doc-preview:hover{border-color:var(--border2);background:rgba(255,255,255,.06)}
+.doc-icon{font-size:32px;margin-bottom:8px}
+.doc-name{font-size:12.5px;font-weight:700;margin-bottom:3px}
+.doc-hint{font-size:11px;color:var(--text)}
+.review-textarea{width:100%;background:var(--bg4);border:1px solid var(--border);border-radius:10px;
+  padding:12px 14px;color:var(--white);font-size:13px;outline:none;resize:vertical;
+  min-height:80px;font-family:'Syne',sans-serif}
+.review-textarea:focus{border-color:rgba(232,83,58,.4)}
+.review-textarea::placeholder{color:rgba(240,237,232,.25)}
+
+/* STAT CHARTS */
+.charts-row{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.chart-card{background:var(--bg3);border:1px solid var(--border);border-radius:13px;padding:18px}
+.chart-card-title{font-size:13px;font-weight:800;margin-bottom:4px}
+.chart-card-sub{font-size:11px;color:var(--text);margin-bottom:16px}
+.bar-chart{display:flex;align-items:flex-end;gap:5px;height:100px}
+.bc-bar{flex:1;border-radius:4px 4px 0 0;position:relative;cursor:pointer;transition:opacity .15s;min-width:0}
+.bc-bar:hover{opacity:.78}
+.bc-lbl{position:absolute;bottom:-17px;left:50%;transform:translateX(-50%);font-size:8.5px;color:rgba(240,237,232,.3);white-space:nowrap;font-weight:600}
+.donut-wrap{display:flex;align-items:center;gap:20px}
+.donut-legend{display:flex;flex-direction:column;gap:8px}
+.legend-item{display:flex;align-items:center;gap:8px;font-size:12px}
+.legend-dot{width:10px;height:10px;border-radius:3px;flex-shrink:0}
+.legend-val{font-weight:800;margin-left:auto;font-size:13px}
+
+/* ACTIVITY FEED */
+.activity-feed{background:var(--bg3);border:1px solid var(--border);border-radius:13px;overflow:hidden}
+.activity-item{display:flex;align-items:flex-start;gap:12px;padding:13px 18px;border-bottom:1px solid rgba(255,255,255,.04)}
+.activity-item:last-child{border-bottom:none}
+.act-icon{width:32px;height:32px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0}
+.act-text{font-size:12.5px;font-weight:600;line-height:1.5;flex:1}
+.act-time{font-size:10.5px;color:rgba(240,237,232,.28);flex-shrink:0;font-family:'DM Mono',monospace}
+
+/* TOAST */
+.toast{position:fixed;bottom:24px;right:24px;background:var(--bg2);border:1px solid var(--border2);
+  border-radius:12px;padding:14px 18px;display:flex;align-items:center;gap:10px;
+  z-index:999;transform:translateY(80px);opacity:0;transition:all .3s;
+  box-shadow:0 8px 32px rgba(0,0,0,.5);font-size:13px;font-weight:700;min-width:280px}
+.toast.show{transform:translateY(0);opacity:1}
+.toast-icon{font-size:18px;flex-shrink:0}
+
+/* EMPTY */
+.empty{text-align:center;padding:48px 20px;color:var(--text)}
+.empty-icon{font-size:36px;margin-bottom:12px;display:block}
+
+/* LISTING REPORT ROW */
+.rep-thumb{width:38px;height:38px;border-radius:8px;background:var(--bg4);
+  display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+</style>
+</head>
+<body>
+
+<!-- TOPBAR -->
+<div class="topbar">
+  <div class="topbar-left">
+    <div class="logo"><div class="logo-icon">🌍</div>Makola<span>Digital</span></div>
+    <div class="admin-badge">Admin</div>
+  </div>
+  <div class="topbar-right">
+    <div class="notif-btn">🔔<div class="notif-dot"></div></div>
+    <div class="admin-user"><div class="admin-av">A</div><div class="admin-name">Admin</div></div>
+  </div>
+</div>
+
+<div class="app-body">
+
+<!-- SIDEBAR -->
+<div class="sidebar">
+  <div class="sb-section">
+    <div class="sb-label">Overview</div>
+    <div class="sb-item active" onclick="nav('overview',this)"><span class="sb-icon">📊</span>Dashboard</div>
+  </div>
+  <div class="sb-section">
+    <div class="sb-label">Verification</div>
+    <div class="sb-item" onclick="nav('kyc',this)"><span class="sb-icon">✅</span>KYC Queue<div class="sb-badge" id="kyc-count">7</div></div>
+    <div class="sb-item" onclick="nav('listings',this)"><span class="sb-icon">📦</span>Listings<div class="sb-badge gold" id="list-count">3</div></div>
+    <div class="sb-item" onclick="nav('reports',this)"><span class="sb-icon">🚩</span>Reports<div class="sb-badge" id="rep-count">12</div></div>
+  </div>
+  <div class="sb-section">
+    <div class="sb-label">Management</div>
+    <div class="sb-item" onclick="nav('users',this)"><span class="sb-icon">👥</span>Users</div>
+    <div class="sb-item" onclick="nav('payments',this)"><span class="sb-icon">💰</span>Payments</div>
+    <div class="sb-item" onclick="nav('disputes',this)"><span class="sb-icon">⚖️</span>Disputes<div class="sb-badge gold">2</div></div>
+  </div>
+  <div class="sb-section">
+    <div class="sb-label">System</div>
+    <div class="sb-item" onclick="nav('audit',this)"><span class="sb-icon">🗒️</span>Audit Log</div>
+    <div class="sb-item" onclick="nav('settings',this)"><span class="sb-icon">⚙️</span>Settings</div>
+  </div>
+</div>
+
+<!-- MAIN -->
+<div class="main">
+
+<!-- ════════ DASHBOARD ════════ -->
+<div id="page-overview" class="page active">
+  <div class="page-hdr">
+    <div><div class="page-title">Platform Overview</div><div class="page-sub">Monday, 19 May 2025 · All systems operational ✓</div></div>
+    <div class="hdr-actions">
+      <button class="btn btn-ghost">Export report</button>
+      <button class="btn btn-primary">+ Add admin</button>
+    </div>
+  </div>
+
+  <div class="metrics">
+    <div class="metric">
+      <div class="metric-top"><div class="metric-icon" style="background:rgba(232,83,58,.12)">👥</div><div class="metric-chg chg-up">↑ +14%</div></div>
+      <div class="metric-val">24,831</div>
+      <div class="metric-lbl">Total users</div>
+    </div>
+    <div class="metric">
+      <div class="metric-top"><div class="metric-icon" style="background:rgba(45,158,107,.12)">📦</div><div class="metric-chg chg-up">↑ +22%</div></div>
+      <div class="metric-val">183,420</div>
+      <div class="metric-lbl">Active listings</div>
+    </div>
+    <div class="metric">
+      <div class="metric-top"><div class="metric-icon" style="background:rgba(196,127,23,.12)">💰</div><div class="metric-chg chg-up">↑ +31%</div></div>
+      <div class="metric-val">GH₵ 2.4M</div>
+      <div class="metric-lbl">GMV this month</div>
+    </div>
+    <div class="metric">
+      <div class="metric-top"><div class="metric-icon" style="background:rgba(124,92,191,.12)">✅</div><div class="metric-chg chg-dn">↓ 7 pending</div></div>
+      <div class="metric-val">1,204</div>
+      <div class="metric-lbl">Verified sellers</div>
+    </div>
+  </div>
+
+  <div class="charts-row">
+    <div class="chart-card">
+      <div class="chart-card-title">New registrations</div>
+      <div class="chart-card-sub">Last 12 weeks</div>
+      <div class="bar-chart" id="reg-chart"></div>
+      <div style="height:20px"></div>
+    </div>
+    <div class="chart-card">
+      <div class="chart-card-title">User breakdown</div>
+      <div class="chart-card-sub">By account type</div>
+      <div class="donut-wrap">
+        <svg width="90" height="90" viewBox="0 0 90 90" style="flex-shrink:0">
+          <circle cx="45" cy="45" r="35" fill="none" stroke="rgba(255,255,255,.06)" stroke-width="14"/>
+          <circle cx="45" cy="45" r="35" fill="none" stroke="#E8533A" stroke-width="14" stroke-dasharray="132 88" stroke-dashoffset="0" transform="rotate(-90 45 45)"/>
+          <circle cx="45" cy="45" r="35" fill="none" stroke="#3B7DD8" stroke-width="14" stroke-dasharray="66 154" stroke-dashoffset="-132" transform="rotate(-90 45 45)"/>
+          <circle cx="45" cy="45" r="35" fill="none" stroke="#2D9E6B" stroke-width="14" stroke-dasharray="22 198" stroke-dashoffset="-198" transform="rotate(-90 45 45)"/>
+        </svg>
+        <div class="donut-legend">
+          <div class="legend-item"><div class="legend-dot" style="background:#E8533A"></div>Buyers<span class="legend-val">60%</span></div>
+          <div class="legend-item"><div class="legend-dot" style="background:#3B7DD8"></div>Sellers<span class="legend-val">30%</span></div>
+          <div class="legend-item"><div class="legend-dot" style="background:#2D9E6B"></div>Both<span class="legend-val">10%</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="table-wrap">
+    <div class="table-hdr"><div class="table-title">Recent KYC submissions</div><button class="btn btn-ghost" onclick="nav('kyc',null)" style="font-size:12px">View all →</button></div>
+    <table class="tbl" id="recent-kyc-table"></table>
+  </div>
+
+  <div class="activity-feed" id="activity-feed"></div>
+</div>
+
+<!-- ════════ KYC QUEUE ════════ -->
+<div id="page-kyc" class="page">
+  <div class="page-hdr">
+    <div><div class="page-title">KYC Review Queue</div><div class="page-sub">Identity & business verification applications</div></div>
+    <div class="hdr-actions">
+      <button class="btn btn-ghost">Export CSV</button>
+    </div>
+  </div>
+
+  <div class="tab-bar">
+    <button class="tab-btn active" onclick="kycTab('pending',this)">⏳ Pending <span style="background:rgba(196,127,23,.2);color:#C47F17;border-radius:5px;padding:1px 6px;font-size:10px;margin-left:4px" id="pending-count">7</span></button>
+    <button class="tab-btn" onclick="kycTab('verified',this)">✅ Approved</button>
+    <button class="tab-btn" onclick="kycTab('rejected',this)">❌ Rejected</button>
+  </div>
+
+  <div class="filters">
+    <input class="search-inp" placeholder="🔍  Search by name or email..." oninput="filterKyc(this.value)" id="kyc-search">
+    <select class="filter-sel" onchange="filterKycType(this.value)">
+      <option value="">All ID types</option>
+      <option>National ID</option><option>Passport</option><option>Driver's License</option>
+    </select>
+    <select class="filter-sel">
+      <option value="">All countries</option>
+      <option>Ghana</option><option>Nigeria</option><option>Kenya</option><option>South Africa</option>
+    </select>
+  </div>
+
+  <div class="table-wrap">
+    <table class="tbl">
+      <thead><tr>
+        <th>Applicant</th><th>Business</th><th>ID type</th><th>Submitted</th><th>Status</th><th>Actions</th>
+      </tr></thead>
+      <tbody id="kyc-table"></tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ════════ USERS ════════ -->
+<div id="page-users" class="page">
+  <div class="page-hdr">
+    <div><div class="page-title">User Management</div><div class="page-sub">All registered accounts</div></div>
+    <div class="hdr-actions">
+      <button class="btn btn-ghost">Export</button>
+    </div>
+  </div>
+  <div class="filters">
+    <input class="search-inp" placeholder="🔍  Search users..." oninput="filterUsers(this.value)">
+    <select class="filter-sel"><option>All roles</option><option>Buyer</option><option>Seller</option><option>Admin</option></select>
+    <select class="filter-sel"><option>All statuses</option><option>Active</option><option>Suspended</option></select>
+  </div>
+  <div class="table-wrap">
+    <table class="tbl">
+      <thead><tr><th>User</th><th>Role</th><th>Country</th><th>KYC</th><th>Joined</th><th>Status</th><th>Actions</th></tr></thead>
+      <tbody id="users-table"></tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ════════ LISTINGS ════════ -->
+<div id="page-listings" class="page">
+  <div class="page-hdr">
+    <div><div class="page-title">Listing Moderation</div><div class="page-sub">Review flagged and new listings</div></div>
+  </div>
+  <div class="tab-bar" style="margin-bottom:0">
+    <button class="tab-btn active" onclick="listTab('flagged',this)">🚩 Flagged <span style="background:rgba(232,83,58,.2);color:var(--red);border-radius:5px;padding:1px 6px;font-size:10px;margin-left:4px">3</span></button>
+    <button class="tab-btn" onclick="listTab('pending',this)">⏳ Pending review</button>
+    <button class="tab-btn" onclick="listTab('active',this)">✅ All active</button>
+  </div>
+  <div class="table-wrap" style="margin-top:0">
+    <table class="tbl">
+      <thead><tr><th>Listing</th><th>Type</th><th>Seller</th><th>Reports</th><th>Status</th><th>Actions</th></tr></thead>
+      <tbody id="listings-table"></tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ════════ REPORTS ════════ -->
+<div id="page-reports" class="page">
+  <div class="page-hdr">
+    <div><div class="page-title">User Reports</div><div class="page-sub">Scams, fraud and policy violations</div></div>
+  </div>
+  <div class="table-wrap">
+    <table class="tbl">
+      <thead><tr><th>Reported item</th><th>Reason</th><th>Reporter</th><th>Date</th><th>Priority</th><th>Actions</th></tr></thead>
+      <tbody id="reports-table"></tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ════════ AUDIT LOG ════════ -->
+<div id="page-audit" class="page">
+  <div class="page-hdr">
+    <div><div class="page-title">Audit Log</div><div class="page-sub">All admin actions recorded</div></div>
+    <div class="hdr-actions"><button class="btn btn-ghost">Export log</button></div>
+  </div>
+  <div class="activity-feed" id="audit-log"></div>
+</div>
+
+<!-- ════════ PAYMENTS, DISPUTES, SETTINGS (stubs) ════════ -->
+<div id="page-payments" class="page">
+  <div class="page-hdr"><div><div class="page-title">Payments</div><div class="page-sub">Transaction monitoring</div></div></div>
+  <div style="text-align:center;padding:60px;color:var(--text)"><div style="font-size:40px;margin-bottom:12px">💰</div><div style="font-size:15px;font-weight:700;margin-bottom:8px">Payment management coming soon</div><div style="font-size:13px">Integrate Paystack, Flutterwave & Stripe webhooks</div></div>
+</div>
+<div id="page-disputes" class="page">
+  <div class="page-hdr"><div><div class="page-title">Disputes</div><div class="page-sub">Buyer-seller conflict resolution</div></div></div>
+  <div style="text-align:center;padding:60px;color:var(--text)"><div style="font-size:40px;margin-bottom:12px">⚖️</div><div style="font-size:15px;font-weight:700;margin-bottom:8px">2 active disputes</div><div style="font-size:13px">Escrow release and refund management</div></div>
+</div>
+<div id="page-settings" class="page">
+  <div class="page-hdr"><div><div class="page-title">Settings</div><div class="page-sub">Platform configuration</div></div></div>
+  <div style="text-align:center;padding:60px;color:var(--text)"><div style="font-size:40px;margin-bottom:12px">⚙️</div><div style="font-size:15px;font-weight:700">Admin settings</div></div>
+</div>
+
+</div><!-- /main -->
+</div><!-- /app-body -->
+
+<!-- ══ KYC REVIEW MODAL ══ -->
+<div class="modal-overlay" id="kyc-modal">
+  <div class="modal">
+    <div class="modal-hdr">
+      <div class="modal-title" id="modal-title">KYC Review</div>
+      <button class="modal-close" onclick="closeModal()">✕</button>
+    </div>
+    <div class="modal-body" id="modal-body"></div>
+    <div class="modal-footer" id="modal-footer"></div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"><span class="toast-icon" id="toast-icon">✓</span><span id="toast-msg"></span></div>
+
+<script>
+// ── DATA ──────────────────────────────────────────────────────
+const KYC_DATA = [
+  {id:'k1',name:'Kofi Mensah',email:'kofi@gmail.com',biz:'TechHub GH',idType:'National ID',idNum:'GHA-123456789-0',country:'Ghana',submitted:'2 hours ago',status:'pending',avatar:'K',docs:['ID Front','ID Back','Biz Cert']},
+  {id:'k2',name:'Fatima Diallo',email:'fatima@yahoo.com',biz:'Fatima Fabrics',idType:'Passport',idNum:'B12345678',country:'Senegal',submitted:'5 hours ago',status:'pending',avatar:'F',docs:['Passport','Biz Cert']},
+  {id:'k3',name:'Emeka Obi',email:'emeka@outlook.com',biz:'Obi Electronics',idType:'Driver\'s License',idNum:'DL-9876543',country:'Nigeria',submitted:'1 day ago',status:'pending',avatar:'E',docs:['License Front','License Back']},
+  {id:'k4',name:'Ama Asante',email:'ama@gmail.com',biz:'Ama Couture',idType:'National ID',idNum:'GHA-987654321-1',country:'Ghana',submitted:'1 day ago',status:'pending',avatar:'A',docs:['ID Front','ID Back']},
+  {id:'k5',name:'David Kamau',email:'david@gmail.com',biz:'KamauTech',idType:'Passport',idNum:'A98765432',country:'Kenya',submitted:'2 days ago',status:'pending',avatar:'D',docs:['Passport']},
+  {id:'k6',name:'Abena Owusu',email:'abena@gmail.com',biz:'Abena Farms',idType:'National ID',idNum:'GHA-555555555-5',country:'Ghana',submitted:'3 days ago',status:'pending',avatar:'A',docs:['ID Front','ID Back','Farm Reg']},
+  {id:'k7',name:'Chidi Nwosu',email:'chidi@hotmail.com',biz:'Chidi Autos',idType:'Driver\'s License',idNum:'LA-1234567',country:'Nigeria',submitted:'3 days ago',status:'pending',avatar:'C',docs:['License','CAC Cert']},
+  {id:'k8',name:'Nadia Hassan',email:'nadia@gmail.com',biz:'Nadia Beauty',idType:'National ID',idNum:'GHA-111222333-4',country:'Ghana',submitted:'1 week ago',status:'verified',avatar:'N',docs:['ID Front','ID Back']},
+  {id:'k9',name:'Kwame Appiah',email:'kwame@gmail.com',biz:'Appiah Traders',idType:'Passport',idNum:'G55566677',country:'Ghana',submitted:'1 week ago',status:'rejected',avatar:'K',docs:['Passport'],note:'Document image too blurry. Please resubmit.'},
+];
+
+const USERS_DATA = [
+  {id:'u1',name:'Kofi Mensah',email:'kofi@gmail.com',role:'seller',country:'🇬🇭 Ghana',kyc:'pending',joined:'May 2025',status:'active',avatar:'K'},
+  {id:'u2',name:'Fatima Diallo',email:'fatima@yahoo.com',role:'seller',country:'🇸🇳 Senegal',kyc:'pending',joined:'May 2025',status:'active',avatar:'F'},
+  {id:'u3',name:'Ama Asante',email:'ama@gmail.com',role:'seller',country:'🇬🇭 Ghana',kyc:'verified',joined:'Apr 2025',status:'active',avatar:'A'},
+  {id:'u4',name:'John Buyer',email:'john@example.com',role:'buyer',country:'🇬🇧 UK',kyc:'unverified',joined:'May 2025',status:'active',avatar:'J'},
+  {id:'u5',name:'Emeka Obi',email:'emeka@outlook.com',role:'seller',country:'🇳🇬 Nigeria',kyc:'pending',joined:'May 2025',status:'active',avatar:'E'},
+  {id:'u6',name:'SpamBot99',email:'spam@fake.com',role:'buyer',country:'🇺🇸 USA',kyc:'unverified',joined:'May 2025',status:'suspended',avatar:'S'},
+  {id:'u7',name:'Nadia Hassan',email:'nadia@gmail.com',role:'seller',country:'🇬🇭 Ghana',kyc:'verified',joined:'Mar 2025',status:'active',avatar:'N'},
+  {id:'u8',name:'David Kamau',email:'david@gmail.com',role:'seller',country:'🇰🇪 Kenya',kyc:'pending',joined:'May 2025',status:'active',avatar:'D'},
+];
+
+const LISTINGS_DATA = [
+  {id:'l1',title:'Rolex Watch Replica — "Genuine"',type:'Product',seller:'Unknown Seller',reports:8,status:'flagged',img:'⌚',reason:'Counterfeit goods'},
+  {id:'l2',title:'Get Rich Quick — Invest GH₵500 get GH₵5000',type:'Service',seller:'ProfitNow GH',reports:14,status:'flagged',img:'💸',reason:'Suspected scam'},
+  {id:'l3',title:'Underage Model Portfolio',type:'Service',seller:'StudioX',reports:22,status:'flagged',img:'📷',reason:'Policy violation'},
+  {id:'l4',title:'iPhone 15 Pro Max 256GB',type:'Product',seller:'TechHub GH',reports:0,status:'pending',img:'📱',reason:'New listing'},
+  {id:'l5',title:'2BR Apartment East Legon',type:'Rental',seller:'PrimeSpace GH',reports:0,status:'active',img:'🏠',reason:'-'},
+];
+
+const REPORTS_DATA = [
+  {id:'r1',item:'Get Rich Quick scheme',type:'listing',reason:'Scam / Fraud',reporter:'john@example.com',date:'2h ago',priority:'high'},
+  {id:'r2',item:'Rolex Replica Watch',type:'listing',reason:'Counterfeit goods',reporter:'ama@gmail.com',date:'4h ago',priority:'high'},
+  {id:'r3',item:'SpamBot99',type:'user',reason:'Spam messages',reporter:'kofi@gmail.com',date:'6h ago',priority:'medium'},
+  {id:'r4',item:'Underage Model Portfolio',type:'listing',reason:'Policy violation',reporter:'fatima@yahoo.com',date:'1d ago',priority:'critical'},
+  {id:'r5',item:'ProfitNow GH',type:'user',reason:'Multiple fraud reports',reporter:'david@gmail.com',date:'1d ago',priority:'high'},
+  {id:'r6',item:'Fake iPhone listing',type:'listing',reason:'Misleading description',reporter:'emeka@outlook.com',date:'2d ago',priority:'medium'},
+];
+
+const ACTIVITIES = [
+  {icon:'✅',bg:'rgba(45,158,107,.12)',text:'<strong>Nadia Hassan</strong> KYC approved by Admin',time:'10:24'},
+  {icon:'❌',bg:'rgba(232,83,58,.12)',text:'<strong>Kwame Appiah</strong> KYC rejected — blurry documents',time:'09:51'},
+  {icon:'🚫',bg:'rgba(232,83,58,.12)',text:'Listing <strong>"Get Rich Quick"</strong> removed for fraud',time:'09:30'},
+  {icon:'👤',bg:'rgba(124,92,191,.12)',text:'User <strong>SpamBot99</strong> suspended for spam',time:'08:45'},
+  {icon:'📦',bg:'rgba(196,127,23,.12)',text:'<strong>3 new listings</strong> flagged for review',time:'08:12'},
+  {icon:'📝',bg:'rgba(59,125,216,.12)',text:'<strong>7 new KYC</strong> applications received overnight',time:'07:00'},
+];
+
+let kycStatus='pending', kycSearch='', listStatus='flagged';
+let auditLog=[...ACTIVITIES];
+let kycData=[...KYC_DATA];
+
+// ── NAVIGATION ──────────────────────────────────────────────
+function nav(page, btn){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.getElementById('page-'+page).classList.add('active');
+  document.querySelectorAll('.sb-item').forEach(b=>b.classList.remove('active'));
+  if(btn) btn.classList.add('active');
+  // render page
+  if(page==='overview'){renderOverview();}
+  if(page==='kyc'){renderKycTable();}
+  if(page==='users'){renderUsers();}
+  if(page==='listings'){renderListings();}
+  if(page==='reports'){renderReports();}
+  if(page==='audit'){renderAudit();}
+}
+
+// ── OVERVIEW ────────────────────────────────────────────────
+function renderOverview(){
+  // Bar chart
+  const vals=[42,58,71,49,88,103,95,127,141,118,156,168];
+  const months=['Jun','Jul','Aug','Sep','Oct','Nov','Dec','Jan','Feb','Mar','Apr','May'];
+  const max=Math.max(...vals);
+  const chart=document.getElementById('reg-chart');
+  if(chart) chart.innerHTML=vals.map((v,i)=>`
+    <div style="flex:1;display:flex;flex-direction:column;align-items:center;height:100%;justify-content:flex-end;position:relative">
+      <div class="bc-bar" style="height:${(v/max*100)}%;background:${i===vals.length-1?'var(--red)':'rgba(232,83,58,.35)'}">
+        <span class="bc-lbl">${months[i]}</span>
+      </div>
+    </div>`).join('');
+
+  // Recent KYC table
+  const t=document.getElementById('recent-kyc-table');
+  if(t){
+    t.innerHTML=`<thead><tr><th>Applicant</th><th>Business</th><th>ID type</th><th>Submitted</th><th>Status</th><th>Action</th></tr></thead>
+    <tbody>${kycData.slice(0,5).map(k=>`
+      <tr>
+        <td><div class="tbl-name">${k.name}</div><div class="tbl-email">${k.email}</div></td>
+        <td>${k.biz}</td><td>${k.idType}</td><td>${k.submitted}</td>
+        <td><span class="pill pill-${k.status}">${k.status==='pending'?'⏳':k.status==='verified'?'✅':'❌'} ${k.status}</span></td>
+        <td><button class="act-btn view" onclick="openKyc('${k.id}')">Review</button></td>
+      </tr>`).join('')}
+    </tbody>`;
+  }
+
+  // Activity
+  const af=document.getElementById('activity-feed');
+  if(af) af.innerHTML=`<div class="table-hdr"><div class="table-title">Recent activity</div></div>`+
+    ACTIVITIES.map(a=>`<div class="activity-item"><div class="act-icon" style="background:${a.bg}">${a.icon}</div><div class="act-text">${a.text}</div><div class="act-time">${a.time}</div></div>`).join('');
+}
+
+// ── KYC TABLE ────────────────────────────────────────────────
+function renderKycTable(){
+  const list=kycData.filter(k=>k.status===kycStatus&&(kycSearch===''||k.name.toLowerCase().includes(kycSearch)||k.email.toLowerCase().includes(kycSearch)));
+  const tbody=document.getElementById('kyc-table');
+  if(!tbody) return;
+  if(!list.length){tbody.innerHTML=`<tr><td colspan="6" style="text-align:center;padding:48px;color:var(--text)"><span style="font-size:32px;display:block;margin-bottom:10px">📭</span>No ${kycStatus} applications</td></tr>`;return;}
+  tbody.innerHTML=list.map(k=>`
+    <tr>
+      <td>
+        <div style="display:flex;align-items:center;gap:10px">
+          <div style="width:34px;height:34px;border-radius:9px;background:linear-gradient(135deg,var(--red),var(--gold));display:flex;align-items:center;justify-content:center;font-weight:800;font-size:13px;flex-shrink:0">${k.avatar}</div>
+          <div><div class="tbl-name">${k.name}</div><div class="tbl-email">${k.email}</div></div>
+        </div>
+      </td>
+      <td style="font-weight:600">${k.biz}</td>
+      <td>${k.idType}</td>
+      <td style="font-size:11.5px;color:var(--text);font-family:'DM Mono',monospace">${k.submitted}</td>
+      <td><span class="pill pill-${k.status}">${k.status==='pending'?'⏳':k.status==='verified'?'✅':'❌'} ${k.status}</span></td>
+      <td style="display:flex;gap:6px;padding-top:16px">
+        <button class="act-btn view" onclick="openKyc('${k.id}')">View docs</button>
+        ${k.status==='pending'?`<button class="act-btn approve" onclick="quickAction('${k.id}','approve')">Approve</button><button class="act-btn reject" onclick="quickAction('${k.id}','reject')">Reject</button>`:''}
+      </td>
+    </tr>`).join('');
+}
+
+function kycTab(status,btn){
+  kycStatus=status;
+  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  renderKycTable();
+}
+function filterKyc(v){kycSearch=v.toLowerCase();renderKycTable();}
+function filterKycType(){renderKycTable();}
+
+// ── KYC MODAL ────────────────────────────────────────────────
+function openKyc(id){
+  const k=kycData.find(x=>x.id===id);
+  if(!k) return;
+  document.getElementById('modal-title').textContent=`KYC Review — ${k.name}`;
+
+  document.getElementById('modal-body').innerHTML=`
+    <div style="display:flex;align-items:center;gap:12px;margin-bottom:20px;padding:14px 16px;background:var(--bg4);border:1px solid var(--border);border-radius:12px">
+      <div style="width:44px;height:44px;border-radius:11px;background:linear-gradient(135deg,var(--red),var(--gold));display:flex;align-items:center;justify-content:center;font-weight:900;font-size:18px;flex-shrink:0">${k.avatar}</div>
+      <div><div style="font-size:15px;font-weight:800">${k.name}</div><div style="font-size:12px;color:var(--text);font-family:'DM Mono',monospace">${k.email}</div></div>
+      <span class="pill pill-${k.status}" style="margin-left:auto">${k.status}</span>
+    </div>
+    <div class="kyc-grid">
+      <div class="kyc-field"><div class="kyc-field-label">Business name</div><div class="kyc-field-value">${k.biz}</div></div>
+      <div class="kyc-field"><div class="kyc-field-label">Country</div><div class="kyc-field-value">${k.country}</div></div>
+      <div class="kyc-field"><div class="kyc-field-label">ID type</div><div class="kyc-field-value">${k.idType}</div></div>
+      <div class="kyc-field"><div class="kyc-field-label">ID number</div><div class="kyc-field-value mono">${k.idNum}</div></div>
+      <div class="kyc-field"><div class="kyc-field-label">Submitted</div><div class="kyc-field-value">${k.submitted}</div></div>
+      <div class="kyc-field"><div class="kyc-field-label">Documents</div><div class="kyc-field-value">${k.docs.length} files uploaded</div></div>
+    </div>
+    <div style="font-size:12px;font-weight:700;color:var(--text);text-transform:uppercase;letter-spacing:.07em;margin-bottom:10px">Documents</div>
+    <div style="display:grid;grid-template-columns:repeat(${Math.min(k.docs.length,3)},1fr);gap:10px;margin-bottom:20px">
+      ${k.docs.map(d=>`<div class="doc-preview"><div class="doc-icon">📄</div><div class="doc-name">${d}</div><div class="doc-hint">Click to view</div></div>`).join('')}
+    </div>
+    ${k.status==='pending'?`
+    <div style="font-size:12px;font-weight:700;color:var(--text);text-transform:uppercase;letter-spacing:.07em;margin-bottom:8px">Review note (optional)</div>
+    <textarea class="review-textarea" id="review-note" placeholder="Add a note for the applicant if rejecting..."></textarea>`:''}
+    ${k.note?`<div style="background:rgba(232,83,58,.08);border:1px solid rgba(232,83,58,.2);border-radius:10px;padding:12px 14px;font-size:12.5px;margin-top:4px"><span style="color:var(--red);font-weight:700">Rejection note: </span>${k.note}</div>`:''}
+  `;
+
+  document.getElementById('modal-footer').innerHTML = k.status==='pending'
+    ? `<button class="btn btn-ghost" onclick="closeModal()">Cancel</button>
+       <button class="btn" style="background:rgba(232,83,58,.15);color:var(--red);border:1px solid rgba(232,83,58,.3)" onclick="doAction('${k.id}','reject')">❌ Reject</button>
+       <button class="btn btn-green" onclick="doAction('${k.id}','approve')">✅ Approve KYC</button>`
+    : `<button class="btn btn-ghost" onclick="closeModal()">Close</button>`;
+
+  document.getElementById('kyc-modal').classList.add('open');
+}
+
+function closeModal(){ document.getElementById('kyc-modal').classList.remove('open'); }
+document.getElementById('kyc-modal').addEventListener('click',function(e){if(e.target===this)closeModal();});
+
+function doAction(id,action){
+  const note=document.getElementById('review-note')?.value||'';
+  performAction(id,action,note);
+  closeModal();
+}
+
+function quickAction(id,action){
+  performAction(id,action,'');
+}
+
+function performAction(id,action,note){
+  const idx=kycData.findIndex(k=>k.id===id);
+  if(idx===-1) return;
+  const k=kycData[idx];
+  kycData[idx]={...k, status:action==='approve'?'verified':'rejected', note:note||undefined};
+
+  // Update badge count
+  const pending=kycData.filter(x=>x.status==='pending').length;
+  document.getElementById('kyc-count').textContent=pending;
+  document.getElementById('pending-count').textContent=pending;
+
+  // Add to audit log
+  auditLog.unshift({
+    icon:action==='approve'?'✅':'❌',
+    bg:action==='approve'?'rgba(45,158,107,.12)':'rgba(232,83,58,.12)',
+    text:`<strong>${k.name}</strong> KYC ${action==='approve'?'approved':'rejected'} by Admin${note?` — "${note}"`:''}`,
+    time: new Date().getHours()+':'+(new Date().getMinutes()+'').padStart(2,'0')
+  });
+
+  renderKycTable();
+  showToast(action==='approve'?'✅':' ❌', action==='approve'?`${k.name} approved!`:`${k.name} rejected`, action==='approve'?'green':'red');
+}
+
+// ── USERS TABLE ──────────────────────────────────────────────
+function renderUsers(search=''){
+  const tbody=document.getElementById('users-table');
+  if(!tbody) return;
+  const list=USERS_DATA.filter(u=>!search||u.name.toLowerCase().includes(search)||u.email.toLowerCase().includes(search));
+  tbody.innerHTML=list.map(u=>`
+    <tr>
+      <td>
+        <div style="display:flex;align-items:center;gap:10px">
+          <div style="width:32px;height:32px;border-radius:9px;background:linear-gradient(135deg,var(--blue),var(--purple));display:flex;align-items:center;justify-content:center;font-weight:800;font-size:12px;flex-shrink:0">${u.avatar}</div>
+          <div><div class="tbl-name">${u.name}</div><div class="tbl-email">${u.email}</div></div>
+        </div>
+      </td>
+      <td><span class="pill pill-${u.role}">${u.role}</span></td>
+      <td style="font-size:12px">${u.country}</td>
+      <td><span class="pill pill-${u.kyc}">${u.kyc}</span></td>
+      <td style="font-size:11.5px;color:var(--text);font-family:'DM Mono',monospace">${u.joined}</td>
+      <td><span class="pill pill-${u.status}">${u.status}</span></td>
+      <td style="display:flex;gap:6px;padding-top:16px">
+        <button class="act-btn view">View</button>
+        ${u.status==='active'?`<button class="act-btn reject" onclick="showToast('🚫','User suspended','red')">Suspend</button>`:`<button class="act-btn approve" onclick="showToast('✅','User reactivated','green')">Restore</button>`}
+      </td>
+    </tr>`).join('');
+}
+function filterUsers(v){renderUsers(v.toLowerCase());}
+
+// ── LISTINGS TABLE ───────────────────────────────────────────
+function renderListings(){
+  const tbody=document.getElementById('listings-table');
+  if(!tbody) return;
+  const list=LISTINGS_DATA.filter(l=>listStatus==='active'?l.status==='active':listStatus==='pending'?l.status==='pending':l.status==='flagged');
+  if(!list.length){tbody.innerHTML=`<tr><td colspan="6" style="text-align:center;padding:48px;color:var(--text)"><span style="font-size:28px;display:block;margin-bottom:8px">✨</span>No listings in this category</td></tr>`;return;}
+  tbody.innerHTML=list.map(l=>`
+    <tr>
+      <td>
+        <div style="display:flex;align-items:center;gap:10px">
+          <div class="rep-thumb">${l.img}</div>
+          <div><div class="tbl-name">${l.title}</div><div style="font-size:11px;color:var(--red);margin-top:2px;font-weight:600">${l.reason}</div></div>
+        </div>
+      </td>
+      <td>${l.type}</td>
+      <td>${l.seller}</td>
+      <td>${l.reports>0?`<span style="color:var(--red);font-weight:800">${l.reports} reports</span>`:'<span style="color:var(--text)">None</span>'}</td>
+      <td><span class="pill pill-${l.status==='flagged'?'rejected':l.status}">${l.status}</span></td>
+      <td style="display:flex;gap:6px;padding-top:16px">
+        <button class="act-btn view">View</button>
+        ${l.status==='flagged'?`<button class="act-btn approve" onclick="showToast('✅','Listing approved','green')">Approve</button><button class="act-btn reject" onclick="showToast('🗑️','Listing removed','red')">Remove</button>`:
+         l.status==='pending'?`<button class="act-btn approve" onclick="showToast('✅','Listing approved','green')">Approve</button><button class="act-btn reject" onclick="showToast('❌','Listing rejected','red')">Reject</button>`:'<button class="act-btn reject">Takedown</button>'}
+      </td>
+    </tr>`).join('');
+}
+function listTab(s,btn){
+  listStatus=s;
+  document.querySelectorAll('#page-listings .tab-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  renderListings();
+}
+
+// ── REPORTS TABLE ────────────────────────────────────────────
+function renderReports(){
+  const tbody=document.getElementById('reports-table');
+  if(!tbody) return;
+  const prioColor={critical:'#E8533A',high:'#C47F17',medium:'#3B7DD8',low:'#2D9E6B'};
+  tbody.innerHTML=REPORTS_DATA.map(r=>`
+    <tr>
+      <td>
+        <div style="display:flex;align-items:center;gap:9px">
+          <div style="font-size:18px">${r.type==='listing'?'📦':'👤'}</div>
+          <div><div class="tbl-name">${r.item}</div><div style="font-size:10.5px;color:var(--text);margin-top:1px">${r.type}</div></div>
+        </div>
+      </td>
+      <td style="font-size:12.5px;font-weight:600">${r.reason}</td>
+      <td style="font-size:11.5px;font-family:'DM Mono',monospace;color:var(--text)">${r.reporter}</td>
+      <td style="font-size:11.5px;color:var(--text);font-family:'DM Mono',monospace">${r.date}</td>
+      <td><span style="background:${prioColor[r.priority]}22;color:${prioColor[r.priority]};border:1px solid ${prioColor[r.priority]}44;border-radius:6px;padding:3px 9px;font-size:10.5px;font-weight:700">${r.priority}</span></td>
+      <td style="display:flex;gap:6px;padding-top:16px">
+        <button class="act-btn view">Investigate</button>
+        <button class="act-btn reject" onclick="showToast('🗑️','Content removed','red')">Remove</button>
+        <button class="act-btn" onclick="showToast('✓','Report dismissed','')">Dismiss</button>
+      </td>
+    </tr>`).join('');
+}
+
+// ── AUDIT LOG ────────────────────────────────────────────────
+function renderAudit(){
+  const el=document.getElementById('audit-log');
+  if(!el) return;
+  el.innerHTML=`<div class="table-hdr"><div class="table-title">Admin audit trail</div><span style="font-size:11.5px;color:var(--text)">${auditLog.length} actions recorded</span></div>`+
+    auditLog.map(a=>`<div class="activity-item"><div class="act-icon" style="background:${a.bg}">${a.icon}</div><div class="act-text">${a.text}</div><div class="act-time">${a.time}</div></div>`).join('');
+}
+
+// ── TOAST ────────────────────────────────────────────────────
+function showToast(icon, msg, type){
+  const t=document.getElementById('toast');
+  const colors={green:'rgba(45,158,107,.15)',red:'rgba(232,83,58,.15)','':`rgba(255,255,255,.06)`};
+  const borders={green:'rgba(45,158,107,.3)',red:'rgba(232,83,58,.3)','':`rgba(255,255,255,.12)`};
+  t.style.background=`var(--bg2)`;
+  t.style.borderColor=borders[type]||borders[''];
+  document.getElementById('toast-icon').textContent=icon;
+  document.getElementById('toast-msg').textContent=msg;
+  t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),3000);
+}
+
+// ── INIT ─────────────────────────────────────────────────────
+renderOverview();
+</script>
+</body>
+</html>

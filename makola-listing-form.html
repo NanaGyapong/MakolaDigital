@@ -1,0 +1,813 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Makola Digital — Create Listing</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--red:#E8533A;--gold:#C47F17;--green:#2D9E6B;--blue:#3B7DD8;--purple:#8B5CF6;
+  --bg:#0A0A0A;--bg2:#0D0D0D;--bg3:#131315;--bg4:rgba(255,255,255,0.04);
+  --border:rgba(255,255,255,0.08);--border2:rgba(255,255,255,0.14);
+  --text:#F0EDE8;--muted:rgba(240,237,232,0.55);--dim:rgba(240,237,232,0.28)}
+body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
+button,input,select,textarea{font-family:inherit}
+::-webkit-scrollbar{width:4px}::-webkit-scrollbar-thumb{background:#222;border-radius:2px}
+
+/* ── NAV ── */
+.nav{height:56px;background:var(--bg2);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;padding:0 28px;position:sticky;top:0;z-index:50}
+.logo{display:flex;align-items:center;gap:8px;font-weight:900;font-size:17px;letter-spacing:-.03em}
+.logo-icon{width:30px;height:30px;border-radius:8px;background:linear-gradient(135deg,var(--red),var(--gold));display:flex;align-items:center;justify-content:center;font-size:14px}
+.logo span{color:var(--red)}
+.nav-actions{display:flex;gap:8px}
+.nav-btn{background:none;border:1px solid var(--border);color:var(--muted);padding:7px 14px;border-radius:8px;font-size:13px;cursor:pointer;font-family:inherit}
+.nav-btn.primary{background:var(--red);border-color:var(--red);color:#fff;font-weight:700}
+
+/* ── LAYOUT ── */
+.layout{display:grid;grid-template-columns:240px 1fr 300px;min-height:calc(100vh - 56px)}
+
+/* ── STEP SIDEBAR ── */
+.step-sidebar{background:var(--bg2);border-right:1px solid var(--border);padding:28px 0;position:sticky;top:56px;height:calc(100vh - 56px)}
+.sidebar-title{font-size:11px;font-weight:700;color:var(--dim);text-transform:uppercase;letter-spacing:.08em;padding:0 22px;margin-bottom:18px}
+.step-item{display:flex;align-items:center;gap:12px;padding:12px 22px;cursor:pointer;transition:all .15s;border-left:2px solid transparent;position:relative}
+.step-item:hover{background:rgba(255,255,255,.03)}
+.step-item.active{background:rgba(232,83,58,.05);border-left-color:var(--red)}
+.step-item.done{opacity:1}
+.step-circle{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;flex-shrink:0;transition:all .2s;border:1.5px solid var(--border);color:var(--muted)}
+.step-item.active .step-circle{background:var(--red);border-color:var(--red);color:#fff}
+.step-item.done .step-circle{background:var(--green);border-color:var(--green);color:#fff}
+.step-connector{width:1.5px;height:24px;background:var(--border);margin:0 auto;position:relative;left:33px}
+.step-connector.done{background:var(--green)}
+.step-info{flex:1}
+.step-name{font-size:13px;font-weight:700;color:var(--muted)}
+.step-item.active .step-name{color:var(--text)}
+.step-item.done .step-name{color:var(--text)}
+.step-sub{font-size:11px;color:var(--dim);margin-top:1px}
+
+/* ── FORM AREA ── */
+.form-area{padding:28px 32px;overflow-y:auto}
+.form-area::-webkit-scrollbar{display:none}
+.form-header{margin-bottom:28px}
+.form-title{font-size:22px;font-weight:900;color:var(--text);letter-spacing:-.03em;margin-bottom:6px}
+.form-sub{font-size:13.5px;color:var(--muted);line-height:1.6}
+
+/* FIELDS */
+.field{margin-bottom:20px}
+.field-row{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.field-row-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px}
+label{display:block;font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:7px}
+.field input,.field select,.field textarea{width:100%;background:rgba(255,255,255,.05);border:1px solid var(--border);border-radius:11px;padding:12px 14px;color:var(--text);font-size:14px;outline:none;transition:border-color .15s;font-family:inherit}
+.field input:focus,.field select:focus,.field textarea:focus{border-color:rgba(232,83,58,.5);background:rgba(255,255,255,.07)}
+.field input::placeholder,.field textarea::placeholder{color:var(--dim)}
+.field select{cursor:pointer;appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath fill='rgba(240,237,232,0.4)' d='M5 6L0 0h10z'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 14px center;padding-right:36px}
+.field select option{background:#1a1a1a}
+.field textarea{resize:vertical;min-height:100px;line-height:1.65}
+.field-hint{font-size:11.5px;color:var(--dim);margin-top:5px}
+.field-hint.ok{color:var(--green)}
+.field-hint.error{color:var(--red)}
+.char-count{text-align:right;font-size:11px;color:var(--dim);margin-top:4px}
+
+/* TYPE SELECTOR */
+.type-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:20px}
+.type-card{background:var(--bg4);border:1.5px solid var(--border);border-radius:13px;padding:16px 12px;text-align:center;cursor:pointer;transition:all .18s}
+.type-card:hover{background:rgba(255,255,255,.07);border-color:rgba(255,255,255,.15)}
+.type-card.active{background:rgba(232,83,58,.08);border-color:var(--red)}
+.type-icon{font-size:28px;margin-bottom:9px;display:block}
+.type-name{font-size:13px;font-weight:800;color:var(--text)}
+.type-desc{font-size:11px;color:var(--muted);margin-top:4px;line-height:1.45}
+
+/* CATEGORY TREE */
+.cat-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.cat-item{background:var(--bg4);border:1px solid var(--border);border-radius:9px;padding:10px 13px;cursor:pointer;display:flex;align-items:center;gap:9px;transition:all .15s;font-size:13px;font-weight:600;color:var(--muted)}
+.cat-item:hover{color:var(--text);border-color:var(--border2)}
+.cat-item.active{background:rgba(232,83,58,.08);border-color:rgba(232,83,58,.35);color:var(--red)}
+.cat-icon{font-size:18px;flex-shrink:0}
+
+/* TAGS INPUT */
+.tags-wrap{display:flex;flex-wrap:wrap;gap:7px;padding:10px 12px;background:rgba(255,255,255,.05);border:1px solid var(--border);border-radius:11px;min-height:48px;cursor:text;transition:border-color .15s}
+.tags-wrap:focus-within{border-color:rgba(232,83,58,.5)}
+.tag-pill{display:flex;align-items:center;gap:5px;background:rgba(232,83,58,.1);border:1px solid rgba(232,83,58,.25);border-radius:16px;padding:3px 10px;font-size:12px;font-weight:700;color:var(--red)}
+.tag-remove{background:none;border:none;color:rgba(232,83,58,.6);cursor:pointer;font-size:14px;line-height:1;padding:0}
+.tag-remove:hover{color:var(--red)}
+.tag-input{background:none;border:none;outline:none;color:var(--text);font-size:13.5px;min-width:80px;flex:1;font-family:inherit}
+
+/* PRICE SECTION */
+.price-row{display:grid;grid-template-columns:80px 1fr;gap:10px;margin-bottom:10px}
+.curr-sel{background:rgba(255,255,255,.05);border:1px solid var(--border);border-radius:11px;padding:12px 8px;color:var(--text);font-size:14px;outline:none;appearance:none;cursor:pointer;font-family:inherit}
+.curr-sel option{background:#1a1a1a}
+.negotiable-row{display:flex;align-items:center;gap:10px;margin-bottom:16px}
+.toggle-wrap{display:flex;align-items:center;gap:10px;cursor:pointer}
+.toggle{width:40px;height:22px;border-radius:11px;background:rgba(255,255,255,.12);position:relative;transition:background .2s;flex-shrink:0}
+.toggle.on{background:var(--green)}
+.toggle-dot{position:absolute;top:3px;left:3px;width:16px;height:16px;border-radius:50%;background:#fff;transition:left .2s;box-shadow:0 1px 4px rgba(0,0,0,.3)}
+.toggle.on .toggle-dot{left:21px}
+.toggle-label{font-size:13px;font-weight:600;color:var(--muted)}
+.toggle.on + .toggle-label{color:var(--text)}
+
+/* PRICE TYPE TABS */
+.price-tabs{display:flex;gap:6px;margin-bottom:14px}
+.price-tab{background:var(--bg4);border:1px solid var(--border);border-radius:8px;padding:7px 14px;font-size:12.5px;font-weight:700;color:var(--muted);cursor:pointer;transition:all .15s}
+.price-tab.active{background:rgba(232,83,58,.1);border-color:rgba(232,83,58,.3);color:var(--red)}
+
+/* IMAGE UPLOAD */
+.upload-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+.upload-slot{aspect-ratio:1;background:rgba(255,255,255,.04);border:2px dashed var(--border);border-radius:12px;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;transition:all .2s;position:relative}
+.upload-slot:hover{border-color:rgba(232,83,58,.5);background:rgba(232,83,58,.04)}
+.upload-slot.has-image{border-style:solid;border-color:rgba(255,255,255,.1)}
+.upload-slot.primary-slot{border-color:var(--red)}
+.upload-icon{font-size:24px;margin-bottom:6px;color:var(--dim)}
+.upload-label{font-size:11px;font-weight:700;color:var(--dim)}
+.img-preview{width:100%;height:100%;object-fit:cover;border-radius:10px}
+.img-remove{position:absolute;top:6px;right:6px;background:rgba(0,0,0,.6);border:none;border-radius:6px;width:24px;height:24px;color:#fff;font-size:13px;cursor:pointer;display:flex;align-items:center;justify-content:center}
+.primary-badge{position:absolute;bottom:6px;left:6px;background:var(--red);color:#fff;font-size:9px;font-weight:800;padding:2px 6px;border-radius:4px;letter-spacing:.04em}
+
+/* CONDITION */
+.cond-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.cond-btn{background:var(--bg4);border:1.5px solid var(--border);border-radius:10px;padding:10px 8px;text-align:center;cursor:pointer;transition:all .15s}
+.cond-btn:hover{border-color:var(--border2)}
+.cond-btn.active{border-color:var(--green);background:rgba(45,158,107,.08);color:var(--green)}
+.cond-icon{font-size:18px;margin-bottom:5px;display:block}
+.cond-name{font-size:12px;font-weight:700;color:var(--text)}
+
+/* LOCATION */
+.loc-wrap{position:relative}
+.loc-wrap input{padding-right:42px}
+.loc-icon{position:absolute;right:13px;top:50%;transform:translateY(-50%);font-size:17px;cursor:pointer;color:var(--dim)}
+.loc-suggestions{position:absolute;top:100%;left:0;right:0;background:var(--bg3);border:1px solid var(--border2);border-radius:10px;margin-top:4px;z-index:10;overflow:hidden;box-shadow:0 8px 32px rgba(0,0,0,.4)}
+.loc-sug-item{padding:11px 14px;font-size:13.5px;cursor:pointer;transition:background .15s;display:flex;align-items:center;gap:8px;border-bottom:1px solid var(--border)}
+.loc-sug-item:last-child{border-bottom:none}
+.loc-sug-item:hover{background:rgba(255,255,255,.06)}
+
+/* CUSTOM FIELDS */
+.custom-field-row{display:flex;gap:8px;margin-bottom:8px;align-items:center}
+.custom-field-row input{flex:1;background:rgba(255,255,255,.05);border:1px solid var(--border);border-radius:9px;padding:10px 12px;color:var(--text);font-size:13px;outline:none;font-family:inherit}
+.cf-remove{background:none;border:1px solid rgba(232,83,58,.3);color:var(--red);border-radius:7px;width:32px;height:36px;cursor:pointer;font-size:16px;flex-shrink:0}
+.add-field-btn{background:none;border:1px dashed var(--border);color:var(--dim);border-radius:9px;padding:9px 14px;font-size:13px;font-weight:600;cursor:pointer;width:100%;margin-top:4px;transition:all .15s;font-family:inherit}
+.add-field-btn:hover{border-color:rgba(232,83,58,.3);color:var(--red)}
+
+/* STEP NAV */
+.step-nav{display:flex;gap:10px;margin-top:28px;padding-top:24px;border-top:1px solid var(--border)}
+.prev-btn{background:none;border:1px solid var(--border);color:var(--muted);padding:12px 24px;border-radius:11px;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit;transition:all .15s}
+.prev-btn:hover{border-color:var(--border2);color:var(--text)}
+.next-btn{flex:1;background:var(--red);border:none;color:#fff;padding:12px 24px;border-radius:11px;font-size:14.5px;font-weight:900;cursor:pointer;font-family:inherit;box-shadow:0 3px 16px rgba(232,83,58,.28);transition:opacity .15s}
+.next-btn:hover{opacity:.88}
+.next-btn.green{background:var(--green);box-shadow:0 3px 16px rgba(45,158,107,.28)}
+
+/* ── PREVIEW PANEL ── */
+.preview-panel{background:var(--bg2);border-left:1px solid var(--border);padding:22px;overflow-y:auto}
+.preview-panel::-webkit-scrollbar{display:none}
+.preview-title{font-size:12px;font-weight:700;color:var(--dim);text-transform:uppercase;letter-spacing:.08em;margin-bottom:16px;display:flex;align-items:center;justify-content:space-between}
+.preview-card{background:var(--bg4);border:1px solid var(--border);border-radius:14px;overflow:hidden}
+.preview-img{height:160px;background:rgba(255,255,255,.04);display:flex;align-items:center;justify-content:center;font-size:56px;position:relative}
+.preview-body{padding:14px}
+.preview-type{font-size:10px;font-weight:700;color:var(--dim);text-transform:uppercase;letter-spacing:.06em;margin-bottom:3px}
+.preview-name{font-size:15px;font-weight:800;color:var(--text);line-height:1.3;margin-bottom:6px}
+.preview-price{font-size:20px;font-weight:900;color:var(--red);margin-bottom:6px}
+.preview-loc{font-size:12px;color:var(--muted)}
+.preview-foot{display:flex;align-items:center;justify-content:space-between;margin-top:10px;padding-top:10px;border-top:1px solid var(--border)}
+.preview-seller{font-size:11px;color:var(--dim)}
+.preview-btn{background:rgba(232,83,58,.1);border:1px solid rgba(232,83,58,.25);color:var(--red);border-radius:7px;padding:5px 11px;font-size:11.5px;font-weight:700;cursor:pointer}
+.completeness{margin-top:18px}
+.comp-label{font-size:12px;font-weight:700;color:var(--text);margin-bottom:8px;display:flex;justify-content:space-between}
+.comp-bar{height:6px;background:rgba(255,255,255,.08);border-radius:3px;overflow:hidden;margin-bottom:14px}
+.comp-fill{height:100%;border-radius:3px;background:linear-gradient(90deg,var(--red),var(--gold));transition:width .4s}
+.comp-items{display:flex;flex-direction:column;gap:7px}
+.comp-item{display:flex;align-items:center;gap:8px;font-size:12px}
+.comp-check{width:18px;height:18px;border-radius:5px;display:flex;align-items:center;justify-content:center;font-size:10px;flex-shrink:0}
+.comp-done{background:rgba(45,158,107,.15);color:var(--green)}
+.comp-todo{background:rgba(255,255,255,.06);color:var(--dim)}
+.tips-box{background:rgba(232,83,58,.06);border:1px solid rgba(232,83,58,.15);border-radius:12px;padding:14px;margin-top:16px}
+.tip-item{font-size:12px;color:rgba(240,237,232,.65);display:flex;align-items:flex-start;gap:7px;margin-bottom:8px;line-height:1.55}
+.tip-item:last-child{margin-bottom:0}
+
+/* SUCCESS */
+.success-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.8);backdrop-filter:blur(6px);z-index:999;align-items:center;justify-content:center}
+.success-overlay.show{display:flex}
+.success-card{background:var(--bg2);border:1px solid var(--border2);border-radius:22px;padding:40px;text-align:center;max-width:440px;width:90%;box-shadow:0 32px 80px rgba(0,0,0,.6)}
+.success-icon{font-size:64px;margin-bottom:18px;display:block}
+.success-title{font-size:26px;font-weight:900;color:var(--text);letter-spacing:-.03em;margin-bottom:10px}
+.success-sub{font-size:14px;color:var(--muted);line-height:1.65;margin-bottom:28px}
+.success-actions{display:flex;gap:10px;justify-content:center}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="nav">
+  <div class="logo"><div class="logo-icon">🌍</div>Makola<span>Digital</span></div>
+  <div style="font-size:13px;color:var(--muted);font-weight:600">Create new listing</div>
+  <div class="nav-actions">
+    <button class="nav-btn" onclick="saveDraft()">Save draft</button>
+    <button class="nav-btn primary" onclick="publishListing()">Publish</button>
+  </div>
+</nav>
+
+<!-- LAYOUT -->
+<div class="layout">
+
+  <!-- STEP SIDEBAR -->
+  <div class="step-sidebar">
+    <div class="sidebar-title">Listing steps</div>
+    <div id="steps-nav"></div>
+  </div>
+
+  <!-- FORM AREA -->
+  <div class="form-area" id="form-area">
+    <!-- Steps rendered by JS -->
+  </div>
+
+  <!-- PREVIEW PANEL -->
+  <div class="preview-panel">
+    <div class="preview-title">
+      <span>Live preview</span>
+      <span style="color:var(--green);font-size:11px">● Updates live</span>
+    </div>
+    <div class="preview-card">
+      <div class="preview-img" id="prev-img">📦</div>
+      <div class="preview-body">
+        <div class="preview-type" id="prev-type">PRODUCT</div>
+        <div class="preview-name" id="prev-name">Your listing title appears here</div>
+        <div class="preview-price" id="prev-price">GH₵ 0.00</div>
+        <div class="preview-loc" id="prev-loc">📍 Location</div>
+        <div class="preview-foot">
+          <span class="preview-seller">by You</span>
+          <button class="preview-btn">View →</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Completeness -->
+    <div class="completeness">
+      <div class="comp-label"><span>Listing score</span><span id="comp-pct" style="color:var(--red)">0%</span></div>
+      <div class="comp-bar"><div class="comp-fill" id="comp-fill" style="width:0%"></div></div>
+      <div class="comp-items" id="comp-items"></div>
+    </div>
+
+    <!-- Tips -->
+    <div class="tips-box">
+      <div style="font-size:12px;font-weight:800;color:var(--red);margin-bottom:10px">💡 Tips for more views</div>
+      <div class="tip-item"><span>📸</span>Listings with 5+ photos get <strong>4× more views</strong></div>
+      <div class="tip-item"><span>✍️</span>Write at least 100 words in your description</div>
+      <div class="tip-item"><span>✅</span>Get KYC verified for <strong>3× more clicks</strong></div>
+      <div class="tip-item"><span>💰</span>Set a competitive price — check similar listings first</div>
+    </div>
+  </div>
+</div>
+
+<!-- SUCCESS OVERLAY -->
+<div class="success-overlay" id="success-overlay">
+  <div class="success-card">
+    <span class="success-icon">🚀</span>
+    <div class="success-title">Listing published!</div>
+    <div class="success-sub" id="success-msg">Your listing is now live on Makola Digital. Buyers across Africa and the diaspora can find it.</div>
+    <div class="success-actions">
+      <button onclick="document.getElementById('success-overlay').classList.remove('show')" style="background:none;border:1px solid var(--border);color:var(--muted);padding:11px 20px;border-radius:11px;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit">Create another</button>
+      <button style="background:var(--red);border:none;color:#fff;padding:11px 24px;border-radius:11px;font-size:14px;font-weight:900;cursor:pointer;font-family:inherit">View listing →</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ── STATE ──────────────────────────────────────────────────────
+const state = {
+  currentStep: 0,
+  type: "product",
+  category: "",
+  title: "",
+  description: "",
+  price: "",
+  priceMax: "",
+  currency: "GHS",
+  priceType: "fixed",
+  negotiable: false,
+  condition: "new",
+  location: "",
+  country: "Ghana",
+  isRemote: false,
+  tags: [],
+  images: [],
+  customFields: [],
+  deliveryAvailable: false,
+};
+
+const STEPS = [
+  { id:"type",      name:"Listing type",    sub:"What are you listing?",       icon:"🏷️" },
+  { id:"details",   name:"Details",          sub:"Title, description & tags",   icon:"✍️" },
+  { id:"pricing",   name:"Pricing",          sub:"Set your price & currency",   icon:"💰" },
+  { id:"photos",    name:"Photos",           sub:"Upload images",               icon:"📸" },
+  { id:"location",  name:"Location",         sub:"Where is this listing?",      icon:"📍" },
+  { id:"extras",    name:"Extras",           sub:"Condition, delivery & more",  icon:"⚙️" },
+  { id:"review",    name:"Review & publish", sub:"Final check before going live",icon:"🚀" },
+];
+
+const TYPES = [
+  {id:"product", icon:"🛍️", name:"Product", desc:"Physical or digital goods"},
+  {id:"service", icon:"🔧", name:"Service", desc:"Skills, freelance & trades"},
+  {id:"job",     icon:"💼", name:"Job",     desc:"Full-time, part-time, remote"},
+  {id:"rental",  icon:"🏠", name:"Rental",  desc:"Property, vehicles, equipment"},
+];
+
+const CATEGORIES = {
+  product: [{icon:"📱",name:"Electronics"},{icon:"👗",name:"Fashion"},{icon:"🚗",name:"Vehicles"},{icon:"🏠",name:"Home & Garden"},{icon:"🌿",name:"Food & Agric"},{icon:"📚",name:"Books"},{icon:"💄",name:"Health & Beauty"},{icon:"🎮",name:"Gaming"},{icon:"🧸",name:"Baby & Kids"},{icon:"🛠️",name:"Tools"}],
+  service: [{icon:"💻",name:"Web & Tech"},{icon:"🎨",name:"Design"},{icon:"📣",name:"Marketing"},{icon:"🔨",name:"Construction"},{icon:"🎓",name:"Tutoring"},{icon:"📷",name:"Photography"},{icon:"🚚",name:"Logistics"},{icon:"🍳",name:"Catering"},{icon:"💈",name:"Beauty & Salon"},{icon:"🏥",name:"Healthcare"}],
+  job:     [{icon:"💻",name:"Tech & Engineering"},{icon:"📊",name:"Finance"},{icon:"📣",name:"Sales & Marketing"},{icon:"🎨",name:"Creative & Design"},{icon:"🏗️",name:"Operations"},{icon:"👩‍🏫",name:"Education"},{icon:"🏥",name:"Healthcare"},{icon:"🚚",name:"Logistics"},{icon:"👔",name:"Admin"},{icon:"🔧",name:"Trades"}],
+  rental:  [{icon:"🏠",name:"Apartments"},{icon:"🏡",name:"Houses"},{icon:"🏢",name:"Offices"},{icon:"🚗",name:"Vehicles"},{icon:"🛠️",name:"Equipment"},{icon:"📷",name:"Cameras & AV"},{icon:"🎪",name:"Event Spaces"},{icon:"⛱️",name:"Holiday Homes"},{icon:"🏪",name:"Shops"},{icon:"🌱",name:"Land"}],
+};
+
+const LOC_SUGGESTIONS = ["Accra, Ghana","Kumasi, Ghana","Tema, Ghana","Takoradi, Ghana","East Legon, Accra","Osu, Accra","Labone, Accra","Lagos, Nigeria","Abuja, Nigeria","Nairobi, Kenya","London, UK (Diaspora)","New York, USA (Diaspora)"];
+
+const TYPE_EMOJIS = {product:"📦",service:"🔧",job:"💼",rental:"🏠"};
+const CURR_SYMBOLS = {GHS:"GH₵",NGN:"₦",KES:"KSh",USD:"$",GBP:"£",EUR:"€",ZAR:"R"};
+
+// ── RENDER STEPS NAV ──────────────────────────────────────────
+function renderStepsNav() {
+  const nav = document.getElementById("steps-nav");
+  nav.innerHTML = STEPS.map((s, i) => `
+    <div>
+      ${i > 0 ? `<div class="step-connector ${i <= state.currentStep ? "done":""}"></div>` : ""}
+      <div class="step-item ${i === state.currentStep ? "active" : ""} ${i < state.currentStep ? "done" : ""}" onclick="goToStep(${i})">
+        <div class="step-circle">${i < state.currentStep ? "✓" : i + 1}</div>
+        <div class="step-info">
+          <div class="step-name">${s.name}</div>
+          <div class="step-sub">${s.sub}</div>
+        </div>
+      </div>
+    </div>`).join("");
+}
+
+// ── RENDER FORM STEP ──────────────────────────────────────────
+function renderStep() {
+  const step = STEPS[state.currentStep];
+  const area = document.getElementById("form-area");
+  const isFirst = state.currentStep === 0;
+  const isLast = state.currentStep === STEPS.length - 1;
+
+  let content = "";
+
+  if (step.id === "type") {
+    content = `
+      <div class="form-header">
+        <div class="form-title">What are you listing?</div>
+        <div class="form-sub">Choose the type that best describes your listing. You can't change this after publishing.</div>
+      </div>
+      <div class="type-grid">
+        ${TYPES.map(t => `
+          <div class="type-card ${state.type === t.id ? "active" : ""}" onclick="setType('${t.id}')">
+            <span class="type-icon">${t.icon}</span>
+            <div class="type-name">${t.name}</div>
+            <div class="type-desc">${t.desc}</div>
+          </div>`).join("")}
+      </div>
+      <div class="form-header" style="margin-top:24px;margin-bottom:16px">
+        <div class="form-title" style="font-size:17px">Category</div>
+        <div class="form-sub" style="font-size:13px">Pick the most relevant category for your listing.</div>
+      </div>
+      <div class="cat-grid" id="cat-grid">
+        ${(CATEGORIES[state.type] || []).map(c => `
+          <div class="cat-item ${state.category === c.name ? "active" : ""}" onclick="setCategory('${c.name}')">
+            <span class="cat-icon">${c.icon}</span>${c.name}
+          </div>`).join("")}
+      </div>`;
+  }
+
+  else if (step.id === "details") {
+    const titleLen = state.title.length;
+    const descLen = state.description.length;
+    content = `
+      <div class="form-header">
+        <div class="form-title">Listing details</div>
+        <div class="form-sub">Write a clear, detailed title and description. More detail = more trust = more sales.</div>
+      </div>
+      <div class="field">
+        <label>Listing title <span style="color:var(--red)">*</span></label>
+        <input type="text" maxlength="200" placeholder="e.g. iPhone 15 Pro Max 256GB — Brand New, All Colours" value="${state.title}" oninput="state.title=this.value;updatePreview();updateScore()">
+        <div class="char-count" style="color:${titleLen > 150 ? 'var(--gold)' : 'var(--dim)'}">${titleLen}/200</div>
+        ${titleLen < 20 && titleLen > 0 ? '<div class="field-hint error">Title is too short — aim for 30+ characters</div>' : ""}
+        ${titleLen >= 30 ? '<div class="field-hint ok">✓ Good title length</div>' : ""}
+      </div>
+      <div class="field">
+        <label>Description <span style="color:var(--red)">*</span></label>
+        <textarea maxlength="5000" rows="6" placeholder="Describe your listing in detail. Include condition, specifications, what's included, and any important notes. Aim for at least 100 words for best results." oninput="state.description=this.value;updateScore()">${state.description}</textarea>
+        <div class="char-count" style="color:${descLen > 4000 ? 'var(--gold)' : 'var(--dim)'}">${descLen}/5000 · ~${Math.round(descLen/5)} words</div>
+        ${descLen < 100 && descLen > 0 ? '<div class="field-hint error">Add more detail — aim for 100+ words</div>' : ""}
+        ${descLen >= 100 ? '<div class="field-hint ok">✓ Great description length</div>' : ""}
+      </div>
+      <div class="field">
+        <label>Tags <span style="color:var(--dim);font-weight:500;text-transform:none;letter-spacing:0">(press Enter to add)</span></label>
+        <div class="tags-wrap" onclick="document.getElementById('tag-input').focus()">
+          ${state.tags.map(t => `<div class="tag-pill">${t}<button class="tag-remove" onclick="removeTag('${t}')">×</button></div>`).join("")}
+          <input id="tag-input" class="tag-input" placeholder="${state.tags.length ? "" : "Add tags: brand, condition, colour..."}" onkeydown="handleTagKey(event)">
+        </div>
+        <div class="field-hint">Tags help buyers find your listing. Add 3–8 relevant tags.</div>
+      </div>`;
+  }
+
+  else if (step.id === "pricing") {
+    const sym = CURR_SYMBOLS[state.currency] || state.currency;
+    content = `
+      <div class="form-header">
+        <div class="form-title">Pricing</div>
+        <div class="form-sub">Set a competitive price. Check similar listings to see what others charge.</div>
+      </div>
+      <div class="field">
+        <label>Price type</label>
+        <div class="price-tabs">
+          ${[["fixed","Fixed price"],["range","Price range"],["free","Free / Contact for price"]].map(([v,l]) =>
+            `<button class="price-tab ${state.priceType===v?"active":""}" onclick="state.priceType='${v}';renderStep()">${l}</button>`).join("")}
+        </div>
+      </div>
+      ${state.priceType !== "free" ? `
+      <div class="field">
+        <label>${state.priceType === "range" ? "Price from" : "Price"} <span style="color:var(--red)">*</span></label>
+        <div class="price-row">
+          <select class="curr-sel" onchange="state.currency=this.value;updatePreview();updateScore()">
+            ${Object.entries(CURR_SYMBOLS).map(([c,s]) => `<option value="${c}" ${state.currency===c?"selected":""}>${c}</option>`).join("")}
+          </select>
+          <input type="number" min="0" step="0.01" placeholder="0.00" value="${state.price}" oninput="state.price=this.value;updatePreview();updateScore()">
+        </div>
+      </div>
+      ${state.priceType === "range" ? `
+      <div class="field">
+        <label>Price to</label>
+        <div class="price-row">
+          <div style="display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,.05);border:1px solid var(--border);border-radius:11px;padding:12px 8px;font-size:14px;color:var(--muted)">${sym}</div>
+          <input type="number" min="0" step="0.01" placeholder="0.00" value="${state.priceMax}" oninput="state.priceMax=this.value">
+        </div>
+      </div>` : ""}
+      <div class="field">
+        <label>Price label <span style="color:var(--dim);font-weight:500;text-transform:none;letter-spacing:0">(optional)</span></label>
+        <input type="text" placeholder="e.g. /month, /hour, per piece, starting from" maxlength="40">
+        <div class="field-hint">Shown next to your price (e.g. GH₵ 4,500 <em>/month</em>)</div>
+      </div>
+      <div class="negotiable-row">
+        <div class="toggle-wrap" onclick="toggleNegotiable()">
+          <div class="toggle ${state.negotiable?"on":""}"><div class="toggle-dot"></div></div>
+          <div class="toggle-label ${state.negotiable?"on":""}">Price is negotiable</div>
+        </div>
+      </div>` : '<div class="field"><div class="field-hint" style="font-size:13.5px">Buyers will contact you directly about pricing.</div></div>'}
+      <div class="field">
+        <label>Platform fee info</label>
+        <div style="background:rgba(255,255,255,.04);border:1px solid var(--border);border-radius:11px;padding:14px 16px;font-size:13px;color:var(--muted);line-height:1.65">
+          Makola charges a <strong style="color:var(--text)">3% platform fee</strong> on successful transactions. Listing is <strong style="color:var(--green)">always free</strong>.
+          ${state.price ? `<br><br>Buyer pays: <strong style="color:var(--red)">${sym} ${(parseFloat(state.price||0)*1.03).toFixed(2)}</strong> · Your payout: <strong style="color:var(--green)">${sym} ${(parseFloat(state.price||0)*0.97).toFixed(2)}</strong>` : ""}
+        </div>
+      </div>`;
+  }
+
+  else if (step.id === "photos") {
+    const photos = state.images;
+    content = `
+      <div class="form-header">
+        <div class="form-title">Photos</div>
+        <div class="form-sub">Upload up to 8 photos. First photo is your main image. Listings with 5+ photos get 4× more views.</div>
+      </div>
+      <div class="upload-grid" id="upload-grid">
+        ${[0,1,2,3,4,5,6,7].map(i => `
+          <div class="upload-slot ${photos[i] ? "has-image" : ""} ${i===0?"primary-slot":""}" onclick="triggerUpload(${i})" id="slot-${i}">
+            ${photos[i] ? `
+              <div style="font-size:44px">${photos[i]}</div>
+              <button class="img-remove" onclick="event.stopPropagation();removeImage(${i})">×</button>
+              ${i===0?'<div class="primary-badge">MAIN</div>':''}
+            ` : `
+              <div class="upload-icon">${i===0?"📸":"+"}</div>
+              <div class="upload-label">${i===0?"Add main photo":"Add photo"}</div>
+            `}
+          </div>`).join("")}
+      </div>
+      <div style="margin-top:14px;background:rgba(255,255,255,.04);border:1px solid var(--border);border-radius:11px;padding:13px 16px;font-size:12.5px;color:var(--muted);line-height:1.65">
+        <strong style="color:var(--text)">Photo tips:</strong> Use good lighting · Show all angles · Include close-ups of any defects · JPG/PNG up to 10MB each
+      </div>`;
+  }
+
+  else if (step.id === "location") {
+    content = `
+      <div class="form-header">
+        <div class="form-title">Location</div>
+        <div class="form-sub">Tell buyers where you're located. Buyers search by location — be as specific as possible.</div>
+      </div>
+      <div class="field">
+        <label>Country <span style="color:var(--red)">*</span></label>
+        <select onchange="state.country=this.value;updateScore()">
+          ${["Ghana","Nigeria","Kenya","South Africa","United Kingdom","United States","Canada","Senegal","Tanzania","Uganda"].map(c =>
+            `<option ${state.country===c?"selected":""}>${c}</option>`).join("")}
+        </select>
+      </div>
+      <div class="field">
+        <label>City / Area <span style="color:var(--red)">*</span></label>
+        <div class="loc-wrap">
+          <input type="text" id="loc-input" placeholder="e.g. East Legon, Accra" value="${state.location}" oninput="state.location=this.value;showLocSuggestions(this.value);updatePreview();updateScore()" onfocus="showLocSuggestions(this.value)" onblur="setTimeout(()=>hideLocSugg(),200)">
+          <span class="loc-icon" onclick="useCurrentLocation()">📍</span>
+          <div class="loc-suggestions" id="loc-sugg" style="display:none">
+            ${LOC_SUGGESTIONS.slice(0,6).map(s => `<div class="loc-sug-item" onclick="selectLocation('${s}')">📍 ${s}</div>`).join("")}
+          </div>
+        </div>
+      </div>
+      ${state.type === "service" || state.type === "job" ? `
+      <div class="field">
+        <div class="negotiable-row">
+          <div class="toggle-wrap" onclick="state.isRemote=!state.isRemote;renderStep()">
+            <div class="toggle ${state.isRemote?"on":""}"><div class="toggle-dot"></div></div>
+            <div class="toggle-label">Available remotely / Worldwide</div>
+          </div>
+        </div>
+      </div>` : ""}
+      <div class="field">
+        <label>Full address <span style="color:var(--dim);font-weight:500;text-transform:none;letter-spacing:0">(optional — shown only after order confirmed)</span></label>
+        <input type="text" placeholder="Street address shown to buyer after purchase">
+      </div>`;
+  }
+
+  else if (step.id === "extras") {
+    content = `
+      <div class="form-header">
+        <div class="form-title">Additional details</div>
+        <div class="form-sub">More detail builds trust and helps buyers make decisions faster.</div>
+      </div>
+      ${state.type === "product" ? `
+      <div class="field">
+        <label>Condition <span style="color:var(--red)">*</span></label>
+        <div class="cond-grid">
+          ${[["new","✨","Brand new","Never used, sealed"],["like_new","⭐","Like new","Used once or twice"],["good","👍","Good","Minor signs of use"],["fair","🔧","Fair","Visible wear, fully functional"],["for_parts","🛠️","For parts","Not fully working"]].map(([v,ic,n,d]) =>
+            `<div class="cond-btn ${state.condition===v?"active":""}" onclick="state.condition='${v}';renderStep()">
+              <span class="cond-icon">${ic}</span>
+              <div class="cond-name">${n}</div>
+              <div style="font-size:10px;color:var(--muted);margin-top:2px">${d}</div>
+            </div>`).join("")}
+        </div>
+      </div>
+      <div class="field">
+        <div class="negotiable-row">
+          <div class="toggle-wrap" onclick="state.deliveryAvailable=!state.deliveryAvailable;renderStep()">
+            <div class="toggle ${state.deliveryAvailable?"on":""}"><div class="toggle-dot"></div></div>
+            <div class="toggle-label">Delivery available</div>
+          </div>
+        </div>
+      </div>` : ""}
+      ${state.type === "job" ? `
+      <div class="field-row">
+        <div class="field">
+          <label>Job type</label>
+          <select><option>Full-time</option><option>Part-time</option><option>Contract</option><option>Remote</option><option>Internship</option></select>
+        </div>
+        <div class="field">
+          <label>Experience level</label>
+          <select><option>Entry level</option><option>Mid level</option><option>Senior</option><option>Any</option></select>
+        </div>
+      </div>` : ""}
+      ${state.type === "rental" ? `
+      <div class="field-row">
+        <div class="field">
+          <label>Rental period</label>
+          <select><option>Per day</option><option>Per week</option><option>Per month</option><option>Per year</option></select>
+        </div>
+        <div class="field">
+          <label>Available from</label>
+          <input type="date">
+        </div>
+      </div>` : ""}
+      <div class="field">
+        <label>Custom specifications <span style="color:var(--dim);font-weight:500;text-transform:none;letter-spacing:0">(optional)</span></label>
+        <div id="custom-fields">
+          ${state.customFields.map((f,i) => `
+            <div class="custom-field-row">
+              <input type="text" placeholder="Field name (e.g. Brand)" value="${f.key}" oninput="state.customFields[${i}].key=this.value">
+              <input type="text" placeholder="Value (e.g. Apple)" value="${f.value}" oninput="state.customFields[${i}].value=this.value">
+              <button class="cf-remove" onclick="removeCustomField(${i})">×</button>
+            </div>`).join("")}
+        </div>
+        <button class="add-field-btn" onclick="addCustomField()">+ Add specification (Brand, Size, Model, etc.)</button>
+      </div>`;
+  }
+
+  else if (step.id === "review") {
+    const sym = CURR_SYMBOLS[state.currency] || state.currency;
+    const score = getScore();
+    content = `
+      <div class="form-header">
+        <div class="form-title">Review & publish</div>
+        <div class="form-sub">Check everything looks right before your listing goes live.</div>
+      </div>
+
+      <div style="background:var(--bg4);border:1px solid var(--border);border-radius:14px;padding:18px;margin-bottom:18px">
+        <div style="display:flex;align-items:center;gap:12px;margin-bottom:14px">
+          <div style="font-size:36px">${TYPE_EMOJIS[state.type]}</div>
+          <div>
+            <div style="font-size:16px;font-weight:900;color:var(--text);letter-spacing:-.02em">${state.title||"No title"}</div>
+            <div style="font-size:12px;color:var(--muted);margin-top:3px">${state.category||"No category"} · ${state.type}</div>
+          </div>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+          ${[
+            ["Price", state.price ? `${sym} ${parseFloat(state.price).toLocaleString()}` : "Not set"],
+            ["Location", state.location||state.country||"Not set"],
+            ["Photos", `${state.images.length} uploaded`],
+            ["Tags", `${state.tags.length} added`],
+            ["Condition", state.type==="product"?state.condition:"N/A"],
+            ["Delivery", state.deliveryAvailable?"Yes":"No"],
+          ].map(([l,v]) => `
+            <div style="background:rgba(255,255,255,.04);border-radius:9px;padding:10px 12px">
+              <div style="font-size:10px;font-weight:700;color:var(--dim);text-transform:uppercase;letter-spacing:.06em;margin-bottom:3px">${l}</div>
+              <div style="font-size:13.5px;font-weight:700;color:var(--text)">${v}</div>
+            </div>`).join("")}
+        </div>
+      </div>
+
+      <div style="background:${score>=80?"rgba(45,158,107,.08)":score>=50?"rgba(196,127,23,.08)":"rgba(232,83,58,.08)"};border:1px solid ${score>=80?"rgba(45,158,107,.25)":score>=50?"rgba(196,127,23,.25)":"rgba(232,83,58,.25)"};border-radius:12px;padding:16px;margin-bottom:18px">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
+          <span style="font-size:22px">${score>=80?"✅":score>=50?"⚠️":"❌"}</span>
+          <div>
+            <div style="font-size:14px;font-weight:800;color:var(--text)">Listing score: ${score}%</div>
+            <div style="font-size:12px;color:var(--muted);margin-top:2px">${score>=80?"Great! Your listing is well optimised.":score>=50?"Good, but adding more detail will help.":"Add more info to improve visibility."}</div>
+          </div>
+        </div>
+      </div>
+
+      <div style="background:rgba(255,255,255,.04);border:1px solid var(--border);border-radius:12px;padding:14px 16px;margin-bottom:20px;font-size:13px;color:var(--muted);line-height:1.65">
+        By publishing, you agree to Makola Digital's <a href="#" style="color:var(--red);font-weight:700">Terms of Service</a> and <a href="#" style="color:var(--red);font-weight:700">Seller Guidelines</a>. Your listing will be reviewed and go live within a few minutes.
+      </div>`;
+  }
+
+  area.innerHTML = `
+    <div class="form-header" style="margin-bottom:0">
+      <div style="font-size:11px;font-weight:700;color:var(--dim);text-transform:uppercase;letter-spacing:.08em;margin-bottom:6px">Step ${state.currentStep+1} of ${STEPS.length}</div>
+    </div>
+    ${content}
+    <div class="step-nav">
+      ${state.currentStep > 0 ? `<button class="prev-btn" onclick="goToStep(${state.currentStep-1})">← Back</button>` : ""}
+      <button class="next-btn ${isLast?"green":""}" onclick="${isLast?"publishListing()":"goToStep("+(state.currentStep+1)+")"}">${isLast?"🚀 Publish listing":"Continue →"}</button>
+    </div>`;
+}
+
+// ── ACTIONS ───────────────────────────────────────────────────
+function goToStep(i) {
+  if(i<0||i>=STEPS.length) return;
+  state.currentStep = i;
+  renderStepsNav();
+  renderStep();
+  updatePreview();
+  updateScore();
+  window.scrollTo({ top: 0, behavior: "smooth" });
+}
+
+function setType(t) {
+  state.type = t;
+  state.category = "";
+  updatePreview();
+  renderStep();
+}
+
+function setCategory(c) {
+  state.category = c;
+  renderStep();
+  updateScore();
+}
+
+function toggleNegotiable() {
+  state.negotiable = !state.negotiable;
+  renderStep();
+}
+
+function handleTagKey(e) {
+  if((e.key==="Enter"||e.key===",") && e.target.value.trim()) {
+    e.preventDefault();
+    const tag = e.target.value.trim().replace(/,/g,"");
+    if(!state.tags.includes(tag) && state.tags.length < 10) {
+      state.tags.push(tag);
+      renderStep();
+      updateScore();
+      setTimeout(()=>{ const inp=document.getElementById("tag-input"); if(inp)inp.focus(); },0);
+    }
+  }
+  if(e.key==="Backspace" && !e.target.value && state.tags.length) {
+    state.tags.pop();
+    renderStep();
+    updateScore();
+    setTimeout(()=>{ const inp=document.getElementById("tag-input"); if(inp)inp.focus(); },0);
+  }
+}
+
+function removeTag(tag) {
+  state.tags = state.tags.filter(t=>t!==tag);
+  renderStep();
+  updateScore();
+}
+
+function triggerUpload(i) {
+  // Simulate file upload with emoji
+  const emojis = ["📱","💻","🏠","🚗","👗","🌿","📚","💎","🎮","🛠️","📷","👟","🧴","🎸","📦"];
+  state.images[i] = emojis[Math.floor(Math.random()*emojis.length)];
+  updateScore();
+  renderStep();
+  updatePreview();
+}
+
+function removeImage(i) {
+  state.images.splice(i,1);
+  renderStep();
+  updatePreview();
+  updateScore();
+}
+
+function showLocSuggestions(v) {
+  const sugg = document.getElementById("loc-sugg");
+  if(!sugg) return;
+  const filtered = LOC_SUGGESTIONS.filter(s=>s.toLowerCase().includes(v.toLowerCase())).slice(0,6);
+  if(filtered.length && v.length>1) {
+    sugg.innerHTML = filtered.map(s=>`<div class="loc-sug-item" onclick="selectLocation('${s}')">📍 ${s}</div>`).join("");
+    sugg.style.display = "block";
+  } else sugg.style.display = "none";
+}
+
+function hideLocSugg() {
+  const sugg = document.getElementById("loc-sugg");
+  if(sugg) sugg.style.display = "none";
+}
+
+function selectLocation(loc) {
+  state.location = loc;
+  const inp = document.getElementById("loc-input");
+  if(inp) inp.value = loc;
+  hideLocSugg();
+  updatePreview();
+  updateScore();
+}
+
+function useCurrentLocation() {
+  selectLocation("Accra, Ghana");
+}
+
+function addCustomField() {
+  state.customFields.push({key:"",value:""});
+  renderStep();
+}
+
+function removeCustomField(i) {
+  state.customFields.splice(i,1);
+  renderStep();
+}
+
+// ── SCORE ─────────────────────────────────────────────────────
+const SCORE_ITEMS = [
+  {key:"title",     label:"Title added (30+ chars)",  fn:()=>state.title.length>=30},
+  {key:"desc",      label:"Description (100+ words)",  fn:()=>state.description.split(/\s+/).filter(Boolean).length>=100},
+  {key:"price",     label:"Price set",                fn:()=>!!state.price||state.priceType==="free"},
+  {key:"photo",     label:"At least 1 photo",         fn:()=>state.images.length>=1},
+  {key:"photos5",   label:"5+ photos (4× more views)",fn:()=>state.images.length>=5},
+  {key:"location",  label:"Location specified",        fn:()=>!!state.location},
+  {key:"tags",      label:"3+ tags added",            fn:()=>state.tags.length>=3},
+  {key:"category",  label:"Category selected",        fn:()=>!!state.category},
+];
+
+function getScore() {
+  const done = SCORE_ITEMS.filter(s=>s.fn()).length;
+  return Math.round((done/SCORE_ITEMS.length)*100);
+}
+
+function updateScore() {
+  const score = getScore();
+  const fill = document.getElementById("comp-fill");
+  const pct = document.getElementById("comp-pct");
+  const items = document.getElementById("comp-items");
+  if(fill) fill.style.width = score+"%";
+  if(pct) { pct.textContent = score+"%"; pct.style.color = score>=80?"var(--green)":score>=50?"var(--gold)":"var(--red)"; }
+  if(items) items.innerHTML = SCORE_ITEMS.map(s=>`
+    <div class="comp-item">
+      <div class="comp-check ${s.fn()?"comp-done":"comp-todo"}">${s.fn()?"✓":"○"}</div>
+      <span style="color:${s.fn()?"var(--text)":"var(--dim)"}">${s.label}</span>
+    </div>`).join("");
+}
+
+// ── PREVIEW ───────────────────────────────────────────────────
+function updatePreview() {
+  const sym = CURR_SYMBOLS[state.currency]||state.currency;
+  document.getElementById("prev-img").innerHTML = state.images[0]||TYPE_EMOJIS[state.type]||"📦";
+  document.getElementById("prev-type").textContent = state.type?.toUpperCase()||"PRODUCT";
+  document.getElementById("prev-name").textContent = state.title||"Your listing title appears here";
+  document.getElementById("prev-price").textContent = state.price ? `${sym} ${parseFloat(state.price).toLocaleString()}` : (state.priceType==="free"?"Free · Contact for price":"Set your price");
+  document.getElementById("prev-loc").textContent = `📍 ${state.location||state.country||"Location"}`;
+}
+
+// ── PUBLISH ───────────────────────────────────────────────────
+function publishListing() {
+  const overlay = document.getElementById("success-overlay");
+  const msg = document.getElementById("success-msg");
+  msg.textContent = `"${state.title||"Your listing"}" is now live on Makola Digital. Buyers across Africa and the diaspora can find it in search results.`;
+  overlay.classList.add("show");
+}
+
+function saveDraft() {
+  const btn = document.querySelector(".nav-btn:not(.primary)");
+  btn.textContent = "✓ Draft saved";
+  btn.style.color = "var(--green)";
+  setTimeout(()=>{ btn.textContent="Save draft"; btn.style.color=""; },2000);
+}
+
+// ── INIT ──────────────────────────────────────────────────────
+renderStepsNav();
+renderStep();
+updatePreview();
+updateScore();
+</script>
+</body>
+</html>

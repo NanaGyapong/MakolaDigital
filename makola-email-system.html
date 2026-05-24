@@ -1,0 +1,629 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Makola Digital — Email System</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--red:#E8533A;--gold:#C47F17;--green:#2D9E6B;--blue:#3B7DD8;--bg:#0A0A0A;--bg2:#0D0D0D;--bg3:#131315;--border:rgba(255,255,255,0.08);--text:#F0EDE8;--muted:rgba(240,237,232,0.55)}
+body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;display:grid;grid-template-columns:300px 1fr;grid-template-rows:56px 1fr}
+button{font-family:inherit;cursor:pointer}
+
+/* NAV */
+.nav{grid-column:1/-1;height:56px;background:var(--bg2);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;padding:0 24px;position:sticky;top:0;z-index:10}
+.logo{display:flex;align-items:center;gap:8px;font-weight:900;font-size:17px;letter-spacing:-.03em}
+.logo-icon{width:30px;height:30px;border-radius:8px;background:linear-gradient(135deg,var(--red),var(--gold));display:flex;align-items:center;justify-content:center;font-size:14px}
+.logo span{color:var(--red)}
+.nav-tag{background:rgba(59,125,216,.15);border:1px solid rgba(59,125,216,.3);color:var(--blue);font-size:11px;font-weight:700;padding:3px 10px;border-radius:5px}
+.nav-stats{display:flex;gap:16px;font-size:12px;color:var(--muted)}
+.nav-stat{display:flex;align-items:center;gap:5px}
+.nav-dot{width:7px;height:7px;border-radius:50%}
+
+/* SIDEBAR */
+.sidebar{background:var(--bg2);border-right:1px solid var(--border);overflow-y:auto;padding:16px 0}
+.sidebar::-webkit-scrollbar{width:3px}::-webkit-scrollbar-thumb{background:#222;border-radius:2px}
+.section-label{font-size:10px;font-weight:700;color:rgba(240,237,232,0.25);letter-spacing:.1em;text-transform:uppercase;padding:12px 18px 6px}
+.template-btn{width:100%;background:none;border:none;border-left:2px solid transparent;text-align:left;padding:10px 18px;cursor:pointer;transition:all .15s;display:flex;align-items:center;gap:11px}
+.template-btn:hover{background:rgba(255,255,255,.04);color:var(--text)}
+.template-btn.active{background:rgba(232,83,58,.06);border-left-color:var(--red)}
+.t-icon{width:32px;height:32px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0}
+.t-info{flex:1;min-width:0}
+.t-name{font-size:13px;font-weight:700;color:var(--text)}
+.t-desc{font-size:11px;color:var(--muted);margin-top:1px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.t-badge{font-size:9px;font-weight:700;padding:2px 6px;border-radius:4px;flex-shrink:0}
+.badge-tx{background:rgba(59,125,216,.15);color:var(--blue)}
+.badge-mk{background:rgba(196,127,23,.15);color:var(--gold)}
+.badge-nt{background:rgba(45,158,107,.15);color:var(--green)}
+
+/* MAIN AREA */
+.main{display:flex;flex-direction:column;overflow:hidden}
+.toolbar{display:flex;align-items:center;gap:10px;padding:12px 20px;border-bottom:1px solid var(--border);background:var(--bg2);flex-shrink:0}
+.toolbar-title{font-size:14px;font-weight:800;flex:1;color:var(--text)}
+.view-tabs{display:flex;gap:4px;background:rgba(255,255,255,.04);border:1px solid var(--border);border-radius:9px;padding:3px}
+.view-tab{background:none;border:none;color:var(--muted);padding:6px 14px;border-radius:7px;font-size:12.5px;font-weight:600;transition:all .15s}
+.view-tab.active{background:var(--bg3);color:var(--text)}
+.device-tabs{display:flex;gap:4px}
+.device-tab{background:rgba(255,255,255,.04);border:1px solid var(--border);border-radius:7px;width:30px;height:30px;display:flex;align-items:center;justify-content:center;font-size:14px;color:var(--muted);transition:all .15s}
+.device-tab.active{background:rgba(232,83,58,.1);border-color:rgba(232,83,58,.3);color:var(--red)}
+.send-test-btn{background:var(--red);border:none;color:#fff;padding:7px 16px;border-radius:9px;font-size:12.5px;font-weight:700;box-shadow:0 2px 10px rgba(232,83,58,.25)}
+.send-test-btn:hover{opacity:.88}
+
+/* EMAIL VIEWPORT */
+.email-viewport{flex:1;overflow:auto;padding:24px;background:#111;display:flex;align-items:flex-start;justify-content:center}
+.email-frame{background:#1A1A1A;border-radius:16px;overflow:hidden;border:1px solid rgba(255,255,255,.08);box-shadow:0 24px 80px rgba(0,0,0,.6);transition:all .3s}
+.email-frame.desktop{width:580px;min-width:580px}
+.email-frame.mobile{width:360px;min-width:360px}
+
+/* EMAIL INTERNAL STYLES */
+.email-header{background:linear-gradient(135deg,#1a0800,#1a1000);padding:28px 32px;text-align:center;border-bottom:1px solid rgba(255,255,255,.07)}
+.em-logo-icon{width:44px;height:44px;background:linear-gradient(135deg,#E8533A,#C47F17);border-radius:12px;display:inline-flex;align-items:center;justify-content:center;font-size:22px;margin-bottom:10px}
+.em-logo{font-size:20px;font-weight:900;color:#F0EDE8;letter-spacing:-.03em;margin:0}
+.em-body{padding:28px 32px;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif}
+.em-h1{font-size:24px;font-weight:900;color:#F0EDE8;margin:0 0 10px;letter-spacing:-.02em;line-height:1.2}
+.em-p{font-size:14px;color:rgba(240,237,232,.65);line-height:1.7;margin:0 0 14px}
+.em-btn{display:inline-block;background:#E8533A;color:#fff;font-size:15px;font-weight:800;padding:13px 30px;border-radius:12px;text-decoration:none;margin:6px 4px}
+.em-btn-g{background:#2D9E6B}
+.em-btn-o{background:transparent;border:1px solid rgba(255,255,255,.2);color:#F0EDE8}
+.em-divider{height:1px;background:rgba(255,255,255,.07);margin:20px 0}
+.em-info{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.09);border-radius:10px;padding:14px 16px;margin:14px 0}
+.em-info-row{display:flex;justify-content:space-between;padding:5px 0;font-size:13px;border-bottom:1px solid rgba(255,255,255,.05)}
+.em-info-row:last-child{border-bottom:none}
+.em-lbl{color:rgba(240,237,232,.45)}
+.em-val{color:#F0EDE8;font-weight:700}
+.em-stat-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin:14px 0}
+.em-stat{background:rgba(255,255,255,.05);border-radius:10px;padding:14px;text-align:center}
+.em-sv{font-size:22px;font-weight:900;color:#E8533A;display:block}
+.em-sl{font-size:10px;color:rgba(240,237,232,.4);display:block;margin-top:3px;text-transform:uppercase;letter-spacing:.06em}
+.em-otp{background:#E8533A;border-radius:12px;padding:20px;text-align:center;margin:18px 0}
+.em-otp-code{font-size:36px;font-weight:900;color:#fff;letter-spacing:.18em;font-family:monospace}
+.em-badge{display:inline-block;padding:3px 10px;border-radius:6px;font-size:12px;font-weight:700}
+.em-badge-g{background:rgba(45,158,107,.2);color:#2D9E6B;border:1px solid rgba(45,158,107,.3)}
+.em-badge-r{background:rgba(232,83,58,.2);color:#E8533A;border:1px solid rgba(232,83,58,.3)}
+.em-footer{padding:18px 32px;text-align:center;border-top:1px solid rgba(255,255,255,.06)}
+.em-footer p{font-size:12px;color:rgba(240,237,232,.28);margin:3px 0;line-height:1.6}
+.em-footer a{color:rgba(240,237,232,.45);text-decoration:none}
+
+/* TEXT VIEW */
+.text-view{background:#0A0A0A;color:rgba(240,237,232,.7);font-family:'Courier New',monospace;font-size:13px;line-height:1.8;padding:28px;white-space:pre-wrap;border-radius:12px;max-width:580px}
+
+/* STATS PANEL */
+.stats-panel{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;padding:14px 20px;border-bottom:1px solid var(--border);background:var(--bg2);flex-shrink:0}
+.stat-card{background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:10px;padding:11px 14px}
+.stat-val{font-size:20px;font-weight:900;letter-spacing:-.02em}
+.stat-lbl{font-size:10px;color:var(--muted);margin-top:3px;font-weight:600;text-transform:uppercase;letter-spacing:.05em}
+.stat-chg{font-size:10.5px;margin-top:3px;font-weight:700}
+.chg-up{color:var(--green)}.chg-dn{color:var(--red)}
+
+/* TOAST */
+.toast{position:fixed;bottom:20px;right:20px;background:var(--bg2);border:1px solid rgba(45,158,107,.35);border-radius:12px;padding:13px 18px;font-size:13px;font-weight:700;z-index:999;transform:translateY(60px);opacity:0;transition:all .3s;color:var(--green)}
+.toast.show{transform:translateY(0);opacity:1}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<div class="nav">
+  <div style="display:flex;align-items:center;gap:12px">
+    <div class="logo"><div class="logo-icon">🌍</div>Makola<span>Digital</span></div>
+    <div class="nav-tag">Email System</div>
+  </div>
+  <div class="nav-stats">
+    <div class="nav-stat"><div class="nav-dot" style="background:var(--green)"></div>SMTP connected</div>
+    <div class="nav-stat"><div class="nav-dot" style="background:var(--gold)"></div>Queue: 3 pending</div>
+    <div class="nav-stat">15 templates · 3 categories</div>
+  </div>
+</div>
+
+<!-- SIDEBAR -->
+<div class="sidebar">
+  <div class="section-label">Auth & Onboarding</div>
+  <button class="template-btn active" onclick="show('verify',this)">
+    <div class="t-icon" style="background:rgba(59,125,216,.12)">📧</div>
+    <div class="t-info"><div class="t-name">Verify Email</div><div class="t-desc">OTP code on registration</div></div>
+    <div class="t-badge badge-tx">TX</div>
+  </button>
+  <button class="template-btn" onclick="show('forgot',this)">
+    <div class="t-icon" style="background:rgba(232,83,58,.12)">🔑</div>
+    <div class="t-info"><div class="t-name">Forgot Password</div><div class="t-desc">Reset link email</div></div>
+    <div class="t-badge badge-tx">TX</div>
+  </button>
+  <button class="template-btn" onclick="show('welcome',this)">
+    <div class="t-icon" style="background:rgba(45,158,107,.12)">🎉</div>
+    <div class="t-info"><div class="t-name">Welcome</div><div class="t-desc">Post-verification onboarding</div></div>
+    <div class="t-badge badge-nt">NT</div>
+  </button>
+
+  <div class="section-label">Orders & Payments</div>
+  <button class="template-btn" onclick="show('order-buyer',this)">
+    <div class="t-icon" style="background:rgba(45,158,107,.12)">✅</div>
+    <div class="t-info"><div class="t-name">Order Confirmed</div><div class="t-desc">Buyer receipt & guarantee</div></div>
+    <div class="t-badge badge-tx">TX</div>
+  </button>
+  <button class="template-btn" onclick="show('order-seller',this)">
+    <div class="t-icon" style="background:rgba(45,158,107,.12)">🎉</div>
+    <div class="t-info"><div class="t-name">New Order (Seller)</div><div class="t-desc">Seller sale notification</div></div>
+    <div class="t-badge badge-tx">TX</div>
+  </button>
+  <button class="template-btn" onclick="show('payment-failed',this)">
+    <div class="t-icon" style="background:rgba(232,83,58,.12)">❌</div>
+    <div class="t-info"><div class="t-name">Payment Failed</div><div class="t-desc">Retry prompt with reason</div></div>
+    <div class="t-badge badge-tx">TX</div>
+  </button>
+  <button class="template-btn" onclick="show('dispute',this)">
+    <div class="t-icon" style="background:rgba(196,127,23,.12)">⚖️</div>
+    <div class="t-info"><div class="t-name">Dispute Opened</div><div class="t-desc">Buyer-seller conflict alert</div></div>
+    <div class="t-badge badge-tx">TX</div>
+  </button>
+
+  <div class="section-label">Listings</div>
+  <button class="template-btn" onclick="show('listing-live',this)">
+    <div class="t-icon" style="background:rgba(232,83,58,.12)">🚀</div>
+    <div class="t-info"><div class="t-name">Listing Approved</div><div class="t-desc">Goes live with tips</div></div>
+    <div class="t-badge badge-nt">NT</div>
+  </button>
+  <button class="template-btn" onclick="show('listing-removed',this)">
+    <div class="t-icon" style="background:rgba(232,83,58,.12)">⚠️</div>
+    <div class="t-info"><div class="t-name">Listing Removed</div><div class="t-desc">Policy violation alert</div></div>
+    <div class="t-badge badge-tx">TX</div>
+  </button>
+  <button class="template-btn" onclick="show('listing-expiring',this)">
+    <div class="t-icon" style="background:rgba(196,127,23,.12)">⏰</div>
+    <div class="t-info"><div class="t-name">Listing Expiring</div><div class="t-desc">Renewal reminder</div></div>
+    <div class="t-badge badge-nt">NT</div>
+  </button>
+
+  <div class="section-label">Social & Engagement</div>
+  <button class="template-btn" onclick="show('message',this)">
+    <div class="t-icon" style="background:rgba(59,125,216,.12)">💬</div>
+    <div class="t-info"><div class="t-name">New Message</div><div class="t-desc">Chat notification</div></div>
+    <div class="t-badge badge-nt">NT</div>
+  </button>
+  <button class="template-btn" onclick="show('review',this)">
+    <div class="t-icon" style="background:rgba(196,127,23,.12)">⭐</div>
+    <div class="t-info"><div class="t-name">Review Received</div><div class="t-desc">New star rating alert</div></div>
+    <div class="t-badge badge-nt">NT</div>
+  </button>
+  <button class="template-btn" onclick="show('kyc',this)">
+    <div class="t-icon" style="background:rgba(45,158,107,.12)">✅</div>
+    <div class="t-info"><div class="t-name">KYC Result</div><div class="t-desc">Verified / rejected notice</div></div>
+    <div class="t-badge badge-tx">TX</div>
+  </button>
+
+  <div class="section-label">Marketing & Analytics</div>
+  <button class="template-btn" onclick="show('digest',this)">
+    <div class="t-icon" style="background:rgba(139,92,246,.12)">📬</div>
+    <div class="t-info"><div class="t-name">Weekly Digest</div><div class="t-desc">Buyer recommendations</div></div>
+    <div class="t-badge badge-mk">MK</div>
+  </button>
+  <button class="template-btn" onclick="show('seller-stats',this)">
+    <div class="t-icon" style="background:rgba(232,83,58,.12)">📊</div>
+    <div class="t-info"><div class="t-name">Seller Weekly Stats</div><div class="t-desc">Revenue & performance</div></div>
+    <div class="t-badge badge-mk">MK</div>
+  </button>
+
+  <div style="padding:16px 18px;margin-top:8px;border-top:1px solid var(--border)">
+    <div style="font-size:11px;color:var(--muted);line-height:1.6">
+      <span style="color:var(--blue);font-weight:700">TX</span> Transactional (always sent)<br>
+      <span style="color:var(--green);font-weight:700">NT</span> Notification (respects prefs)<br>
+      <span style="color:var(--gold);font-weight:700">MK</span> Marketing (opt-out available)
+    </div>
+  </div>
+</div>
+
+<!-- MAIN -->
+<div class="main">
+  <!-- Stats bar -->
+  <div class="stats-panel">
+    <div class="stat-card"><div class="stat-val" style="color:var(--green)">98.4%</div><div class="stat-lbl">Delivery rate</div><div class="stat-chg chg-up">↑ +0.3%</div></div>
+    <div class="stat-card"><div class="stat-val">24,831</div><div class="stat-lbl">Sent this month</div><div class="stat-chg chg-up">↑ +18%</div></div>
+    <div class="stat-card"><div class="stat-val" style="color:var(--gold)">42.1%</div><div class="stat-lbl">Open rate</div><div class="stat-chg chg-up">↑ +4.2%</div></div>
+    <div class="stat-card"><div class="stat-val" style="color:var(--red)">0.08%</div><div class="stat-lbl">Bounce rate</div><div class="stat-chg chg-dn">↓ -0.02%</div></div>
+  </div>
+
+  <!-- Toolbar -->
+  <div class="toolbar">
+    <div class="toolbar-title" id="toolbar-title">Verify Email — OTP verification</div>
+    <div class="view-tabs">
+      <button class="view-tab active" onclick="setView('html',this)">HTML</button>
+      <button class="view-tab" onclick="setView('text',this)">Plain text</button>
+    </div>
+    <div class="device-tabs">
+      <button class="device-tab active" onclick="setDevice('desktop',this)" title="Desktop">🖥</button>
+      <button class="device-tab" onclick="setDevice('mobile',this)" title="Mobile">📱</button>
+    </div>
+    <button class="send-test-btn" onclick="sendTest()">▶ Send test</button>
+  </div>
+
+  <!-- Email viewport -->
+  <div class="email-viewport" id="viewport">
+    <div class="email-frame desktop" id="email-frame">
+      <div id="email-content"></div>
+    </div>
+  </div>
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast">✓ Test email queued</div>
+
+<script>
+let currentView = 'html';
+let currentDevice = 'desktop';
+let currentTemplate = 'verify';
+
+const TEMPLATES = {
+  verify: {
+    title: 'Verify Email — OTP verification',
+    html: () => `
+      <div class="email-header">
+        <div class="em-logo-icon">🌍</div>
+        <h1 class="em-logo">Makola<span style="color:#E8533A">Digital</span></h1>
+      </div>
+      <div class="em-body">
+        <h1 class="em-h1">Verify your email 📧</h1>
+        <p class="em-p">Hi Kofi, welcome to Makola Digital! Enter the code below to activate your account and start buying or selling across Africa.</p>
+        <div class="em-otp"><div class="em-otp-code">482 917</div></div>
+        <p class="em-p" style="text-align:center;font-size:13px">Code expires in <strong style="color:#F0EDE8">10 minutes</strong>. Don't share it with anyone.</p>
+        <div class="em-divider"></div>
+        <p class="em-p" style="font-size:12px">If you didn't create a Makola Digital account, you can safely ignore this email.</p>
+      </div>`,
+    text: `Hi Kofi,\n\nYour Makola Digital verification code is:\n\n  482917\n\nExpires in 10 minutes. Don't share it with anyone.\n\nIf you didn't sign up, ignore this email.\n\n-- Makola Digital Team\nhttps://makoladigital.com`,
+  },
+
+  forgot: {
+    title: 'Forgot Password — Reset link',
+    html: () => `
+      <div class="email-header"><div class="em-logo-icon">🌍</div><h1 class="em-logo">Makola<span style="color:#E8533A">Digital</span></h1></div>
+      <div class="em-body">
+        <h1 class="em-h1">Reset your password 🔑</h1>
+        <p class="em-p">Hi Kofi, we received a request to reset your Makola Digital password. Click the button below to set a new one.</p>
+        <div style="text-align:center;margin:24px 0"><a class="em-btn" href="#">Reset password →</a></div>
+        <p class="em-p" style="text-align:center;font-size:12px">This link expires in <strong style="color:#F0EDE8">30 minutes</strong>.</p>
+        <div class="em-divider"></div>
+        <p class="em-p" style="font-size:12px">If you didn't request a password reset, you can safely ignore this email. Your password will not change.</p>
+      </div>`,
+    text: `Hi Kofi,\n\nReset your password:\nhttps://makoladigital.com/auth/reset-password?token=xxx\n\nExpires in 30 minutes.\n\nIf you didn't request this, ignore this email.`,
+  },
+
+  welcome: {
+    title: 'Welcome — Post-verification onboarding',
+    html: () => `
+      <div class="email-header"><div class="em-logo-icon">🌍</div><h1 class="em-logo">Makola<span style="color:#E8533A">Digital</span></h1></div>
+      <div class="em-body">
+        <h1 class="em-h1">You're in! Welcome, Kofi 🎉</h1>
+        <p class="em-p">Your Makola Digital account is active. You can now list products, services, and more across Africa and the diaspora.</p>
+        <div class="em-stat-grid">
+          <div class="em-stat"><span class="em-sv">180k+</span><span class="em-sl">Active listings</span></div>
+          <div class="em-stat"><span class="em-sv">54</span><span class="em-sl">Countries</span></div>
+          <div class="em-stat"><span class="em-sv">22k+</span><span class="em-sl">Sellers</span></div>
+        </div>
+        <div style="text-align:center;margin:24px 0;display:flex;gap:12px;justify-content:center;flex-wrap:wrap">
+          <a class="em-btn" href="#">Explore marketplace →</a>
+          <a class="em-btn em-btn-o" href="#">Create listing</a>
+        </div>
+        <div class="em-divider"></div>
+        <p style="font-size:16px;font-weight:800;color:#F0EDE8;margin-bottom:8px">Complete your seller profile</p>
+        <p class="em-p">Verified sellers get a trust badge and 3× more visibility in search results.</p>
+        <div style="text-align:center"><a class="em-btn em-btn-g" href="#">Get verified →</a></div>
+      </div>`,
+    text: `Welcome to Makola Digital, Kofi!\n\nYour account is ready. Explore the marketplace:\nhttps://makoladigital.com\n\nCreate your first listing:\nhttps://makoladigital.com/sell`,
+  },
+
+  'order-buyer': {
+    title: 'Order Confirmed — Buyer receipt',
+    html: () => `
+      <div class="email-header"><div class="em-logo-icon">🌍</div><h1 class="em-logo">Makola<span style="color:#E8533A">Digital</span></h1></div>
+      <div class="em-body">
+        <div style="text-align:center;font-size:48px;margin-bottom:14px">✅</div>
+        <h1 class="em-h1" style="text-align:center">Order confirmed!</h1>
+        <p class="em-p" style="text-align:center">Hi Kofi, your payment was received. The seller has been notified.</p>
+        <div class="em-info">
+          <div class="em-info-row"><span class="em-lbl">Order ref</span><span class="em-val" style="font-family:monospace">#MKL-948271</span></div>
+          <div class="em-info-row"><span class="em-lbl">Item</span><span class="em-val">iPhone 15 Pro Max 256GB</span></div>
+          <div class="em-info-row"><span class="em-lbl">Seller</span><span class="em-val">TechHub GH</span></div>
+          <div class="em-info-row"><span class="em-lbl">Amount paid</span><span class="em-val" style="color:#E8533A">GH₵ 8,755</span></div>
+          <div class="em-info-row"><span class="em-lbl">Payment method</span><span class="em-val">Mobile Money (MTN)</span></div>
+          <div class="em-info-row"><span class="em-lbl">Delivery</span><span class="em-val">Same-day · Accra</span></div>
+        </div>
+        <div style="text-align:center;margin:20px 0;display:flex;gap:12px;justify-content:center;flex-wrap:wrap">
+          <a class="em-btn" href="#">View order →</a>
+          <a class="em-btn em-btn-o" href="#">Message seller</a>
+        </div>
+        <div class="em-info" style="background:rgba(45,158,107,.08);border-color:rgba(45,158,107,.2)">
+          <p style="margin:0;font-size:13px;color:rgba(240,237,232,.7)">🛡️ <strong>Makola Buyer Guarantee:</strong> Your payment is protected. If the item doesn't arrive or isn't as described, contact us within 7 days for a full refund.</p>
+        </div>
+      </div>`,
+    text: `Order confirmed!\n\nRef: #MKL-948271\nItem: iPhone 15 Pro Max 256GB\nAmount: GH₵ 8,755\nSeller: TechHub GH\n\nView order: https://makoladigital.com/orders/MKL-948271`,
+  },
+
+  'order-seller': {
+    title: 'New Order (Seller) — Sale notification',
+    html: () => `
+      <div class="email-header"><div class="em-logo-icon">🌍</div><h1 class="em-logo">Makola<span style="color:#E8533A">Digital</span></h1></div>
+      <div class="em-body">
+        <div style="text-align:center;font-size:48px;margin-bottom:14px">🎉</div>
+        <h1 class="em-h1" style="text-align:center">You have a new order!</h1>
+        <p class="em-p" style="text-align:center">Hi Ama, <strong style="color:#F0EDE8">Kofi Mensah</strong> just bought one of your listings.</p>
+        <div class="em-info">
+          <div class="em-info-row"><span class="em-lbl">Order ref</span><span class="em-val" style="font-family:monospace">#MKL-948271</span></div>
+          <div class="em-info-row"><span class="em-lbl">Item sold</span><span class="em-val">Custom Ankara Dress — Size M</span></div>
+          <div class="em-info-row"><span class="em-lbl">Buyer</span><span class="em-val">Kofi Mensah</span></div>
+          <div class="em-info-row"><span class="em-lbl">Sale price</span><span class="em-val">GH₵ 850</span></div>
+          <div class="em-info-row"><span class="em-lbl">Your payout</span><span class="em-val" style="color:#2D9E6B">GH₵ 824.50</span></div>
+        </div>
+        <div style="text-align:center;margin:20px 0;display:flex;gap:12px;justify-content:center;flex-wrap:wrap">
+          <a class="em-btn em-btn-g" href="#">Fulfill order →</a>
+          <a class="em-btn em-btn-o" href="#">Contact buyer</a>
+        </div>
+        <p class="em-p" style="font-size:12px;text-align:center">Payout released when buyer confirms receipt or after 7 days.</p>
+      </div>`,
+    text: `New order!\n\nRef: #MKL-948271\nItem: Custom Ankara Dress\nBuyer: Kofi Mensah\nYour payout: GH₵ 824.50\n\nFulfill order: https://makoladigital.com/orders/MKL-948271`,
+  },
+
+  'payment-failed': {
+    title: 'Payment Failed — Retry prompt',
+    html: () => `
+      <div class="email-header"><div class="em-logo-icon">🌍</div><h1 class="em-logo">Makola<span style="color:#E8533A">Digital</span></h1></div>
+      <div class="em-body">
+        <div style="text-align:center;font-size:48px;margin-bottom:14px">❌</div>
+        <h1 class="em-h1">Payment unsuccessful</h1>
+        <p class="em-p">Hi Kofi, your payment of <strong style="color:#F0EDE8">GH₵ 8,755</strong> for <em>iPhone 15 Pro Max 256GB</em> could not be processed.</p>
+        <div class="em-info" style="border-left:3px solid #E8533A">
+          <p style="margin:0;font-size:13px;color:rgba(240,237,232,.7)">Common reasons: insufficient funds, incorrect PIN, network timeout, or card declined by your bank.</p>
+        </div>
+        <div style="text-align:center;margin:20px 0"><a class="em-btn" href="#">Try again →</a></div>
+        <p class="em-p" style="font-size:12px;text-align:center">No money was deducted. Need help? <a href="#" style="color:#E8533A">Contact support</a>.</p>
+      </div>`,
+    text: `Hi Kofi,\n\nYour payment for "iPhone 15 Pro Max 256GB" failed.\n\nNo money was deducted. Please try again:\nhttps://makoladigital.com/checkout/retry`,
+  },
+
+  dispute: {
+    title: 'Dispute Opened — Order conflict alert',
+    html: () => `
+      <div class="email-header"><div class="em-logo-icon">🌍</div><h1 class="em-logo">Makola<span style="color:#E8533A">Digital</span></h1></div>
+      <div class="em-body">
+        <div style="text-align:center;font-size:48px;margin-bottom:14px">⚖️</div>
+        <h1 class="em-h1">Dispute opened</h1>
+        <p class="em-p">Hi Ama, a dispute has been opened for order <strong style="color:#F0EDE8">#MKL-948271</strong>. The buyer has raised an issue. Please respond within <strong style="color:#E8533A">48 hours</strong> to avoid automatic refund.</p>
+        <div style="text-align:center;margin:20px 0"><a class="em-btn" href="#">View dispute →</a></div>
+        <p class="em-p" style="font-size:12px;text-align:center">Payment is on hold until the dispute is resolved.</p>
+      </div>`,
+    text: `Hi Ama,\n\nA dispute has been opened for order #MKL-948271.\n\nPlease respond within 48 hours.\n\nView dispute: https://makoladigital.com/disputes/xxx`,
+  },
+
+  'listing-live': {
+    title: 'Listing Approved — Goes live with tips',
+    html: () => `
+      <div class="email-header"><div class="em-logo-icon">🌍</div><h1 class="em-logo">Makola<span style="color:#E8533A">Digital</span></h1></div>
+      <div class="em-body">
+        <div style="text-align:center;font-size:48px;margin-bottom:14px">🚀</div>
+        <h1 class="em-h1" style="text-align:center">Your listing is live!</h1>
+        <p class="em-p" style="text-align:center">Hi Kofi, <strong style="color:#F0EDE8">"iPhone 15 Pro Max 256GB"</strong> is now visible to millions of buyers across Africa and the diaspora.</p>
+        <div style="text-align:center;margin:20px 0;display:flex;gap:12px;justify-content:center;flex-wrap:wrap">
+          <a class="em-btn" href="#">View listing →</a>
+          <a class="em-btn em-btn-o" href="#">Dashboard</a>
+        </div>
+        <div class="em-divider"></div>
+        <p style="font-size:16px;font-weight:800;color:#F0EDE8;margin-bottom:10px">Tips to get more views 💡</p>
+        <div class="em-info">
+          <p style="margin:0 0 8px;font-size:13px;color:rgba(240,237,232,.7)">📸 <strong style="color:#F0EDE8">Add more photos</strong> — listings with 5+ images get 4× more views</p>
+          <p style="margin:8px 0;font-size:13px;color:rgba(240,237,232,.7)">⚡ <strong style="color:#F0EDE8">Boost your listing</strong> — get featured at the top of search results</p>
+          <p style="margin:8px 0 0;font-size:13px;color:rgba(240,237,232,.7)">✅ <strong style="color:#F0EDE8">Get verified</strong> — verified sellers get 3× more clicks</p>
+        </div>
+      </div>`,
+    text: `Your listing "iPhone 15 Pro Max 256GB" is now live!\n\nView it: https://makoladigital.com/listing/iphone-15-pro-max`,
+  },
+
+  'listing-removed': {
+    title: 'Listing Removed — Policy violation',
+    html: () => `
+      <div class="email-header"><div class="em-logo-icon">🌍</div><h1 class="em-logo">Makola<span style="color:#E8533A">Digital</span></h1></div>
+      <div class="em-body">
+        <div style="text-align:center;font-size:48px;margin-bottom:14px">⚠️</div>
+        <h1 class="em-h1">Listing removed</h1>
+        <p class="em-p">Hi Kofi, your listing <strong style="color:#F0EDE8">"Rolex Replica Watch"</strong> has been removed from Makola Digital.</p>
+        <div class="em-info" style="border-left:3px solid #E8533A"><p style="margin:0;font-size:13px;color:rgba(240,237,232,.7)"><strong style="color:#F0EDE8">Reason:</strong> Listing violates our counterfeit goods policy (Section 4.2 of Community Guidelines).</p></div>
+        <p class="em-p">If you believe this was a mistake, you can appeal the decision or contact our support team.</p>
+        <div style="text-align:center;margin:20px 0;display:flex;gap:12px;justify-content:center;flex-wrap:wrap">
+          <a class="em-btn" href="#">Appeal decision →</a>
+          <a class="em-btn em-btn-o" href="#">Contact support</a>
+        </div>
+      </div>`,
+    text: `Hi Kofi,\n\nYour listing "Rolex Replica Watch" was removed.\n\nReason: Counterfeit goods policy violation.\n\nAppeal: https://makoladigital.com/help/appeal`,
+  },
+
+  'listing-expiring': {
+    title: 'Listing Expiring — Renewal reminder',
+    html: () => `
+      <div class="email-header"><div class="em-logo-icon">🌍</div><h1 class="em-logo">Makola<span style="color:#E8533A">Digital</span></h1></div>
+      <div class="em-body">
+        <div style="text-align:center;font-size:48px;margin-bottom:14px">⏰</div>
+        <h1 class="em-h1">Listing expiring soon</h1>
+        <p class="em-p">Hi Kofi, your listing <strong style="color:#F0EDE8">"iPhone 15 Pro Max 256GB"</strong> will be removed from search results in <strong style="color:#E8533A">3 days</strong>.</p>
+        <div style="text-align:center;margin:20px 0;display:flex;gap:12px;justify-content:center;flex-wrap:wrap">
+          <a class="em-btn" href="#">Renew listing →</a>
+          <a class="em-btn em-btn-o" href="#">View listing</a>
+        </div>
+        <p class="em-p" style="font-size:12px;text-align:center">Renewing is free for basic listings. Upgrade to Pro for unlimited listings.</p>
+      </div>`,
+    text: `Hi Kofi,\n\nYour listing "iPhone 15 Pro Max 256GB" expires in 3 days.\n\nRenew: https://makoladigital.com/dashboard/listings`,
+  },
+
+  message: {
+    title: 'New Message — Chat notification',
+    html: () => `
+      <div class="email-header"><div class="em-logo-icon">🌍</div><h1 class="em-logo">Makola<span style="color:#E8533A">Digital</span></h1></div>
+      <div class="em-body">
+        <h1 class="em-h1">New message 💬</h1>
+        <p class="em-p">Hi Kofi, you have a new message from <strong style="color:#F0EDE8">Ama Asante</strong> about <em>iPhone 15 Pro Max 256GB</em>.</p>
+        <div class="em-info" style="border-left:3px solid #E8533A">
+          <p style="margin:0;font-size:14px;color:rgba(240,237,232,.75);font-style:italic;line-height:1.6">"Hi! Is the iPhone still available? Can you do delivery to East Legon? What's the best price you can do?"</p>
+          <p style="margin:8px 0 0;font-size:12px;color:rgba(240,237,232,.4)">— Ama Asante</p>
+        </div>
+        <div style="text-align:center;margin:20px 0"><a class="em-btn" href="#">Reply now →</a></div>
+        <p class="em-p" style="font-size:12px;text-align:center">Don't leave them waiting — sellers respond within minutes on Makola.</p>
+      </div>`,
+    text: `Hi Kofi,\n\nAma Asante sent you a message:\n\n"Hi! Is the iPhone still available? Can you do delivery to East Legon?"\n\nReply: https://makoladigital.com/messages/conv-123`,
+  },
+
+  review: {
+    title: 'Review Received — Star rating alert',
+    html: () => `
+      <div class="email-header"><div class="em-logo-icon">🌍</div><h1 class="em-logo">Makola<span style="color:#E8533A">Digital</span></h1></div>
+      <div class="em-body">
+        <h1 class="em-h1">New review received ⭐</h1>
+        <p class="em-p">Hi Kofi, <strong style="color:#F0EDE8">Ama Asante</strong> left a review for <em>iPhone 15 Pro Max 256GB</em>.</p>
+        <div class="em-info">
+          <div style="font-size:24px;color:#C47F17;margin-bottom:10px">★★★★★</div>
+          <p style="margin:0;font-size:14px;color:rgba(240,237,232,.75);font-style:italic;line-height:1.65">"Excellent seller! Item arrived same day, factory sealed exactly as described. Will definitely buy from TechHub GH again."</p>
+          <p style="margin:10px 0 0;font-size:12px;color:rgba(240,237,232,.4)">— Ama Asante</p>
+        </div>
+        <div style="text-align:center;margin:20px 0"><a class="em-btn" href="#">Reply to review →</a></div>
+        <p class="em-p" style="font-size:12px;text-align:center">Responding builds trust and improves your seller rating.</p>
+      </div>`,
+    text: `Hi Kofi,\n\nAma Asante left a 5-star review:\n\n"Excellent seller! Item arrived same day, factory sealed."\n\nReply: https://makoladigital.com/reviews/123`,
+  },
+
+  kyc: {
+    title: 'KYC Result — Verified / Rejected notice',
+    html: () => `
+      <div class="email-header"><div class="em-logo-icon">🌍</div><h1 class="em-logo">Makola<span style="color:#E8533A">Digital</span></h1></div>
+      <div class="em-body">
+        <div style="text-align:center;font-size:48px;margin-bottom:14px">✅</div>
+        <h1 class="em-h1" style="text-align:center">You're verified!</h1>
+        <p class="em-p" style="text-align:center">Hi Kofi, your identity has been verified. Your listings now show a Verified badge — which means more trust and more sales.</p>
+        <div class="em-stat-grid">
+          <div class="em-stat"><span class="em-sv">✓</span><span class="em-sl">Verified badge</span></div>
+          <div class="em-stat"><span class="em-sv">3×</span><span class="em-sl">More visibility</span></div>
+          <div class="em-stat"><span class="em-sv">★</span><span class="em-sl">Pro seller</span></div>
+        </div>
+        <div style="text-align:center;margin:20px 0"><a class="em-btn em-btn-g" href="#">Go to dashboard →</a></div>
+      </div>`,
+    text: `Hi Kofi,\n\nCongratulations! Your identity has been verified.\n\nYou now have a Verified badge on all your listings.\n\nDashboard: https://makoladigital.com/dashboard`,
+  },
+
+  digest: {
+    title: 'Weekly Digest — Buyer recommendations',
+    html: () => `
+      <div class="email-header"><div class="em-logo-icon">🌍</div><h1 class="em-logo">Makola<span style="color:#E8533A">Digital</span></h1></div>
+      <div class="em-body">
+        <h1 class="em-h1">Your weekly Makola digest 📬</h1>
+        <p class="em-p">Hi Kofi, here's what's new on Makola Digital this week based on your saved searches.</p>
+        <div class="em-stat-grid">
+          <div class="em-stat"><span class="em-sv">14</span><span class="em-sl">New matches</span></div>
+          <div class="em-stat"><span class="em-sv">28</span><span class="em-sl">Saved listings</span></div>
+          <div class="em-stat"><span class="em-sv">↑32%</span><span class="em-sl">New sellers</span></div>
+        </div>
+        <div class="em-divider"></div>
+        <p style="font-size:16px;font-weight:800;color:#F0EDE8;margin-bottom:12px">Recommended for you</p>
+        ${[['iPhone 15 Pro 128GB','GH₵ 7,200','Accra, Ghana'],['2BR Apartment Osu','GH₵ 3,200/mo','Osu, Accra'],['Logo Design Service','From GH₵ 500','Remote']].map(([t,p,l])=>`
+        <div class="em-info" style="margin-bottom:10px">
+          <div style="display:flex;justify-content:space-between;align-items:center;gap:12px">
+            <div><p style="margin:0 0 4px;font-size:14px;font-weight:700;color:#F0EDE8">${t}</p><p style="margin:0;font-size:12px;color:rgba(240,237,232,.5)">📍 ${l}</p></div>
+            <div style="text-align:right;flex-shrink:0"><p style="margin:0 0 8px;font-size:15px;font-weight:900;color:#E8533A">${p}</p><a href="#" style="background:#E8533A;color:#fff;font-size:11px;font-weight:700;padding:5px 11px;border-radius:6px;text-decoration:none">View →</a></div>
+          </div>
+        </div>`).join('')}
+        <div style="text-align:center;margin:20px 0"><a class="em-btn" href="#">Explore all listings →</a></div>
+      </div>`,
+    text: `Hi Kofi,\n\n14 new listings match your saved searches this week.\n\nExplore: https://makoladigital.com`,
+  },
+
+  'seller-stats': {
+    title: 'Seller Weekly Stats — Revenue & performance',
+    html: () => `
+      <div class="email-header"><div class="em-logo-icon">🌍</div><h1 class="em-logo">Makola<span style="color:#E8533A">Digital</span></h1></div>
+      <div class="em-body">
+        <h1 class="em-h1">Your week in review 📊</h1>
+        <p class="em-p">Hi Ama, here's how your Makola Digital store performed this week.</p>
+        <div class="em-stat-grid">
+          <div class="em-stat"><span class="em-sv">GH₵ 4,800</span><span class="em-sl">Revenue</span></div>
+          <div class="em-stat"><span class="em-sv">12</span><span class="em-sl">Orders</span></div>
+          <div class="em-stat"><span class="em-sv">840</span><span class="em-sl">Profile views</span></div>
+        </div>
+        <div class="em-divider"></div>
+        <p style="font-size:16px;font-weight:800;color:#F0EDE8;margin-bottom:10px">Top performing listing</p>
+        <div class="em-info">
+          <p style="margin:0 0 6px;font-size:15px;font-weight:700;color:#F0EDE8">Custom Ankara Dress Collection</p>
+          <p style="margin:0;font-size:13px;color:rgba(240,237,232,.55)">👁 342 views · 💰 8 sales this week</p>
+        </div>
+        <div style="text-align:center;margin:20px 0"><a class="em-btn" href="#">View full analytics →</a></div>
+      </div>`,
+    text: `Hi Ama,\n\nThis week: GH₵ 4,800 revenue, 12 orders, 840 profile views.\n\nDashboard: https://makoladigital.com/dashboard`,
+  },
+};
+
+const FOOTER = `
+<div class="em-footer">
+  <div style="display:flex;justify-content:center;gap:14px;margin-bottom:12px;font-size:20px">
+    <a href="#" title="Website">🌍</a>
+    <a href="#" title="Twitter">🐦</a>
+    <a href="#" title="Instagram">📸</a>
+  </div>
+  <p>🌍 Makola Digital — Africa's trusted marketplace</p>
+  <p>© 2025 Makola Digital Ltd · Accra, Ghana</p>
+  <p><a href="#">Privacy</a> · <a href="#">Terms</a> · <a href="#">Help</a></p>
+  <p style="font-size:11px;color:rgba(240,237,232,.2);margin-top:10px"><a href="#" style="color:rgba(240,237,232,.2)">Unsubscribe from these emails</a></p>
+</div>`;
+
+function show(id, btn) {
+  currentTemplate = id;
+  document.querySelectorAll('.template-btn').forEach(b => b.classList.remove('active'));
+  if (btn) btn.classList.add('active');
+  const t = TEMPLATES[id];
+  if (!t) return;
+  document.getElementById('toolbar-title').textContent = t.title;
+  render();
+}
+
+function render() {
+  const t = TEMPLATES[currentTemplate];
+  const frame = document.getElementById('email-frame');
+  const content = document.getElementById('email-content');
+
+  if (currentView === 'html') {
+    content.innerHTML = t.html() + FOOTER;
+    content.style.fontFamily = '-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif';
+    content.style.background = '';
+    content.style.padding = '';
+    content.style.color = '';
+    content.style.whiteSpace = '';
+  } else {
+    content.style.fontFamily = '"Courier New",monospace';
+    content.style.background = '#0A0A0A';
+    content.style.padding = '28px';
+    content.style.color = 'rgba(240,237,232,0.7)';
+    content.style.whiteSpace = 'pre-wrap';
+    content.style.fontSize = '13px';
+    content.style.lineHeight = '1.8';
+    content.innerHTML = t.text;
+  }
+}
+
+function setView(v, btn) {
+  currentView = v;
+  document.querySelectorAll('.view-tab').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  render();
+}
+
+function setDevice(d, btn) {
+  currentDevice = d;
+  document.querySelectorAll('.device-tab').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  const frame = document.getElementById('email-frame');
+  frame.className = `email-frame ${d}`;
+}
+
+function sendTest() {
+  const toast = document.getElementById('toast');
+  toast.textContent = `✓ Test "${TEMPLATES[currentTemplate]?.title.split('—')[0].trim()}" queued`;
+  toast.classList.add('show');
+  setTimeout(() => toast.classList.remove('show'), 3000);
+}
+
+// Init
+show('verify', document.querySelector('.template-btn.active'));
+</script>
+</body>
+</html>

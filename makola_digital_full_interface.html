@@ -1,0 +1,620 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Plus Jakarta Sans',sans-serif;background:#0A0A0A;color:#F0EDE8;min-height:100vh}
+::-webkit-scrollbar{width:4px}::-webkit-scrollbar-track{background:#111}::-webkit-scrollbar-thumb{background:#333;border-radius:2px}
+
+/* NAV */
+.nav{display:flex;align-items:center;justify-content:space-between;padding:0 28px;height:56px;background:rgba(10,10,10,0.97);border-bottom:1px solid rgba(255,255,255,0.07);position:sticky;top:0;z-index:200}
+.logo{display:flex;align-items:center;gap:8px;font-weight:800;font-size:17px;letter-spacing:-0.03em}
+.logo-icon{width:30px;height:30px;border-radius:8px;background:linear-gradient(135deg,#E8533A,#C47F17);display:flex;align-items:center;justify-content:center;font-size:15px}
+.logo span{color:#E8533A}
+.nav-links{display:flex;gap:4px}
+.nav-link{background:none;border:none;color:rgba(240,237,232,0.55);font-size:13px;cursor:pointer;padding:6px 11px;border-radius:6px;font-family:inherit;transition:color .15s}
+.nav-link:hover,.nav-link.active{color:#F0EDE8;background:rgba(255,255,255,0.06)}
+.nav-actions{display:flex;gap:8px;align-items:center}
+.btn-outline{background:none;border:1px solid rgba(255,255,255,0.15);color:#F0EDE8;padding:6px 14px;border-radius:8px;font-size:12px;cursor:pointer;font-family:inherit}
+.btn-primary{background:#E8533A;border:none;color:#fff;padding:6px 14px;border-radius:8px;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit}
+
+/* SCREEN TABS */
+.screen-tabs{display:flex;gap:6px;padding:14px 28px;border-bottom:1px solid rgba(255,255,255,0.06);background:#0D0D0D;overflow-x:auto;flex-wrap:nowrap}
+.screen-tab{background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);color:rgba(240,237,232,0.5);padding:7px 16px;border-radius:20px;font-size:12px;cursor:pointer;font-family:inherit;white-space:nowrap;transition:all .15s;font-weight:500}
+.screen-tab.active{background:#E8533A;border-color:#E8533A;color:#fff;font-weight:700}
+
+/* SCREENS */
+.screen{display:none;padding:0 0 40px}
+.screen.active{display:block}
+
+/* ── HOMEPAGE ─────────────────────────────── */
+.hero{padding:52px 28px 36px;background:radial-gradient(ellipse 70% 50% at 50% -5%,rgba(232,83,58,0.16) 0%,transparent 70%);text-align:center}
+.hero-pill{display:inline-flex;align-items:center;gap:6px;background:rgba(232,83,58,0.1);border:1px solid rgba(232,83,58,0.25);border-radius:20px;padding:4px 12px;font-size:11px;color:#E8533A;font-weight:600;margin-bottom:18px}
+.hero h1{font-size:42px;font-weight:800;letter-spacing:-0.035em;line-height:1.08;margin-bottom:14px}
+.hero h1 .grad{background:linear-gradient(90deg,#E8533A,#C47F17);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.hero p{font-size:15px;color:rgba(240,237,232,0.55);margin-bottom:28px;max-width:420px;margin-left:auto;margin-right:auto}
+.search-bar{display:flex;max-width:540px;margin:0 auto;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.12);border-radius:12px;overflow:hidden;padding:5px}
+.search-bar input{flex:1;background:none;border:none;outline:none;color:#F0EDE8;font-size:13px;padding:0 10px;font-family:inherit}
+.search-bar input::placeholder{color:rgba(240,237,232,0.35)}
+.search-btn{background:#E8533A;border:none;color:#fff;padding:9px 18px;border-radius:8px;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit}
+.quick-tags{display:flex;gap:6px;justify-content:center;margin-top:12px;flex-wrap:wrap}
+.quick-tag{background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.09);border-radius:14px;padding:3px 10px;font-size:11px;color:rgba(240,237,232,0.5);cursor:pointer}
+
+/* STATS */
+.stats-bar{display:flex;justify-content:center;border-top:1px solid rgba(255,255,255,0.06);border-bottom:1px solid rgba(255,255,255,0.06);background:rgba(255,255,255,0.02)}
+.stat{padding:16px 36px;text-align:center;border-right:1px solid rgba(255,255,255,0.06)}
+.stat:last-child{border-right:none}
+.stat-val{font-size:20px;font-weight:800;color:#E8533A}
+.stat-lbl{font-size:11px;color:rgba(240,237,232,0.4);margin-top:2px}
+
+/* CATEGORIES */
+.section{padding:28px 28px 0}
+.section-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
+.section-title{font-size:16px;font-weight:700;letter-spacing:-0.02em}
+.see-all{font-size:12px;color:#E8533A;cursor:pointer;background:none;border:none;font-family:inherit}
+.cats{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.cat-card{background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.07);border-radius:12px;padding:14px 10px;text-align:center;cursor:pointer;transition:all .15s}
+.cat-card:hover{background:rgba(255,255,255,0.08);border-color:rgba(232,83,58,0.3)}
+.cat-icon{font-size:22px;margin-bottom:6px}
+.cat-name{font-size:12px;font-weight:600}
+.cat-count{font-size:10px;margin-top:2px}
+
+/* LISTINGS GRID */
+.tabs-row{display:flex;gap:5px;margin-bottom:16px}
+.tab{background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.08);color:rgba(240,237,232,0.55);padding:6px 13px;border-radius:7px;font-size:12px;cursor:pointer;font-family:inherit;transition:all .15s;font-weight:500}
+.tab.active{background:#E8533A;border-color:#E8533A;color:#fff;font-weight:700}
+.listings{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.card{background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:14px;overflow:hidden;cursor:pointer;transition:all .15s}
+.card:hover{background:rgba(255,255,255,0.07);border-color:rgba(255,255,255,0.15);transform:translateY(-1px)}
+.card-img{height:100px;background:rgba(255,255,255,0.04);display:flex;align-items:center;justify-content:center;font-size:36px;position:relative}
+.badge{position:absolute;top:8px;left:8px;font-size:10px;font-weight:700;padding:2px 7px;border-radius:5px}
+.heart{position:absolute;top:7px;right:7px;background:rgba(0,0,0,0.45);border:none;border-radius:6px;width:26px;height:26px;cursor:pointer;font-size:13px;display:flex;align-items:center;justify-content:center;color:#fff}
+.card-body{padding:11px 13px}
+.card-type{font-size:10px;color:rgba(240,237,232,0.35);margin-bottom:3px;text-transform:uppercase;letter-spacing:.04em}
+.card-title{font-size:13px;font-weight:600;line-height:1.3;margin-bottom:5px}
+.card-price{font-size:15px;font-weight:800;color:#E8533A;margin-bottom:6px}
+.card-meta{display:flex;justify-content:space-between;font-size:11px;color:rgba(240,237,232,0.4)}
+.card-footer{display:flex;align-items:center;justify-content:space-between;margin-top:9px;padding-top:9px;border-top:1px solid rgba(255,255,255,0.06)}
+.card-seller{font-size:11px;color:rgba(240,237,232,0.4)}
+.card-btn{background:rgba(232,83,58,0.12);border:1px solid rgba(232,83,58,0.25);color:#E8533A;border-radius:6px;padding:4px 10px;font-size:11px;font-weight:700;cursor:pointer;font-family:inherit}
+
+/* CTA BANNER */
+.cta-banner{margin:24px 28px 0;background:linear-gradient(135deg,rgba(232,83,58,0.12),rgba(196,127,23,0.12));border:1px solid rgba(232,83,58,0.18);border-radius:16px;padding:28px 32px;display:flex;align-items:center;justify-content:space-between;gap:16px}
+.cta-banner h3{font-size:17px;font-weight:800;letter-spacing:-0.02em;margin-bottom:5px}
+.cta-banner p{font-size:12px;color:rgba(240,237,232,0.5)}
+.cta-actions{display:flex;gap:8px;flex-shrink:0}
+
+/* ── LISTING DETAIL ───────────────────────── */
+.detail-layout{display:grid;grid-template-columns:1fr 320px;gap:20px;padding:20px 28px}
+.detail-images{background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:14px;height:280px;display:flex;align-items:center;justify-content:center;font-size:80px;position:relative;margin-bottom:12px}
+.detail-thumbs{display:flex;gap:8px}
+.thumb{width:60px;height:50px;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:20px;cursor:pointer}
+.thumb.active{border-color:#E8533A}
+.detail-info{}
+.detail-badge{display:inline-block;font-size:11px;font-weight:700;padding:3px 9px;border-radius:6px;margin-bottom:10px;background:rgba(45,158,107,0.15);border:1px solid rgba(45,158,107,0.3);color:#2D9E6B}
+.detail-title{font-size:22px;font-weight:800;letter-spacing:-0.02em;line-height:1.2;margin-bottom:8px}
+.detail-price{font-size:28px;font-weight:800;color:#E8533A;margin-bottom:6px}
+.detail-loc{font-size:12px;color:rgba(240,237,232,0.45);margin-bottom:16px}
+.rating-row{display:flex;align-items:center;gap:8px;margin-bottom:16px}
+.stars{color:#C47F17;font-size:14px}
+.rating-num{font-size:14px;font-weight:700}
+.rating-cnt{font-size:12px;color:rgba(240,237,232,0.4)}
+.detail-desc{font-size:13px;color:rgba(240,237,232,0.65);line-height:1.7;margin-bottom:18px}
+.detail-tags{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:20px}
+.dtag{background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);border-radius:6px;padding:3px 9px;font-size:11px;color:rgba(240,237,232,0.55)}
+
+/* SELLER CARD */
+.seller-card{background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.09);border-radius:14px;padding:18px;margin-bottom:14px}
+.seller-top{display:flex;align-items:center;gap:12px;margin-bottom:14px}
+.seller-avatar{width:44px;height:44px;border-radius:12px;background:linear-gradient(135deg,#E8533A,#C47F17);display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:800;flex-shrink:0}
+.seller-name{font-size:14px;font-weight:700}
+.seller-verified{font-size:10px;color:#2D9E6B;font-weight:600;margin-top:2px}
+.seller-stats{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px}
+.s-stat{background:rgba(255,255,255,0.04);border-radius:8px;padding:8px 10px;text-align:center}
+.s-stat-val{font-size:15px;font-weight:800;color:#E8533A}
+.s-stat-lbl{font-size:10px;color:rgba(240,237,232,0.4);margin-top:1px}
+.msg-btn{width:100%;background:#E8533A;border:none;color:#fff;padding:11px;border-radius:10px;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit;margin-bottom:8px}
+.save-btn{width:100%;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.12);color:#F0EDE8;padding:10px;border-radius:10px;font-size:13px;cursor:pointer;font-family:inherit}
+
+/* ORDER CARD */
+.order-card{background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.09);border-radius:14px;padding:18px}
+.order-card h4{font-size:13px;font-weight:700;margin-bottom:14px}
+.order-row{display:flex;justify-content:space-between;font-size:12px;margin-bottom:8px;color:rgba(240,237,232,0.7)}
+.order-row.total{font-size:14px;font-weight:800;color:#F0EDE8;border-top:1px solid rgba(255,255,255,0.08);padding-top:10px;margin-top:4px}
+.pay-methods{display:flex;gap:6px;margin:12px 0}
+.pay-method{flex:1;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.09);border-radius:8px;padding:6px;text-align:center;font-size:10px;cursor:pointer;border-radius:8px}
+.pay-method.sel{border-color:#E8533A;color:#E8533A;background:rgba(232,83,58,0.08)}
+.buy-btn{width:100%;background:linear-gradient(135deg,#E8533A,#C47F17);border:none;color:#fff;padding:12px;border-radius:10px;font-size:13px;font-weight:800;cursor:pointer;font-family:inherit;margin-top:10px}
+
+/* ── SELLER DASHBOARD ─────────────────────── */
+.dash-layout{display:grid;grid-template-columns:200px 1fr;min-height:calc(100vh - 120px)}
+.sidebar{background:#0D0D0D;border-right:1px solid rgba(255,255,255,0.07);padding:20px 0}
+.sidebar-item{display:flex;align-items:center;gap:10px;padding:10px 20px;font-size:13px;color:rgba(240,237,232,0.5);cursor:pointer;transition:all .15s}
+.sidebar-item:hover,.sidebar-item.active{color:#F0EDE8;background:rgba(255,255,255,0.05)}
+.sidebar-item.active{border-right:2px solid #E8533A}
+.sidebar-icon{font-size:16px;width:20px;text-align:center}
+.dash-main{padding:24px 28px}
+.metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:24px}
+.metric{background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:12px;padding:16px}
+.metric-lbl{font-size:11px;color:rgba(240,237,232,0.4);margin-bottom:6px;text-transform:uppercase;letter-spacing:.05em}
+.metric-val{font-size:24px;font-weight:800;letter-spacing:-0.02em}
+.metric-chg{font-size:11px;margin-top:4px}
+.metric-chg.up{color:#2D9E6B}
+.metric-chg.dn{color:#E8533A}
+
+/* CHART */
+.chart-box{background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.07);border-radius:12px;padding:18px;margin-bottom:20px}
+.chart-hdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px}
+.chart-title{font-size:14px;font-weight:700}
+.chart-legend{display:flex;gap:12px;font-size:11px;color:rgba(240,237,232,0.5)}
+.chart-area{height:120px;display:flex;align-items:flex-end;gap:4px}
+.bar{flex:1;border-radius:4px 4px 0 0;position:relative;min-width:0;transition:opacity .2s;cursor:pointer}
+.bar:hover{opacity:.8}
+.bar-label{position:absolute;bottom:-18px;left:50%;transform:translateX(-50%);font-size:9px;color:rgba(240,237,232,0.3);white-space:nowrap}
+
+/* LISTINGS TABLE */
+.table-box{background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.07);border-radius:12px;overflow:hidden}
+.table-hdr{display:flex;justify-content:space-between;align-items:center;padding:14px 18px;border-bottom:1px solid rgba(255,255,255,0.07)}
+.tbl{width:100%;border-collapse:collapse}
+.tbl th{font-size:10px;color:rgba(240,237,232,0.35);font-weight:600;text-transform:uppercase;letter-spacing:.06em;padding:10px 18px;text-align:left;border-bottom:1px solid rgba(255,255,255,0.06)}
+.tbl td{padding:12px 18px;font-size:12px;border-bottom:1px solid rgba(255,255,255,0.04);vertical-align:middle}
+.tbl tr:last-child td{border-bottom:none}
+.status-pill{display:inline-block;padding:3px 8px;border-radius:5px;font-size:10px;font-weight:700}
+.pill-active{background:rgba(45,158,107,0.15);color:#2D9E6B}
+.pill-paused{background:rgba(196,127,23,0.15);color:#C47F17}
+.pill-sold{background:rgba(59,125,216,0.15);color:#3B7DD8}
+
+/* ── MESSAGES ─────────────────────────────── */
+.msg-layout{display:grid;grid-template-columns:280px 1fr;height:calc(100vh - 112px)}
+.conv-list{border-right:1px solid rgba(255,255,255,0.07);overflow-y:auto}
+.conv-item{padding:14px 16px;border-bottom:1px solid rgba(255,255,255,0.05);cursor:pointer;transition:background .1s;display:flex;gap:10px}
+.conv-item:hover,.conv-item.active{background:rgba(255,255,255,0.05)}
+.conv-avatar{width:38px;height:38px;border-radius:10px;background:linear-gradient(135deg,#3B7DD8,#8B5CF6);display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0}
+.conv-info{flex:1;min-width:0}
+.conv-name{font-size:13px;font-weight:700;margin-bottom:2px}
+.conv-preview{font-size:11px;color:rgba(240,237,232,0.4);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.conv-time{font-size:10px;color:rgba(240,237,232,0.3);flex-shrink:0}
+.unread-dot{width:7px;height:7px;background:#E8533A;border-radius:50%;flex-shrink:0;margin-top:5px}
+
+.chat-area{display:flex;flex-direction:column}
+.chat-hdr{padding:14px 20px;border-bottom:1px solid rgba(255,255,255,0.07);display:flex;align-items:center;gap:12px}
+.chat-hdr-avatar{width:36px;height:36px;border-radius:10px;background:linear-gradient(135deg,#E8533A,#C47F17);display:flex;align-items:center;justify-content:center;font-size:16px}
+.chat-hdr-name{font-size:14px;font-weight:700}
+.chat-hdr-sub{font-size:11px;color:rgba(240,237,232,0.4)}
+.chat-messages{flex:1;padding:20px;overflow-y:auto;display:flex;flex-direction:column;gap:12px}
+.bubble{max-width:68%;padding:10px 14px;border-radius:12px;font-size:13px;line-height:1.5}
+.bubble.them{background:rgba(255,255,255,0.07);border-bottom-left-radius:4px;align-self:flex-start}
+.bubble.me{background:#E8533A;border-bottom-right-radius:4px;align-self:flex-end}
+.bubble-time{font-size:10px;color:rgba(240,237,232,0.35);margin-top:4px;text-align:right}
+.chat-input-row{padding:14px 16px;border-top:1px solid rgba(255,255,255,0.07);display:flex;gap:8px}
+.chat-input{flex:1;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);border-radius:10px;padding:10px 14px;color:#F0EDE8;font-size:13px;font-family:inherit;outline:none}
+.chat-send{background:#E8533A;border:none;color:#fff;padding:10px 18px;border-radius:10px;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit}
+
+/* FOOTER */
+.footer{border-top:1px solid rgba(255,255,255,0.06);padding:20px 28px;display:flex;align-items:center;justify-content:space-between;font-size:11px;color:rgba(240,237,232,0.3)}
+.footer-links{display:flex;gap:18px}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="nav">
+  <div class="logo">
+    <div class="logo-icon">🌍</div>
+    Makola<span>Digital</span>
+  </div>
+  <div class="nav-links">
+    <button class="nav-link active" onclick="showScreen('home',this)">Home</button>
+    <button class="nav-link" onclick="showScreen('listing',this)">Listing</button>
+    <button class="nav-link" onclick="showScreen('dashboard',this)">Dashboard</button>
+    <button class="nav-link" onclick="showScreen('messages',this)">Messages</button>
+  </div>
+  <div class="nav-actions">
+    <button class="btn-outline">Log in</button>
+    <button class="btn-primary">Sell free →</button>
+  </div>
+</nav>
+
+<!-- SCREEN TABS -->
+<div class="screen-tabs">
+  <button class="screen-tab active" onclick="showScreen('home',null,this)">🏠 Homepage</button>
+  <button class="screen-tab" onclick="showScreen('listing',null,this)">📦 Listing Detail</button>
+  <button class="screen-tab" onclick="showScreen('dashboard',null,this)">📊 Seller Dashboard</button>
+  <button class="screen-tab" onclick="showScreen('messages',null,this)">💬 Messages</button>
+</div>
+
+<!-- ══ SCREEN: HOME ════════════════════════════ -->
+<div id="screen-home" class="screen active">
+  <div class="hero">
+    <div class="hero-pill">🌍 Africa's Marketplace — Products · Services · Jobs · Rentals</div>
+    <h1>Buy, Sell & Connect<br><span class="grad">Across Africa & Beyond</span></h1>
+    <p>The trusted marketplace connecting African businesses with buyers locally, continentally, and in the diaspora.</p>
+    <div class="search-bar">
+      <input placeholder="Search products, services, jobs, rentals..." id="hero-search" oninput="filterCards(this.value)">
+      <button class="search-btn">Search</button>
+    </div>
+    <div class="quick-tags">
+      <span class="quick-tag" onclick="document.getElementById('hero-search').value='iPhone';filterCards('iPhone')">iPhone</span>
+      <span class="quick-tag" onclick="document.getElementById('hero-search').value='Apartments';filterCards('Apartments')">Apartments Accra</span>
+      <span class="quick-tag" onclick="document.getElementById('hero-search').value='Remote Jobs';filterCards('Remote Jobs')">Remote Jobs</span>
+      <span class="quick-tag" onclick="document.getElementById('hero-search').value='Toyota';filterCards('Toyota')">Toyota</span>
+    </div>
+  </div>
+
+  <div class="stats-bar">
+    <div class="stat"><div class="stat-val">180k+</div><div class="stat-lbl">Active listings</div></div>
+    <div class="stat"><div class="stat-val">54</div><div class="stat-lbl">African countries</div></div>
+    <div class="stat"><div class="stat-val">22k+</div><div class="stat-lbl">Verified sellers</div></div>
+    <div class="stat"><div class="stat-val">1.2M+</div><div class="stat-lbl">Community members</div></div>
+  </div>
+
+  <div class="section">
+    <div class="section-hdr">
+      <div class="section-title">Browse categories</div>
+      <button class="see-all">See all →</button>
+    </div>
+    <div class="cats">
+      <div class="cat-card" onclick="setTab('Products')"><div class="cat-icon">🛍️</div><div class="cat-name">Products</div><div class="cat-count" style="color:#E8533A">12.4k listings</div></div>
+      <div class="cat-card" onclick="setTab('Services')"><div class="cat-icon">🔧</div><div class="cat-name">Services</div><div class="cat-count" style="color:#2D9E6B">8.1k listings</div></div>
+      <div class="cat-card" onclick="setTab('Jobs')"><div class="cat-icon">💼</div><div class="cat-name">Jobs</div><div class="cat-count" style="color:#C47F17">3.7k listings</div></div>
+      <div class="cat-card" onclick="setTab('Rentals')"><div class="cat-icon">🏠</div><div class="cat-name">Rentals</div><div class="cat-count" style="color:#3B7DD8">2.2k listings</div></div>
+      <div class="cat-card"><div class="cat-icon">🚗</div><div class="cat-name">Vehicles</div><div class="cat-count" style="color:#8B5CF6">5.9k listings</div></div>
+      <div class="cat-card"><div class="cat-icon">📱</div><div class="cat-name">Electronics</div><div class="cat-count" style="color:#E8533A">9.3k listings</div></div>
+      <div class="cat-card"><div class="cat-icon">👗</div><div class="cat-name">Fashion</div><div class="cat-count" style="color:#DB2777">6.6k listings</div></div>
+      <div class="cat-card"><div class="cat-icon">🌿</div><div class="cat-name">Food & Agric</div><div class="cat-count" style="color:#2D9E6B">4.1k listings</div></div>
+    </div>
+  </div>
+
+  <div class="section" style="margin-top:24px">
+    <div class="section-hdr">
+      <div class="section-title">Featured listings</div>
+    </div>
+    <div class="tabs-row">
+      <button class="tab active" onclick="setTab('All',this)">All</button>
+      <button class="tab" onclick="setTab('Products',this)">Products</button>
+      <button class="tab" onclick="setTab('Services',this)">Services</button>
+      <button class="tab" onclick="setTab('Jobs',this)">Jobs</button>
+      <button class="tab" onclick="setTab('Rentals',this)">Rentals</button>
+    </div>
+    <div class="listings" id="listings-grid"></div>
+  </div>
+
+  <div class="cta-banner">
+    <div>
+      <h3>Are you a business owner?</h3>
+      <p>List your products, services, or jobs — reach millions across Africa & the diaspora.</p>
+    </div>
+    <div class="cta-actions">
+      <button class="btn-outline">Learn more</button>
+      <button class="btn-primary">Start selling free →</button>
+    </div>
+  </div>
+
+  <div class="footer" style="margin-top:32px">
+    <div>🌍 MakolaDigital — Africa's Marketplace © 2025</div>
+    <div class="footer-links"><span>Privacy</span><span>Terms</span><span>Help</span><span>Contact</span></div>
+  </div>
+</div>
+
+<!-- ══ SCREEN: LISTING DETAIL ════════════════ -->
+<div id="screen-listing" class="screen">
+  <div class="detail-layout">
+    <div>
+      <div class="detail-images" id="detail-main-img">📱</div>
+      <div class="detail-thumbs">
+        <div class="thumb active">📱</div>
+        <div class="thumb">🖼️</div>
+        <div class="thumb">📦</div>
+        <div class="thumb">🔍</div>
+      </div>
+      <div style="margin-top:20px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.07);border-radius:12px;padding:18px">
+        <div style="font-size:13px;font-weight:700;margin-bottom:12px">Description</div>
+        <div style="font-size:12px;color:rgba(240,237,232,0.6);line-height:1.75">Brand new iPhone 15 Pro Max in factory seal. 256GB storage, titanium frame, A17 Pro chip. Available in Natural Titanium, Blue Titanium, and Black Titanium. Comes with original accessories, 1-year Apple warranty. We are an authorized reseller based in Accra with 3+ years experience.</div>
+        <div style="margin-top:14px;display:flex;gap:6px;flex-wrap:wrap">
+          <span class="dtag">Brand new</span><span class="dtag">Apple</span><span class="dtag">256GB</span><span class="dtag">Warranty</span><span class="dtag">Accra</span>
+        </div>
+      </div>
+      <div style="margin-top:14px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.07);border-radius:12px;padding:18px">
+        <div style="font-size:13px;font-weight:700;margin-bottom:14px">Reviews (142)</div>
+        <div style="display:flex;gap:8px;margin-bottom:14px">
+          <div style="font-size:36px;font-weight:800;color:#E8533A">4.8</div>
+          <div style="padding-top:4px"><div style="color:#C47F17;font-size:16px">★★★★★</div><div style="font-size:11px;color:rgba(240,237,232,0.4);margin-top:2px">142 verified reviews</div></div>
+        </div>
+        <div id="reviews-list"></div>
+      </div>
+    </div>
+    <div>
+      <div class="detail-badge">✓ Verified Seller</div>
+      <div class="detail-title">iPhone 15 Pro Max 256GB — All Colours</div>
+      <div class="detail-price">GH₵ 8,500</div>
+      <div class="detail-loc">📍 Accra Mall, Accra, Ghana &nbsp;·&nbsp; Posted 2 days ago</div>
+      <div class="rating-row"><span class="stars">★★★★★</span><span class="rating-num">4.8</span><span class="rating-cnt">(142 reviews)</span></div>
+
+      <div class="seller-card">
+        <div class="seller-top">
+          <div class="seller-avatar">T</div>
+          <div><div class="seller-name">TechHub GH</div><div class="seller-verified">✓ Verified · Pro Seller</div></div>
+        </div>
+        <div class="seller-stats">
+          <div class="s-stat"><div class="s-stat-val">142</div><div class="s-stat-lbl">Reviews</div></div>
+          <div class="s-stat"><div class="s-stat-val">98%</div><div class="s-stat-lbl">Response</div></div>
+          <div class="s-stat"><div class="s-stat-val">3 yrs</div><div class="s-stat-lbl">Member</div></div>
+          <div class="s-stat"><div class="s-stat-val">4.8★</div><div class="s-stat-lbl">Rating</div></div>
+        </div>
+        <button class="msg-btn" onclick="showScreen('messages')">💬 Send Message</button>
+        <button class="save-btn">♡ Save listing</button>
+      </div>
+
+      <div class="order-card">
+        <h4>Make a purchase</h4>
+        <div class="order-row"><span>Price</span><span>GH₵ 8,500</span></div>
+        <div class="order-row"><span>Platform fee (3%)</span><span>GH₵ 255</span></div>
+        <div class="order-row total"><span>Total</span><span>GH₵ 8,755</span></div>
+        <div style="font-size:11px;color:rgba(240,237,232,0.4);margin:10px 0 5px">Pay with:</div>
+        <div class="pay-methods">
+          <div class="pay-method sel" onclick="selPay(this)">📱 MoMo</div>
+          <div class="pay-method" onclick="selPay(this)">💳 Card</div>
+          <div class="pay-method" onclick="selPay(this)">🏦 Bank</div>
+        </div>
+        <button class="buy-btn">🔒 Buy Securely</button>
+        <div style="font-size:10px;color:rgba(240,237,232,0.3);text-align:center;margin-top:8px">Protected by Makola Buyer Guarantee</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ SCREEN: DASHBOARD ══════════════════════ -->
+<div id="screen-dashboard" class="screen">
+  <div class="dash-layout">
+    <div class="sidebar">
+      <div class="sidebar-item active"><span class="sidebar-icon">📊</span>Overview</div>
+      <div class="sidebar-item"><span class="sidebar-icon">📦</span>My Listings</div>
+      <div class="sidebar-item"><span class="sidebar-icon">🛒</span>Orders</div>
+      <div class="sidebar-item"><span class="sidebar-icon">💬</span>Messages</div>
+      <div class="sidebar-item"><span class="sidebar-icon">⭐</span>Reviews</div>
+      <div class="sidebar-item"><span class="sidebar-icon">💰</span>Earnings</div>
+      <div class="sidebar-item"><span class="sidebar-icon">📣</span>Boost Listings</div>
+      <div class="sidebar-item"><span class="sidebar-icon">✅</span>KYC Verification</div>
+      <div class="sidebar-item" style="margin-top:auto"><span class="sidebar-icon">⚙️</span>Settings</div>
+    </div>
+    <div class="dash-main">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px">
+        <div><div style="font-size:18px;font-weight:800;letter-spacing:-0.02em">Good morning, Kofi 👋</div><div style="font-size:12px;color:rgba(240,237,232,0.45);margin-top:3px">Here's how your store is performing</div></div>
+        <button class="btn-primary">+ New listing</button>
+      </div>
+
+      <div class="metrics">
+        <div class="metric"><div class="metric-lbl">Revenue (this month)</div><div class="metric-val">GH₵ 24,800</div><div class="metric-chg up">↑ +18% vs last month</div></div>
+        <div class="metric"><div class="metric-lbl">Active listings</div><div class="metric-val">34</div><div class="metric-chg up">↑ 4 new this week</div></div>
+        <div class="metric"><div class="metric-lbl">Orders</div><div class="metric-val">89</div><div class="metric-chg up">↑ 12 pending</div></div>
+        <div class="metric"><div class="metric-lbl">Profile views</div><div class="metric-val">4,210</div><div class="metric-chg dn">↓ -5% vs last week</div></div>
+      </div>
+
+      <div class="chart-box">
+        <div class="chart-hdr">
+          <div class="chart-title">Monthly revenue (GH₵)</div>
+          <div class="chart-legend"><span style="color:#E8533A">■</span> Revenue &nbsp; <span style="color:#3B7DD8">■</span> Orders</div>
+        </div>
+        <div class="chart-area" id="chart-bars"></div>
+        <div style="height:20px"></div>
+      </div>
+
+      <div class="table-box">
+        <div class="table-hdr">
+          <div style="font-size:13px;font-weight:700">Recent listings</div>
+          <button class="see-all">View all →</button>
+        </div>
+        <table class="tbl">
+          <thead><tr><th>Listing</th><th>Type</th><th>Price</th><th>Views</th><th>Status</th><th>Action</th></tr></thead>
+          <tbody id="dash-table"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ SCREEN: MESSAGES ═══════════════════════ -->
+<div id="screen-messages" class="screen">
+  <div class="msg-layout">
+    <div class="conv-list" id="conv-list"></div>
+    <div class="chat-area">
+      <div class="chat-hdr">
+        <div class="chat-hdr-avatar">T</div>
+        <div><div class="chat-hdr-name">TechHub GH</div><div class="chat-hdr-sub">Re: iPhone 15 Pro Max 256GB</div></div>
+        <div style="margin-left:auto;font-size:11px;color:rgba(240,237,232,0.35)">🟢 Online</div>
+      </div>
+      <div class="chat-messages" id="chat-messages"></div>
+      <div class="chat-input-row">
+        <input class="chat-input" id="msg-input" placeholder="Type a message..." onkeydown="if(event.key==='Enter')sendMsg()">
+        <button class="chat-send" onclick="sendMsg()">Send</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ── DATA ──────────────────────────────────────
+const listings = [
+  {id:1,type:'Products',badge:'Verified',badgeColor:'#2D9E6B',title:'iPhone 15 Pro Max 256GB',price:'GH₵ 8,500',loc:'Accra, Ghana',seller:'TechHub GH',rating:4.8,rev:142,img:'📱'},
+  {id:2,type:'Services',badge:'Top Rated',badgeColor:'#3B7DD8',title:'Professional Web & App Dev',price:'From GH₵ 2,000',loc:'Remote / Worldwide',seller:'CodeAfrica Studio',rating:4.9,rev:87,img:'💻'},
+  {id:3,type:'Rentals',badge:'New',badgeColor:'#8B5CF6',title:'2BR Furnished Apartment — East Legon',price:'GH₵ 4,500/mo',loc:'East Legon, Accra',seller:'PrimeSpace GH',rating:4.7,rev:33,img:'🏠'},
+  {id:4,type:'Jobs',badge:'Urgent',badgeColor:'#E8533A',title:'Senior Data Scientist (Remote)',price:'$3,500–$5,000/mo',loc:'Remote — Africa',seller:'Fintech Lagos Ltd',rating:4.6,rev:21,img:'📊'},
+  {id:5,type:'Products',badge:'Verified',badgeColor:'#2D9E6B',title:'Toyota RAV4 2020 Full Option',price:'GH₵ 185,000',loc:'Kumasi, Ghana',seller:'AutoLink GH',rating:4.5,rev:58,img:'🚗'},
+  {id:6,type:'Services',badge:'Popular',badgeColor:'#C47F17',title:'African Print Tailoring & Design',price:'From GH₵ 350',loc:'Labone, Accra',seller:'Ama Couture',rating:5.0,rev:204,img:'👗'},
+];
+
+let savedIds=[], activeTab='All', searchVal='';
+
+function renderListings(){
+  const grid=document.getElementById('listings-grid');
+  if(!grid)return;
+  const filtered=listings.filter(l=>
+    (activeTab==='All'||l.type===activeTab)&&
+    (searchVal===''||l.title.toLowerCase().includes(searchVal.toLowerCase())||l.loc.toLowerCase().includes(searchVal.toLowerCase()))
+  );
+  if(!filtered.length){grid.innerHTML='<div style="grid-column:1/-1;text-align:center;padding:40px;color:rgba(240,237,232,0.3)">No listings found</div>';return;}
+  grid.innerHTML=filtered.map(l=>`
+    <div class="card" onclick="showScreen('listing')">
+      <div class="card-img">${l.img}
+        <div class="badge" style="background:${l.badgeColor}22;border:1px solid ${l.badgeColor}55;color:${l.badgeColor}">${l.badge}</div>
+        <button class="heart" onclick="event.stopPropagation();toggleSave(${l.id},this)">${savedIds.includes(l.id)?'❤️':'🤍'}</button>
+      </div>
+      <div class="card-body">
+        <div class="card-type">${l.type}</div>
+        <div class="card-title">${l.title}</div>
+        <div class="card-price">${l.price}</div>
+        <div class="card-meta"><span>📍 ${l.loc}</span><span style="color:#C47F17">⭐ ${l.rating} (${l.rev})</span></div>
+        <div class="card-footer"><span class="card-seller">by ${l.seller}</span><button class="card-btn">View →</button></div>
+      </div>
+    </div>
+  `).join('');
+}
+
+function toggleSave(id,btn){savedIds.includes(id)?savedIds=savedIds.filter(x=>x!==id):savedIds.push(id);btn.textContent=savedIds.includes(id)?'❤️':'🤍';}
+function filterCards(v){searchVal=v;renderListings();}
+function setTab(t,btn){
+  activeTab=t;
+  document.querySelectorAll('.tab').forEach(b=>b.classList.remove('active'));
+  if(btn)btn.classList.add('active');
+  renderListings();
+}
+function selPay(el){document.querySelectorAll('.pay-method').forEach(e=>e.classList.remove('sel'));el.classList.add('sel');}
+
+// ── CHART ─────────────────────────────────────
+const chartData=[
+  {m:'Jan',rev:9200,ord:34},{m:'Feb',rev:11400,ord:41},{m:'Mar',rev:8700,ord:28},
+  {m:'Apr',rev:15600,ord:56},{m:'May',rev:13200,ord:48},{m:'Jun',rev:18900,ord:67},
+  {m:'Jul',rev:16400,ord:59},{m:'Aug',rev:21300,ord:74},{m:'Sep',rev:19800,ord:70},
+  {m:'Oct',rev:24800,ord:89},{m:'Nov',rev:0,ord:0},{m:'Dec',rev:0,ord:0},
+];
+function renderChart(){
+  const el=document.getElementById('chart-bars');if(!el)return;
+  const maxR=Math.max(...chartData.map(d=>d.rev));
+  el.innerHTML=chartData.map(d=>`
+    <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;height:100%;justify-content:flex-end;position:relative">
+      <div class="bar" style="width:100%;height:${d.rev?Math.max(d.rev/maxR*100,3):3}%;background:${d.rev?'#E8533A':'rgba(255,255,255,0.05)'};opacity:${d.rev?1:0.3}" title="GH₵${d.rev.toLocaleString()}">
+        <span class="bar-label">${d.m}</span>
+      </div>
+    </div>
+  `).join('');
+}
+
+// ── DASH TABLE ────────────────────────────────
+const dashListings=[
+  {title:'iPhone 15 Pro Max',type:'Product',price:'GH₵ 8,500',views:1240,status:'active'},
+  {title:'Web Dev Services',type:'Service',price:'GH₵ 2,000+',views:873,status:'active'},
+  {title:'Toyota RAV4 2020',type:'Product',price:'GH₵ 185,000',views:540,status:'paused'},
+  {title:'2BR Apartment Legon',type:'Rental',price:'GH₵ 4,500/mo',views:312,status:'active'},
+  {title:'Senior Dev (Remote)',type:'Job',price:'$3,500/mo',views:921,status:'sold'},
+];
+function renderDashTable(){
+  const el=document.getElementById('dash-table');if(!el)return;
+  el.innerHTML=dashListings.map(l=>`
+    <tr>
+      <td style="font-weight:600">${l.title}</td>
+      <td style="color:rgba(240,237,232,0.5)">${l.type}</td>
+      <td style="color:#E8533A;font-weight:700">${l.price}</td>
+      <td>${l.views.toLocaleString()}</td>
+      <td><span class="status-pill pill-${l.status}">${l.status}</span></td>
+      <td><button style="background:none;border:1px solid rgba(255,255,255,0.1);color:rgba(240,237,232,0.6);padding:4px 10px;border-radius:6px;font-size:11px;cursor:pointer;font-family:inherit">Edit</button></td>
+    </tr>
+  `).join('');
+}
+
+// ── REVIEWS ───────────────────────────────────
+const reviews=[
+  {name:'Ama K.',rating:5,text:'Fast delivery, exactly as described. TechHub is the best!',time:'2 days ago'},
+  {name:'Kwame B.',rating:5,text:'Legit seller. Got my phone sealed, works perfectly.',time:'5 days ago'},
+  {name:'Fatima M.',rating:4,text:'Good product, delivery was a day late but quality is great.',time:'1 week ago'},
+];
+function renderReviews(){
+  const el=document.getElementById('reviews-list');if(!el)return;
+  el.innerHTML=reviews.map(r=>`
+    <div style="padding:12px 0;border-bottom:1px solid rgba(255,255,255,0.05)">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:5px">
+        <div style="display:flex;align-items:center;gap:8px">
+          <div style="width:28px;height:28px;border-radius:8px;background:rgba(255,255,255,0.08);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700">${r.name[0]}</div>
+          <span style="font-size:12px;font-weight:600">${r.name}</span>
+          <span style="color:#C47F17;font-size:12px">${'★'.repeat(r.rating)}</span>
+        </div>
+        <span style="font-size:10px;color:rgba(240,237,232,0.3)">${r.time}</span>
+      </div>
+      <div style="font-size:12px;color:rgba(240,237,232,0.6);padding-left:36px">${r.text}</div>
+    </div>
+  `).join('');
+}
+
+// ── MESSAGES ──────────────────────────────────
+const convs=[
+  {name:'TechHub GH',avatar:'T',avatarColor:'linear-gradient(135deg,#E8533A,#C47F17)',preview:'Sure, we can do delivery to Tema',time:'2m',unread:true,active:true},
+  {name:'CodeAfrica Studio',avatar:'C',avatarColor:'linear-gradient(135deg,#3B7DD8,#8B5CF6)',preview:'The project timeline is 3 weeks',time:'1h',unread:false},
+  {name:'PrimeSpace GH',avatar:'P',avatarColor:'linear-gradient(135deg,#2D9E6B,#3B7DD8)',preview:'Apartment is still available',time:'3h',unread:true},
+  {name:'AutoLink GH',avatar:'A',avatarColor:'linear-gradient(135deg,#C47F17,#E8533A)',preview:'Yes it comes with full service history',time:'1d',unread:false},
+  {name:'Ama Couture',avatar:'A',avatarColor:'linear-gradient(135deg,#DB2777,#8B5CF6)',preview:'I can start your order next week',time:'2d',unread:false},
+];
+const chatMsgs=[
+  {me:false,text:'Hi! Is the iPhone 15 Pro Max still available?',time:'10:24 AM'},
+  {me:true,text:'Yes it is! We have all colours in stock — Natural, Blue and Black Titanium.',time:'10:25 AM'},
+  {me:false,text:'Great! Can you do delivery to East Legon?',time:'10:27 AM'},
+  {me:true,text:'Absolutely, we offer same-day delivery within Accra for GH₵ 30. Payment is via MoMo or card.',time:'10:28 AM'},
+  {me:false,text:'Perfect. Is the price negotiable at all?',time:'10:31 AM'},
+  {me:true,text:'We can do GH₵ 8,300 if you pay today. Factory sealed with full warranty.',time:'10:32 AM'},
+];
+let msgs=[...chatMsgs];
+function renderConvs(){
+  const el=document.getElementById('conv-list');if(!el)return;
+  el.innerHTML=convs.map((c,i)=>`
+    <div class="conv-item ${c.active?'active':''}" onclick="setConv(${i})">
+      <div class="conv-avatar" style="background:${c.avatarColor}">${c.avatar}</div>
+      <div class="conv-info">
+        <div class="conv-name">${c.name}</div>
+        <div class="conv-preview">${c.preview}</div>
+      </div>
+      <div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px">
+        <span class="conv-time">${c.time}</span>
+        ${c.unread?'<div class="unread-dot"></div>':''}
+      </div>
+    </div>
+  `).join('');
+}
+function renderChat(){
+  const el=document.getElementById('chat-messages');if(!el)return;
+  el.innerHTML=msgs.map(m=>`
+    <div>
+      <div class="bubble ${m.me?'me':'them'}">${m.text}</div>
+      <div class="bubble-time" style="${m.me?'':'text-align:left'}">${m.time}</div>
+    </div>
+  `).join('');
+  el.scrollTop=el.scrollHeight;
+}
+function setConv(i){convs.forEach((c,j)=>c.active=i===j);renderConvs();}
+function sendMsg(){
+  const inp=document.getElementById('msg-input');
+  if(!inp||!inp.value.trim())return;
+  const now=new Date();
+  msgs.push({me:true,text:inp.value.trim(),time:now.getHours()+':'+(now.getMinutes()+'').padStart(2,'0')});
+  inp.value='';renderChat();
+}
+
+// ── SCREEN SWITCHING ──────────────────────────
+function showScreen(id,navBtn,tabBtn){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.getElementById('screen-'+id).classList.add('active');
+  document.querySelectorAll('.nav-link').forEach(b=>b.classList.remove('active'));
+  document.querySelectorAll('.screen-tab').forEach(b=>b.classList.remove('active'));
+  if(navBtn)navBtn.classList.add('active');
+  if(tabBtn)tabBtn.classList.add('active');
+  if(id==='home'){renderListings();}
+  if(id==='listing'){renderReviews();}
+  if(id==='dashboard'){renderChart();renderDashTable();}
+  if(id==='messages'){renderConvs();renderChat();}
+}
+
+// ── INIT ──────────────────────────────────────
+renderListings();
+</script>
+</body>
+</html>

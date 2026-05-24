@@ -1,0 +1,42 @@
+{
+  "expo": {
+    "name": "Makola Digital",
+    "slug": "makola-digital",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "dark",
+    "backgroundColor": "#08090A",
+    "splash": {
+      "image": "./assets/splash.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#08090A"
+    },
+    "ios": {
+      "supportsTablet": false,
+      "bundleIdentifier": "com.makoladigital.app",
+      "infoPlist": {
+        "NSCameraUsageDescription": "Used to take photos for your listings",
+        "NSPhotoLibraryUsageDescription": "Used to upload photos for your listings",
+        "NSLocationWhenInUseUsageDescription": "Used to show nearby listings"
+      }
+    },
+    "android": {
+      "package": "com.makoladigital.app",
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#08090A"
+      },
+      "permissions": ["CAMERA","READ_EXTERNAL_STORAGE","WRITE_EXTERNAL_STORAGE","ACCESS_FINE_LOCATION"]
+    },
+    "plugins": [
+      "expo-secure-store",
+      "expo-image-picker",
+      "expo-location",
+      ["expo-notifications", { "sounds": ["./assets/notification.wav"] }]
+    ],
+    "extra": {
+      "eas": { "projectId": "your-eas-project-id" }
+    }
+  }
+}

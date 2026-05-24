@@ -1,0 +1,20 @@
+{
+  "expo": {
+    "name": "Makola Admin",
+    "slug": "makola-admin",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "userInterfaceStyle": "dark",
+    "backgroundColor": "#08090A",
+    "ios": {
+      "bundleIdentifier": "com.makoladigital.admin",
+      "supportsTablet": false
+    },
+    "android": {
+      "package": "com.makoladigital.admin",
+      "adaptiveIcon": {
+        "backgroundColor": "#08090A"
+      }
+    }
+  }
+}

@@ -1,0 +1,627 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Makola Digital — Auth</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --red:#E8533A;--gold:#C47F17;--green:#2D9E6B;--blue:#3B7DD8;
+  --bg:#0A0A0A;--bg2:#0F0F0F;--bg3:rgba(255,255,255,0.04);
+  --border:rgba(255,255,255,0.09);--text:rgba(240,237,232,0.55);--white:#F0EDE8;
+}
+body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(--white);min-height:100vh}
+button,input,select,textarea{font-family:inherit}
+::-webkit-scrollbar{width:4px}::-webkit-scrollbar-thumb{background:#2a2a2a;border-radius:2px}
+
+/* SCREEN SWITCHER */
+.screen-tabs{display:flex;gap:8px;padding:16px 24px;background:var(--bg2);border-bottom:1px solid var(--border)}
+.stab{background:var(--bg3);border:1px solid var(--border);color:var(--text);padding:8px 20px;border-radius:22px;font-size:12.5px;font-weight:600;cursor:pointer;transition:all .15s;white-space:nowrap}
+.stab.active{background:var(--red);border-color:var(--red);color:#fff}
+.screen{display:none}.screen.active{display:flex}
+
+/* SHARED LAYOUT */
+.auth-layout{min-height:calc(100vh - 57px);display:grid;grid-template-columns:1fr 1fr}
+.auth-left{position:relative;overflow:hidden;display:flex;flex-direction:column;justify-content:space-between;padding:48px;
+  background:linear-gradient(155deg,#0D0D0D 0%,#111 60%,rgba(232,83,58,.08) 100%)}
+.auth-left::before{content:'';position:absolute;inset:0;
+  background:repeating-linear-gradient(0deg,transparent,transparent 49px,rgba(255,255,255,.025) 50px),
+             repeating-linear-gradient(90deg,transparent,transparent 49px,rgba(255,255,255,.025) 50px)}
+.auth-left::after{content:'';position:absolute;top:-120px;right:-120px;width:400px;height:400px;
+  background:radial-gradient(circle,rgba(232,83,58,.18) 0%,transparent 70%);pointer-events:none}
+.left-logo{display:flex;align-items:center;gap:10px;font-weight:900;font-size:20px;letter-spacing:-.03em;position:relative;z-index:1}
+.logo-icon{width:38px;height:38px;border-radius:10px;background:linear-gradient(135deg,var(--red),var(--gold));
+  display:flex;align-items:center;justify-content:center;font-size:19px;box-shadow:0 4px 20px rgba(232,83,58,.4)}
+.logo span{color:var(--red)}
+.left-body{position:relative;z-index:1}
+.left-tag{display:inline-flex;align-items:center;gap:6px;background:rgba(232,83,58,.1);
+  border:1px solid rgba(232,83,58,.25);border-radius:20px;padding:5px 13px;
+  font-size:11.5px;color:var(--red);font-weight:700;margin-bottom:24px}
+.left-h1{font-size:40px;font-weight:900;letter-spacing:-.035em;line-height:1.1;margin-bottom:16px}
+.left-h1 .grad{background:linear-gradient(90deg,var(--red),var(--gold));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.left-sub{font-size:14.5px;color:var(--text);line-height:1.7;max-width:360px;margin-bottom:36px}
+.trust-items{display:flex;flex-direction:column;gap:12px}
+.trust-item{display:flex;align-items:center;gap:12px;font-size:13px;color:rgba(240,237,232,.65)}
+.trust-icon{width:34px;height:34px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0}
+.left-footer{font-size:11.5px;color:rgba(240,237,232,.25);position:relative;z-index:1}
+.testimonial{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:14px;padding:18px;margin-bottom:20px}
+.test-text{font-size:13px;color:rgba(240,237,232,.7);line-height:1.65;margin-bottom:12px;font-style:italic}
+.test-author{display:flex;align-items:center;gap:9px}
+.test-av{width:30px;height:30px;border-radius:8px;background:linear-gradient(135deg,var(--red),var(--gold));display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:900}
+.test-name{font-size:12px;font-weight:700}
+.test-role{font-size:10.5px;color:var(--text)}
+
+/* RIGHT PANEL */
+.auth-right{background:var(--bg2);display:flex;align-items:center;justify-content:center;padding:48px 56px;
+  border-left:1px solid var(--border)}
+.auth-form-wrap{width:100%;max-width:400px}
+.form-header{margin-bottom:32px}
+.form-title{font-size:26px;font-weight:900;letter-spacing:-.03em;margin-bottom:7px}
+.form-sub{font-size:13.5px;color:var(--text);line-height:1.6}
+.form-sub a{color:var(--red);font-weight:700;text-decoration:none}
+
+/* GOOGLE BTN */
+.google-btn{width:100%;display:flex;align-items:center;justify-content:center;gap:10px;
+  background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);
+  color:var(--white);padding:12px;border-radius:11px;font-size:13.5px;font-weight:700;
+  cursor:pointer;transition:all .15s;margin-bottom:22px}
+.google-btn:hover{background:rgba(255,255,255,.1);border-color:rgba(255,255,255,.2)}
+.google-logo{font-size:18px}
+.divider{display:flex;align-items:center;gap:12px;margin-bottom:22px}
+.divider-line{flex:1;height:1px;background:var(--border)}
+.divider-text{font-size:11.5px;color:rgba(240,237,232,.3);font-weight:600;white-space:nowrap}
+
+/* FORM FIELDS */
+.field{margin-bottom:16px}
+.field-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.field label{display:block;font-size:12px;font-weight:700;color:rgba(240,237,232,.55);margin-bottom:6px;text-transform:uppercase;letter-spacing:.05em}
+.field input,.field select,.field textarea{
+  width:100%;background:rgba(255,255,255,.05);border:1px solid var(--border);
+  border-radius:10px;padding:12px 14px;color:var(--white);font-size:13.5px;
+  outline:none;transition:border-color .15s}
+.field input::placeholder,.field textarea::placeholder{color:rgba(240,237,232,.28)}
+.field input:focus,.field select:focus,.field textarea:focus{border-color:rgba(232,83,58,.5);background:rgba(255,255,255,.07)}
+.field select{cursor:pointer;appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='rgba(240,237,232,0.4)' d='M6 8L1 3h10z'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 14px center;padding-right:36px}
+.field select option{background:#1a1a1a}
+.field textarea{resize:vertical;min-height:80px}
+.input-wrap{position:relative}
+.input-wrap input{padding-right:44px}
+.eye-btn{position:absolute;right:13px;top:50%;transform:translateY(-50%);background:none;border:none;color:rgba(240,237,232,.35);cursor:pointer;font-size:17px;padding:0}
+.eye-btn:hover{color:var(--white)}
+.field-hint{font-size:11px;color:var(--text);margin-top:5px}
+.field-hint.error{color:#ff6b6b}
+.field-hint.ok{color:var(--green)}
+
+/* PASSWORD STRENGTH */
+.pw-strength{display:flex;gap:4px;margin-top:8px}
+.pw-bar{flex:1;height:3px;border-radius:2px;background:rgba(255,255,255,.1);transition:background .3s}
+.pw-bar.weak{background:#E8533A}
+.pw-bar.fair{background:#C47F17}
+.pw-bar.good{background:#3B7DD8}
+.pw-bar.strong{background:#2D9E6B}
+.pw-label{font-size:10.5px;margin-top:5px;font-weight:600}
+
+/* CHECKBOX */
+.check-row{display:flex;align-items:flex-start;gap:10px;margin-bottom:18px}
+.check-row input[type=checkbox]{width:16px;height:16px;margin-top:2px;accent-color:var(--red);flex-shrink:0;cursor:pointer}
+.check-row label{font-size:12.5px;color:var(--text);line-height:1.55;cursor:pointer}
+.check-row a{color:var(--red);font-weight:700;text-decoration:none}
+
+/* SUBMIT BTN */
+.submit-btn{width:100%;background:linear-gradient(135deg,var(--red),var(--gold));border:none;
+  color:#fff;padding:13px;border-radius:11px;font-size:14.5px;font-weight:900;
+  cursor:pointer;transition:opacity .15s;box-shadow:0 4px 20px rgba(232,83,58,.3);
+  letter-spacing:-.01em}
+.submit-btn:hover{opacity:.88}
+.submit-btn:disabled{opacity:.45;cursor:not-allowed}
+
+/* STEP INDICATOR */
+.steps{display:flex;align-items:center;gap:8px;margin-bottom:28px}
+.step{display:flex;align-items:center;gap:6px}
+.step-num{width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;border:1.5px solid var(--border);color:var(--text);transition:all .2s}
+.step-num.active{background:var(--red);border-color:var(--red);color:#fff}
+.step-num.done{background:var(--green);border-color:var(--green);color:#fff}
+.step-label{font-size:11.5px;color:var(--text);font-weight:600}
+.step-label.active{color:var(--white)}
+.step-connector{flex:1;height:1.5px;background:var(--border)}
+.step-connector.done{background:var(--green)}
+
+/* ACCOUNT TYPE CARDS */
+.account-types{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:20px}
+.type-card{background:var(--bg3);border:1.5px solid var(--border);border-radius:12px;
+  padding:16px 14px;cursor:pointer;transition:all .18s;text-align:center}
+.type-card:hover{border-color:rgba(232,83,58,.4);background:rgba(232,83,58,.05)}
+.type-card.active{border-color:var(--red);background:rgba(232,83,58,.08)}
+.type-icon{font-size:26px;margin-bottom:8px}
+.type-name{font-size:13px;font-weight:800;margin-bottom:3px}
+.type-desc{font-size:11px;color:var(--text);line-height:1.5}
+
+/* KYC UPLOAD */
+.upload-zone{background:rgba(255,255,255,.03);border:2px dashed rgba(255,255,255,.12);
+  border-radius:13px;padding:28px;text-align:center;cursor:pointer;transition:all .2s;margin-bottom:14px}
+.upload-zone:hover,.upload-zone.dragover{border-color:rgba(232,83,58,.5);background:rgba(232,83,58,.05)}
+.upload-icon{font-size:32px;margin-bottom:10px}
+.upload-title{font-size:14px;font-weight:700;margin-bottom:4px}
+.upload-hint{font-size:12px;color:var(--text)}
+.upload-types{font-size:11px;color:rgba(240,237,232,.3);margin-top:6px}
+.uploaded-file{display:flex;align-items:center;gap:10px;background:rgba(45,158,107,.08);
+  border:1px solid rgba(45,158,107,.25);border-radius:10px;padding:10px 14px;margin-bottom:10px}
+.file-icon{font-size:20px}
+.file-name{font-size:12.5px;font-weight:700;flex:1}
+.file-size{font-size:11px;color:var(--text)}
+.file-remove{background:none;border:none;color:rgba(240,237,232,.35);font-size:16px;cursor:pointer}
+
+/* VERIFICATION TYPES */
+.id-types{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:18px}
+.id-type{background:var(--bg3);border:1.5px solid var(--border);border-radius:10px;
+  padding:12px 8px;text-align:center;cursor:pointer;transition:all .18s;font-size:12px;font-weight:700}
+.id-type:hover{border-color:rgba(232,83,58,.4)}
+.id-type.active{border-color:var(--red);background:rgba(232,83,58,.08);color:var(--red)}
+.id-type-icon{font-size:22px;margin-bottom:5px}
+
+/* VERIFICATION BADGE */
+.verify-badge{display:flex;align-items:center;gap:12px;background:rgba(45,158,107,.08);
+  border:1px solid rgba(45,158,107,.25);border-radius:12px;padding:14px 16px;margin-bottom:16px}
+.verify-icon{font-size:24px}
+.verify-text{font-size:13px;font-weight:700;color:var(--green)}
+.verify-sub{font-size:11.5px;color:var(--text);margin-top:2px}
+
+/* SUCCESS STATE */
+.success-screen{text-align:center;padding:24px 0}
+.success-icon{font-size:56px;margin-bottom:18px;display:block}
+.success-title{font-size:24px;font-weight:900;letter-spacing:-.025em;margin-bottom:10px}
+.success-sub{font-size:13.5px;color:var(--text);line-height:1.65;margin-bottom:28px}
+
+/* OTP */
+.otp-inputs{display:flex;gap:10px;justify-content:center;margin:22px 0}
+.otp-input{width:52px;height:56px;text-align:center;font-size:22px;font-weight:900;
+  background:rgba(255,255,255,.06);border:1.5px solid var(--border);border-radius:11px;
+  color:var(--white);outline:none;transition:border-color .15s}
+.otp-input:focus{border-color:var(--red)}
+
+/* FORGOT */
+.forgot-link{display:block;text-align:right;font-size:12px;color:var(--red);font-weight:700;
+  text-decoration:none;margin-top:-10px;margin-bottom:18px;cursor:pointer}
+</style>
+</head>
+<body>
+
+<div class="screen-tabs">
+  <button class="stab active" onclick="show('login',this)">🔐 Login</button>
+  <button class="stab" onclick="show('register',this)">📝 Register</button>
+  <button class="stab" onclick="show('verify',this)">📧 Verify Email</button>
+  <button class="stab" onclick="show('kyc',this)">✅ KYC Upload</button>
+  <button class="stab" onclick="show('forgot',this)">🔑 Forgot Password</button>
+</div>
+
+<!-- ══════════════ LOGIN ══════════════ -->
+<div id="screen-login" class="screen active">
+  <div class="auth-layout">
+    <div class="auth-left">
+      <div class="left-logo"><div class="logo-icon">🌍</div>Makola<span>Digital</span></div>
+      <div class="left-body">
+        <div class="left-tag">🔐 Welcome back</div>
+        <h1 class="left-h1">Sign in to your<br><span class="grad">Makola account</span></h1>
+        <p class="left-sub">Access your listings, orders, messages and seller dashboard all in one place.</p>
+        <div class="trust-items">
+          <div class="trust-item"><div class="trust-icon" style="background:rgba(232,83,58,.12)">🛡️</div>Your account is protected with bank-grade encryption</div>
+          <div class="trust-item"><div class="trust-icon" style="background:rgba(45,158,107,.12)">📱</div>Supports Mobile Money, Card & Bank transfer</div>
+          <div class="trust-item"><div class="trust-icon" style="background:rgba(59,125,216,.12)">🌍</div>Reach buyers across 54 African countries & diaspora</div>
+        </div>
+      </div>
+      <div class="left-footer">🌍 MakolaDigital · Africa's trusted marketplace</div>
+    </div>
+    <div class="auth-right">
+      <div class="auth-form-wrap">
+        <div class="form-header">
+          <div class="form-title">Welcome back 👋</div>
+          <div class="form-sub">Don't have an account? <a onclick="show('register',null)">Create one free</a></div>
+        </div>
+        <button class="google-btn"><span class="google-logo">🇬</span>Continue with Google</button>
+        <div class="divider"><div class="divider-line"></div><div class="divider-text">or sign in with email</div><div class="divider-line"></div></div>
+        <div class="field"><label>Email address</label><input type="email" placeholder="you@example.com" id="login-email" oninput="validateEmail(this)"></div>
+        <div class="field">
+          <label>Password</label>
+          <div class="input-wrap">
+            <input type="password" placeholder="Enter your password" id="login-pw">
+            <button class="eye-btn" onclick="togglePw('login-pw',this)">👁</button>
+          </div>
+        </div>
+        <a class="forgot-link" onclick="show('forgot')">Forgot password?</a>
+        <div class="check-row"><input type="checkbox" id="remember" checked><label for="remember">Keep me signed in for 30 days</label></div>
+        <button class="submit-btn" onclick="doLogin()">Sign in to Makola →</button>
+        <div style="text-align:center;margin-top:18px;font-size:12px;color:var(--text)">
+          New to Makola? <a onclick="show('register',null)" style="color:var(--red);font-weight:700;cursor:pointer">Create your free account</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════ REGISTER ══════════════ -->
+<div id="screen-register" class="screen">
+  <div class="auth-layout">
+    <div class="auth-left">
+      <div class="left-logo"><div class="logo-icon">🌍</div>Makola<span>Digital</span></div>
+      <div class="left-body">
+        <div class="left-tag">✨ Join 22,000+ sellers</div>
+        <h1 class="left-h1">Sell to all of<br><span class="grad">Africa & beyond</span></h1>
+        <p class="left-sub">List products, services, jobs or rentals — reach millions of buyers across Africa and in the diaspora. It's completely free to start.</p>
+        <div class="testimonial">
+          <div class="test-text">"I listed my tailoring business on Makola and got my first 10 orders within 2 weeks. My business has grown 3x since joining."</div>
+          <div class="test-author">
+            <div class="test-av">A</div>
+            <div><div class="test-name">Ama Asante</div><div class="test-role">Fashion designer · Kumasi, Ghana</div></div>
+          </div>
+        </div>
+      </div>
+      <div class="left-footer">🌍 MakolaDigital · Africa's trusted marketplace</div>
+    </div>
+    <div class="auth-right">
+      <div class="auth-form-wrap">
+        <div class="form-header">
+          <div class="form-title">Create your account</div>
+          <div class="form-sub">Already have one? <a onclick="show('login',null)">Sign in</a></div>
+        </div>
+
+        <!-- Account type -->
+        <div class="field"><label>I want to</label></div>
+        <div class="account-types" id="account-types">
+          <div class="type-card active" onclick="selectType(this,'buyer')">
+            <div class="type-icon">🛍️</div>
+            <div class="type-name">Buy / Browse</div>
+            <div class="type-desc">Shop products, services, jobs & rentals</div>
+          </div>
+          <div class="type-card" onclick="selectType(this,'seller')">
+            <div class="type-icon">🏪</div>
+            <div class="type-name">Sell / List</div>
+            <div class="type-desc">List my business, products or services</div>
+          </div>
+        </div>
+
+        <button class="google-btn"><span class="google-logo">🇬</span>Continue with Google</button>
+        <div class="divider"><div class="divider-line"></div><div class="divider-text">or register with email</div><div class="divider-line"></div></div>
+
+        <div class="field-row">
+          <div class="field"><label>First name</label><input type="text" placeholder="Kofi"></div>
+          <div class="field"><label>Last name</label><input type="text" placeholder="Mensah"></div>
+        </div>
+        <div class="field"><label>Email address</label><input type="email" placeholder="kofi@example.com" oninput="validateEmail(this)"></div>
+        <div class="field"><label>Phone number</label>
+          <div style="display:flex;gap:8px">
+            <select style="width:110px;background:rgba(255,255,255,.05);border:1px solid var(--border);border-radius:10px;padding:12px 10px;color:var(--white);outline:none">
+              <option>🇬🇭 +233</option><option>🇳🇬 +234</option><option>🇰🇪 +254</option>
+              <option>🇿🇦 +27</option><option>🇬🇧 +44</option><option>🇺🇸 +1</option>
+            </select>
+            <input type="tel" placeholder="024 000 0000" style="flex:1">
+          </div>
+        </div>
+        <div class="field">
+          <label>Password</label>
+          <div class="input-wrap">
+            <input type="password" placeholder="Min. 8 characters" id="reg-pw" oninput="checkPwStrength(this.value)">
+            <button class="eye-btn" onclick="togglePw('reg-pw',this)">👁</button>
+          </div>
+          <div class="pw-strength"><div class="pw-bar" id="pb1"></div><div class="pw-bar" id="pb2"></div><div class="pw-bar" id="pb3"></div><div class="pw-bar" id="pb4"></div></div>
+          <div class="pw-label" id="pw-label" style="color:var(--text)">Enter a password</div>
+        </div>
+        <div class="field"><label>Country</label>
+          <select>
+            <option value="">Select your country</option>
+            <option>🇬🇭 Ghana</option><option>🇳🇬 Nigeria</option><option>🇰🇪 Kenya</option>
+            <option>🇿🇦 South Africa</option><option>🇬🇧 United Kingdom</option><option>🇺🇸 United States</option>
+            <option>🇨🇦 Canada</option><option>🇸🇳 Senegal</option><option>🇨🇮 Côte d'Ivoire</option>
+          </select>
+        </div>
+        <div class="check-row"><input type="checkbox" id="terms"><label for="terms">I agree to the <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a></label></div>
+        <div class="check-row"><input type="checkbox" id="mktg" checked><label for="mktg">Send me tips, new features & marketplace updates</label></div>
+        <button class="submit-btn" onclick="doRegister()">Create free account →</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════ VERIFY EMAIL ══════════════ -->
+<div id="screen-verify" class="screen">
+  <div class="auth-layout">
+    <div class="auth-left">
+      <div class="left-logo"><div class="logo-icon">🌍</div>Makola<span>Digital</span></div>
+      <div class="left-body">
+        <div class="left-tag">📧 One more step</div>
+        <h1 class="left-h1">Verify your<br><span class="grad">email address</span></h1>
+        <p class="left-sub">We sent a 6-digit code to your email. Enter it to activate your account and start buying or selling.</p>
+        <div class="trust-items">
+          <div class="trust-item"><div class="trust-icon" style="background:rgba(232,83,58,.12)">⚡</div>Code expires in 10 minutes</div>
+          <div class="trust-item"><div class="trust-icon" style="background:rgba(45,158,107,.12)">📱</div>Check your spam if you don't see it</div>
+          <div class="trust-item"><div class="trust-icon" style="background:rgba(59,125,216,.12)">🔄</div>You can request a new code after 60 seconds</div>
+        </div>
+      </div>
+      <div class="left-footer">🌍 MakolaDigital · Africa's trusted marketplace</div>
+    </div>
+    <div class="auth-right">
+      <div class="auth-form-wrap">
+        <div class="form-header">
+          <div class="form-title">Check your inbox 📧</div>
+          <div class="form-sub">We sent a 6-digit code to <strong style="color:var(--white)">kofi@example.com</strong></div>
+        </div>
+        <div class="otp-inputs">
+          <input class="otp-input" maxlength="1" oninput="otpNext(this,0)" id="otp0">
+          <input class="otp-input" maxlength="1" oninput="otpNext(this,1)" id="otp1">
+          <input class="otp-input" maxlength="1" oninput="otpNext(this,2)" id="otp2">
+          <input class="otp-input" maxlength="1" oninput="otpNext(this,3)" id="otp3">
+          <input class="otp-input" maxlength="1" oninput="otpNext(this,4)" id="otp4">
+          <input class="otp-input" maxlength="1" oninput="otpNext(this,5)" id="otp5">
+        </div>
+        <div id="otp-status" style="text-align:center;font-size:12.5px;color:var(--text);margin-bottom:18px">Enter the 6-digit code above</div>
+        <button class="submit-btn" onclick="doVerify()">Verify email →</button>
+        <div style="text-align:center;margin-top:18px;font-size:12.5px;color:var(--text)">
+          Didn't receive it? <span onclick="resendOtp()" style="color:var(--red);font-weight:700;cursor:pointer" id="resend-btn">Resend code</span>
+        </div>
+        <div style="text-align:center;margin-top:10px;font-size:12px;color:rgba(240,237,232,.3)">
+          <span onclick="show('register')" style="cursor:pointer;color:var(--text)">← Change email address</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════ KYC ══════════════ -->
+<div id="screen-kyc" class="screen">
+  <div class="auth-layout">
+    <div class="auth-left">
+      <div class="left-logo"><div class="logo-icon">🌍</div>Makola<span>Digital</span></div>
+      <div class="left-body">
+        <div class="left-tag">✅ Build buyer trust</div>
+        <h1 class="left-h1">Verify your<br><span class="grad">identity & business</span></h1>
+        <p class="left-sub">Verified sellers get a trust badge, higher search ranking, and up to 3x more sales. Takes less than 5 minutes.</p>
+        <div class="trust-items">
+          <div class="trust-item"><div class="trust-icon" style="background:rgba(45,158,107,.12)">🏅</div><div><strong>Verified badge</strong> on all your listings</div></div>
+          <div class="trust-item"><div class="trust-icon" style="background:rgba(59,125,216,.12)">📈</div><div><strong>3x more visibility</strong> in search results</div></div>
+          <div class="trust-item"><div class="trust-icon" style="background:rgba(232,83,58,.12)">🔒</div><div><strong>Documents encrypted</strong> and never shared</div></div>
+          <div class="trust-item"><div class="trust-icon" style="background:rgba(196,127,23,.12)">⚡</div><div><strong>Reviewed within 24 hours</strong> by our team</div></div>
+        </div>
+      </div>
+      <div class="left-footer">🌍 MakolaDigital · Africa's trusted marketplace</div>
+    </div>
+    <div class="auth-right">
+      <div class="auth-form-wrap" style="max-width:440px">
+        <div class="steps">
+          <div class="step"><div class="step-num done" id="s1">✓</div><div class="step-label">Account</div></div>
+          <div class="step-connector done" id="sc1"></div>
+          <div class="step"><div class="step-num done" id="s2">✓</div><div class="step-label">Email</div></div>
+          <div class="step-connector done" id="sc2"></div>
+          <div class="step"><div class="step-num active" id="s3">3</div><div class="step-label active">Identity</div></div>
+          <div class="step-connector" id="sc3"></div>
+          <div class="step"><div class="step-num" id="s4">4</div><div class="step-label">Business</div></div>
+        </div>
+
+        <div id="kyc-step-1">
+          <div class="form-header">
+            <div class="form-title">Identity verification</div>
+            <div class="form-sub">Step 3 of 4 — Choose your ID type</div>
+          </div>
+
+          <div class="field"><label>Select ID type</label></div>
+          <div class="id-types">
+            <div class="id-type active" onclick="selId(this)"><div class="id-type-icon">🪪</div>National ID</div>
+            <div class="id-type" onclick="selId(this)"><div class="id-type-icon">🛂</div>Passport</div>
+            <div class="id-type" onclick="selId(this)"><div class="id-type-icon">🚗</div>Driver's License</div>
+          </div>
+
+          <div class="field"><label>ID Number</label><input type="text" placeholder="e.g. GHA-000000000-0"><div class="field-hint">Enter exactly as shown on your document</div></div>
+          <div class="field-row">
+            <div class="field"><label>Issue Date</label><input type="date"></div>
+            <div class="field"><label>Expiry Date</label><input type="date"></div>
+          </div>
+
+          <div class="upload-zone" id="front-zone" ondragover="event.preventDefault();this.classList.add('dragover')" ondragleave="this.classList.remove('dragover')" ondrop="handleDrop(event,'front')" onclick="document.getElementById('front-file').click()">
+            <div class="upload-icon">📄</div>
+            <div class="upload-title">Upload front of ID</div>
+            <div class="upload-hint">Drag & drop or click to browse</div>
+            <div class="upload-types">JPG, PNG or PDF · Max 5MB</div>
+          </div>
+          <input type="file" id="front-file" accept=".jpg,.jpeg,.png,.pdf" hidden onchange="showFile(this,'front-zone','front-uploaded')">
+          <div id="front-uploaded"></div>
+
+          <div class="upload-zone" onclick="document.getElementById('back-file').click()">
+            <div class="upload-icon">📋</div>
+            <div class="upload-title">Upload back of ID</div>
+            <div class="upload-hint">Drag & drop or click to browse</div>
+            <div class="upload-types">JPG, PNG or PDF · Max 5MB</div>
+          </div>
+          <input type="file" id="back-file" accept=".jpg,.jpeg,.png,.pdf" hidden onchange="showFile(this,'null','back-uploaded')">
+          <div id="back-uploaded"></div>
+
+          <button class="submit-btn" style="margin-top:16px" onclick="nextKyc()">Continue to Business Info →</button>
+        </div>
+
+        <div id="kyc-step-2" style="display:none">
+          <div class="form-header">
+            <div class="form-title">Business information</div>
+            <div class="form-sub">Step 4 of 4 — Almost done!</div>
+          </div>
+          <div class="field"><label>Business / Trading Name</label><input type="text" placeholder="e.g. TechHub GH"></div>
+          <div class="field"><label>Business Type</label>
+            <select>
+              <option value="">Select type</option>
+              <option>Sole proprietor / Individual</option>
+              <option>Registered company (Ltd / LLC)</option>
+              <option>Partnership</option>
+              <option>NGO / Non-profit</option>
+            </select>
+          </div>
+          <div class="field"><label>Business Registration No. (optional)</label><input type="text" placeholder="e.g. CS000000000"></div>
+          <div class="field"><label>Primary category</label>
+            <select>
+              <option value="">What do you sell/offer?</option>
+              <option>Electronics & Gadgets</option><option>Fashion & Clothing</option>
+              <option>Food & Agriculture</option><option>Web & Tech Services</option>
+              <option>Real Estate & Rentals</option><option>Vehicles</option>
+              <option>Health & Beauty</option><option>Other</option>
+            </select>
+          </div>
+          <div class="field"><label>Business address</label><input type="text" placeholder="Street, City, Country"></div>
+          <div class="field"><label>Short business description</label><textarea placeholder="Describe what you sell or offer in 2-3 sentences..."></textarea></div>
+          <div class="upload-zone" style="margin-top:4px" onclick="document.getElementById('biz-file').click()">
+            <div class="upload-icon">🏢</div>
+            <div class="upload-title">Business registration document (optional)</div>
+            <div class="upload-hint">Certificate of incorporation, business license, or tax cert</div>
+          </div>
+          <input type="file" id="biz-file" hidden>
+          <button class="submit-btn" style="margin-top:18px" onclick="submitKyc()">Submit for verification →</button>
+          <div style="font-size:11px;color:rgba(240,237,232,.28);text-align:center;margin-top:10px">Our team reviews all KYC applications within 24 hours</div>
+        </div>
+
+        <div id="kyc-success" style="display:none">
+          <div class="success-screen">
+            <span class="success-icon">🎉</span>
+            <div class="success-title">Application submitted!</div>
+            <div class="success-sub">Your KYC application is under review. We'll notify you by email within 24 hours. You can start listing while we process your verification.</div>
+            <div class="verify-badge"><span class="verify-icon">⏳</span><div><div class="verify-text">Verification pending</div><div class="verify-sub">Usually completed within 24 hours</div></div></div>
+            <button class="submit-btn" onclick="show('login')">Go to my dashboard →</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════ FORGOT PASSWORD ══════════════ -->
+<div id="screen-forgot" class="screen">
+  <div class="auth-layout">
+    <div class="auth-left">
+      <div class="left-logo"><div class="logo-icon">🌍</div>Makola<span>Digital</span></div>
+      <div class="left-body">
+        <div class="left-tag">🔑 Account recovery</div>
+        <h1 class="left-h1">Reset your<br><span class="grad">password</span></h1>
+        <p class="left-sub">Enter your email and we'll send you a secure link to reset your password. The link expires in 30 minutes.</p>
+        <div class="trust-items">
+          <div class="trust-item"><div class="trust-icon" style="background:rgba(232,83,58,.12)">📧</div>Reset link sent to your email</div>
+          <div class="trust-item"><div class="trust-icon" style="background:rgba(45,158,107,.12)">⏱️</div>Link expires in 30 minutes</div>
+          <div class="trust-item"><div class="trust-icon" style="background:rgba(59,125,216,.12)">🛡️</div>Your account security is protected</div>
+        </div>
+      </div>
+      <div class="left-footer">🌍 MakolaDigital · Africa's trusted marketplace</div>
+    </div>
+    <div class="auth-right">
+      <div class="auth-form-wrap">
+        <div id="forgot-form">
+          <div class="form-header">
+            <div class="form-title">Forgot password? 🔑</div>
+            <div class="form-sub">Remember it? <a onclick="show('login',null)">Back to login</a></div>
+          </div>
+          <div class="field"><label>Your email address</label><input type="email" id="forgot-email" placeholder="you@example.com"></div>
+          <button class="submit-btn" onclick="doForgot()">Send reset link →</button>
+        </div>
+        <div id="forgot-sent" style="display:none">
+          <div class="success-screen">
+            <span class="success-icon">📬</span>
+            <div class="success-title">Check your email!</div>
+            <div class="success-sub">We've sent a password reset link to your email. Click the link to set a new password. If you don't see it, check your spam folder.</div>
+            <button class="submit-btn" onclick="show('login')">Back to login →</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+function show(id,navBtn,tabBtn){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.getElementById('screen-'+id).classList.add('active');
+  document.querySelectorAll('.stab').forEach(b=>b.classList.remove('active'));
+  if(tabBtn)tabBtn.classList.add('active');
+  if(!tabBtn&&!navBtn){
+    const tabs={'login':0,'register':1,'verify':2,'kyc':3,'forgot':4};
+    document.querySelectorAll('.stab')[tabs[id]]?.classList.add('active');
+  }
+}
+function togglePw(id,btn){
+  const inp=document.getElementById(id);
+  inp.type=inp.type==='password'?'text':'password';
+  btn.textContent=inp.type==='password'?'👁':'🙈';
+}
+function validateEmail(inp){
+  const ok=/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(inp.value);
+  inp.style.borderColor=inp.value?(ok?'rgba(45,158,107,.5)':'rgba(232,83,58,.5)'):'';
+}
+function checkPwStrength(v){
+  const bars=[document.getElementById('pb1'),document.getElementById('pb2'),document.getElementById('pb3'),document.getElementById('pb4')];
+  const lbl=document.getElementById('pw-label');
+  bars.forEach(b=>b.className='pw-bar');
+  if(!v){lbl.textContent='Enter a password';lbl.style.color='var(--text)';return;}
+  let score=0;
+  if(v.length>=8)score++;if(/[A-Z]/.test(v))score++;if(/[0-9]/.test(v))score++;if(/[^A-Za-z0-9]/.test(v))score++;
+  const levels=['weak','fair','good','strong'];
+  const labels=['Weak','Fair','Good','Strong! 💪'];
+  const colors=['#E8533A','#C47F17','#3B7DD8','#2D9E6B'];
+  for(let i=0;i<score;i++)bars[i].className='pw-bar '+levels[score-1];
+  lbl.textContent=labels[score-1];lbl.style.color=colors[score-1];
+}
+function selectType(el,type){
+  document.querySelectorAll('.type-card').forEach(c=>c.classList.remove('active'));
+  el.classList.add('active');
+}
+function selId(el){
+  document.querySelectorAll('.id-type').forEach(c=>c.classList.remove('active'));
+  el.classList.add('active');
+}
+function otpNext(inp,idx){
+  if(inp.value.length===1&&idx<5)document.getElementById('otp'+(idx+1)).focus();
+  const all=[...Array(6)].map((_,i)=>document.getElementById('otp'+i).value).join('');
+  const st=document.getElementById('otp-status');
+  if(all.length===6){st.textContent='✓ Code entered';st.style.color='var(--green)';}
+  else{st.textContent='Enter the 6-digit code above';st.style.color='var(--text)';}
+}
+let resendTimer=60;
+function resendOtp(){
+  const btn=document.getElementById('resend-btn');
+  btn.style.pointerEvents='none';btn.style.color='var(--text)';
+  let t=resendTimer;
+  const iv=setInterval(()=>{
+    btn.textContent=`Resend in ${t}s`;t--;
+    if(t<0){clearInterval(iv);btn.textContent='Resend code';btn.style.pointerEvents='auto';btn.style.color='var(--red)';}
+  },1000);
+}
+function showFile(inp,zoneId,resultId){
+  const file=inp.files[0];if(!file)return;
+  const result=document.getElementById(resultId);
+  result.innerHTML=`<div class="uploaded-file"><span class="file-icon">📄</span><span class="file-name">${file.name}</span><span class="file-size">${(file.size/1024).toFixed(0)}KB</span><button class="file-remove" onclick="this.parentElement.remove()">✕</button></div>`;
+}
+function handleDrop(e,side){
+  e.preventDefault();e.currentTarget.classList.remove('dragover');
+  const file=e.dataTransfer.files[0];if(!file)return;
+  const result=document.getElementById(side+'-uploaded');
+  result.innerHTML=`<div class="uploaded-file"><span class="file-icon">📄</span><span class="file-name">${file.name}</span><span class="file-size">${(file.size/1024).toFixed(0)}KB</span><button class="file-remove" onclick="this.parentElement.remove()">✕</button></div>`;
+}
+function nextKyc(){
+  document.getElementById('kyc-step-1').style.display='none';
+  document.getElementById('kyc-step-2').style.display='block';
+  document.getElementById('s3').className='step-num done';document.getElementById('s3').textContent='✓';
+  document.getElementById('sc3').className='step-connector done';
+  document.getElementById('s4').className='step-num active';
+}
+function submitKyc(){
+  document.getElementById('kyc-step-2').style.display='none';
+  document.getElementById('kyc-success').style.display='block';
+}
+function doLogin(){
+  const email=document.getElementById('login-email').value;
+  const pw=document.getElementById('login-pw').value;
+  if(!email||!pw){alert('Please fill in all fields');return;}
+  show('dashboard');
+}
+function doRegister(){show('verify');}
+function doVerify(){show('kyc');}
+function doForgot(){
+  const email=document.getElementById('forgot-email').value;
+  if(!email){alert('Please enter your email');return;}
+  document.getElementById('forgot-form').style.display='none';
+  document.getElementById('forgot-sent').style.display='block';
+}
+</script>
+</body>
+</html>

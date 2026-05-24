@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Makola Digital — Search</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--red:#E8533A;--gold:#C47F17;--green:#2D9E6B;--blue:#3B7DD8;--purple:#8B5CF6;--bg:#0A0A0A;--bg2:#0D0D0D;--bg3:#131315;--bg4:rgba(255,255,255,0.04);--border:rgba(255,255,255,0.08);--border2:rgba(255,255,255,0.14);--text:#F0EDE8;--muted:rgba(240,237,232,0.55);--dim:rgba(240,237,232,0.28)}
+body{font-family:"Plus Jakarta Sans",sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
+button,input,select{font-family:inherit;cursor:pointer}
+::-webkit-scrollbar{width:4px}::-webkit-scrollbar-thumb{background:#2a2a2a;border-radius:2px}
+.nav{height:56px;background:rgba(10,10,10,0.97);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;padding:0 28px;position:sticky;top:0;z-index:100}
+.logo{display:flex;align-items:center;gap:8px;font-weight:900;font-size:17px;letter-spacing:-.03em;color:var(--text);text-decoration:none}
+.logo-icon{width:30px;height:30px;border-radius:8px;background:linear-gradient(135deg,var(--red),var(--gold));display:flex;align-items:center;justify-content:center;font-size:14px}
+.logo span{color:var(--red)}
+.nav-right{display:flex;gap:8px}
+.nav-btn{background:none;border:1px solid var(--border);color:var(--text);padding:7px 14px;border-radius:8px;font-size:13px;font-weight:500}
+.nav-btn.primary{background:var(--red);border-color:var(--red);color:#fff;font-weight:700}
+.search-hero{background:var(--bg2);border-bottom:1px solid var(--border);padding:18px 28px}
+.search-main-row{display:flex;gap:10px;margin-bottom:14px}
+.search-box{flex:1;display:flex;align-items:center;gap:10px;background:rgba(255,255,255,0.06);border:1px solid var(--border2);border-radius:12px;padding:0 16px;height:48px;transition:border-color .15s}
+.search-box:focus-within{border-color:rgba(232,83,58,0.5)}
+.search-box input{flex:1;background:none;border:none;outline:none;color:var(--text);font-size:15px}
+.search-box input::placeholder{color:var(--dim)}
+.search-btn{background:var(--red);border:none;color:#fff;padding:0 24px;height:48px;border-radius:12px;font-size:14px;font-weight:800;white-space:nowrap;box-shadow:0 2px 14px rgba(232,83,58,.28)}
+.search-btn:hover{opacity:.88}
+.quick-filters{display:flex;gap:7px;flex-wrap:wrap;align-items:center}
+.quick-chip{background:var(--bg4);border:1px solid var(--border);border-radius:20px;padding:5px 13px;font-size:12.5px;font-weight:600;color:var(--muted);transition:all .15s}
+.quick-chip:hover,.quick-chip.active{background:rgba(232,83,58,.1);border-color:rgba(232,83,58,.35);color:var(--red)}
+.layout{display:grid;grid-template-columns:272px 1fr;min-height:calc(100vh - 130px)}
+.sidebar{background:var(--bg2);border-right:1px solid var(--border);padding:20px;overflow-y:auto;position:sticky;top:56px;height:calc(100vh - 56px)}
+.filter-section{margin-bottom:22px;border-bottom:1px solid var(--border);padding-bottom:22px}
+.filter-section:last-child{border-bottom:none}
+.filter-title{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;cursor:pointer}
+.filter-label{font-size:13px;font-weight:800;color:var(--text)}
+.filter-toggle{font-size:13px;color:var(--muted);transition:transform .2s}
+.filter-toggle.coll{transform:rotate(-90deg)}
+.type-grid{display:grid;grid-template-columns:1fr 1fr;gap:7px}
+.type-btn{background:var(--bg4);border:1px solid var(--border);border-radius:10px;padding:10px 8px;text-align:center;transition:all .15s;font-size:12px;font-weight:600;color:var(--muted)}
+.type-btn:hover,.type-btn.active{background:rgba(232,83,58,.09);border-color:rgba(232,83,58,.35);color:var(--red)}
+.type-btn-icon{font-size:20px;display:block;margin-bottom:5px}
+.check-item{display:flex;align-items:center;gap:9px;padding:6px 0;cursor:pointer}
+.check-item input[type=checkbox]{width:15px;height:15px;accent-color:var(--red);cursor:pointer;flex-shrink:0}
+.check-label{font-size:13px;color:var(--muted);flex:1;line-height:1.4}
+.check-count{font-size:11px;color:var(--dim);font-weight:600}
+.price-inputs{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px}
+.price-inp{background:rgba(255,255,255,.05);border:1px solid var(--border);border-radius:9px;padding:9px 11px;color:var(--text);font-size:13px;outline:none;width:100%}
+.price-inp:focus{border-color:rgba(232,83,58,.4)}
+.price-inp::placeholder{color:var(--dim)}
+.price-slider{width:100%;accent-color:var(--red)}
+.currency-tabs{display:flex;gap:5px;margin-bottom:12px}
+.curr-tab{background:var(--bg4);border:1px solid var(--border);border-radius:7px;padding:5px 10px;font-size:11.5px;font-weight:700;color:var(--muted);transition:all .15s}
+.curr-tab.active{background:rgba(232,83,58,.1);border-color:rgba(232,83,58,.3);color:var(--red)}
+.loc-input{background:rgba(255,255,255,.05);border:1px solid var(--border);border-radius:9px;padding:9px 34px 9px 11px;color:var(--text);font-size:13px;outline:none;width:100%;margin-bottom:10px}
+.loc-input:focus{border-color:rgba(232,83,58,.4)}
+.radius-row{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+.radius-label{font-size:12px;color:var(--muted);white-space:nowrap}
+.radius-val{font-size:12px;font-weight:700;color:var(--red);min-width:46px;text-align:right}
+.star-filter{display:flex;flex-direction:column;gap:7px}
+.star-row{display:flex;align-items:center;gap:8px;cursor:pointer;padding:5px 7px;border-radius:8px;transition:background .15s}
+.star-row:hover{background:rgba(255,255,255,.04)}
+.star-row.active{background:rgba(232,83,58,.08)}
+.stars-disp{color:var(--gold);font-size:13px;letter-spacing:1px;width:72px;flex-shrink:0}
+.star-lbl{font-size:12px;color:var(--muted);flex:1}
+.star-count{font-size:11px;color:var(--dim)}
+.filter-actions{display:flex;gap:8px;margin-top:4px}
+.clear-btn{flex:1;background:none;border:1px solid var(--border);color:var(--muted);border-radius:9px;padding:9px;font-size:13px;font-weight:600}
+.clear-btn:hover{border-color:var(--border2);color:var(--text)}
+.apply-btn{flex:2;background:var(--red);border:none;color:#fff;border-radius:9px;padding:9px;font-size:13px;font-weight:800}
+.apply-btn:hover{opacity:.88}
+.results-area{padding:20px 24px}
+.results-topbar{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;flex-wrap:wrap;gap:10px}
+.results-count{font-size:15px;font-weight:800;color:var(--text)}
+.results-sub{font-size:12px;color:var(--muted);margin-top:2px}
+.sort-row{display:flex;align-items:center;gap:8px}
+.sort-label{font-size:12.5px;color:var(--muted);font-weight:600}
+.sort-sel{background:var(--bg3);border:1px solid var(--border);color:var(--text);padding:8px 28px 8px 12px;border-radius:9px;font-size:13px;outline:none;appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath fill='rgba(240,237,232,0.4)' d='M5 6L0 0h10z'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 10px center}
+.view-btns{display:flex;gap:4px}
+.view-btn{background:var(--bg4);border:1px solid var(--border);border-radius:8px;width:34px;height:34px;display:flex;align-items:center;justify-content:center;font-size:16px;transition:all .15s}
+.view-btn.active{background:rgba(232,83,58,.12);border-color:rgba(232,83,58,.3)}
+.active-tags{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:16px;align-items:center}
+.active-tag{display:flex;align-items:center;gap:6px;background:rgba(232,83,58,.1);border:1px solid rgba(232,83,58,.25);border-radius:16px;padding:4px 11px;font-size:12px;font-weight:700;color:var(--red)}
+.tag-remove{background:none;border:none;color:rgba(232,83,58,.6);font-size:14px;cursor:pointer;padding:0;line-height:1}
+.tag-remove:hover{color:var(--red)}
+.clear-all{background:none;border:none;color:var(--muted);font-size:12px;font-weight:600;cursor:pointer;text-decoration:underline}
+.clear-all:hover{color:var(--text)}
+.map-strip{background:var(--bg3);border:1px solid var(--border);border-radius:12px;padding:12px 16px;margin-bottom:18px;display:flex;align-items:center;gap:12px;cursor:pointer;transition:all .15s}
+.map-strip:hover{border-color:var(--border2)}
+.map-thumb{width:60px;height:42px;background:rgba(59,125,216,.1);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0}
+.cards-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:13px}
+.cards-list{display:flex;flex-direction:column;gap:12px}
+.card{background:var(--bg4);border:1px solid var(--border);border-radius:15px;overflow:hidden;cursor:pointer;transition:all .2s}
+.card:hover{background:rgba(255,255,255,.07);border-color:rgba(255,255,255,.15);transform:translateY(-1px);box-shadow:0 8px 32px rgba(0,0,0,.35)}
+.card-img{height:106px;background:rgba(255,255,255,.04);display:flex;align-items:center;justify-content:center;font-size:40px;position:relative}
+.card-badge{position:absolute;top:9px;left:9px;font-size:10px;font-weight:700;padding:2px 8px;border-radius:6px}
+.card-save{position:absolute;top:8px;right:8px;background:rgba(0,0,0,.45);border:none;border-radius:7px;width:28px;height:28px;display:flex;align-items:center;justify-content:center;font-size:14px;transition:transform .15s}
+.card-save:hover{transform:scale(1.12)}
+.card-body{padding:12px 14px}
+.card-type{font-size:10px;font-weight:700;color:var(--dim);text-transform:uppercase;letter-spacing:.05em;margin-bottom:3px}
+.card-title{font-size:13px;font-weight:700;color:var(--text);line-height:1.3;margin-bottom:5px}
+.card-price{font-size:15.5px;font-weight:900;color:var(--red);margin-bottom:6px}
+.card-loc{font-size:11px;color:var(--muted)}
+.card-foot{display:flex;align-items:center;justify-content:space-between;margin-top:9px;padding-top:9px;border-top:1px solid var(--border)}
+.card-seller{font-size:10.5px;color:var(--dim)}
+.card-rating{font-size:11px;color:var(--gold);font-weight:700}
+.verified-badge{display:inline-flex;align-items:center;gap:3px;background:rgba(45,158,107,.1);border:1px solid rgba(45,158,107,.25);color:var(--green);font-size:10px;font-weight:700;padding:1px 6px;border-radius:4px}
+.list-card{background:var(--bg4);border:1px solid var(--border);border-radius:14px;overflow:hidden;cursor:pointer;transition:all .2s;display:flex}
+.list-card:hover{background:rgba(255,255,255,.07);border-color:rgba(255,255,255,.15)}
+.list-img{width:120px;flex-shrink:0;background:rgba(255,255,255,.04);display:flex;align-items:center;justify-content:center;font-size:40px;position:relative}
+.list-body{padding:14px 16px;flex:1;display:flex;flex-direction:column;gap:4px}
+.list-top{display:flex;align-items:flex-start;justify-content:space-between;gap:8px}
+.list-price{font-size:17px;font-weight:900;color:var(--red);white-space:nowrap}
+.list-meta{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-top:4px}
+.list-meta-item{font-size:12px;color:var(--muted)}
+.list-foot{display:flex;align-items:center;justify-content:space-between;margin-top:8px}
+.card-btn{background:rgba(232,83,58,.1);border:1px solid rgba(232,83,58,.25);color:var(--red);border-radius:7px;padding:4px 11px;font-size:11.5px;font-weight:700;transition:all .15s}
+.card-btn:hover{background:rgba(232,83,58,.2)}
+.pagination{display:flex;align-items:center;justify-content:center;gap:6px;margin-top:28px;padding-bottom:28px}
+.page-btn{width:36px;height:36px;border-radius:9px;background:var(--bg4);border:1px solid var(--border);font-size:13px;font-weight:600;color:var(--muted);transition:all .15s}
+.page-btn:hover{color:var(--text);border-color:var(--border2)}
+.page-btn.active{background:var(--red);border-color:var(--red);color:#fff;font-weight:800}
+.page-btn.pn{width:auto;padding:0 14px;font-size:12.5px}
+.no-results{text-align:center;padding:64px 20px;color:var(--muted)}
+.no-results-icon{font-size:48px;display:block;margin-bottom:16px}
+.no-results-title{font-size:17px;font-weight:800;color:var(--text);margin-bottom:8px}
+.no-results-sub{font-size:13.5px;color:var(--muted);line-height:1.65;margin-bottom:24px}
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <a class="logo" href="#"><div class="logo-icon">&#127757;</div>Makola<span>Digital</span></a>
+  <div class="nav-right">
+    <button class="nav-btn">Log in</button>
+    <button class="nav-btn primary">Sell free &rarr;</button>
+  </div>
+</nav>
+
+<div class="search-hero">
+  <div class="search-main-row">
+    <div class="search-box">
+      <span style="font-size:18px">&#128269;</span>
+      <input id="main-search" placeholder="Search products, services, jobs, rentals..." value="iPhone" oninput="onSearch(this.value)">
+      <button onclick="document.getElementById('main-search').value='';onSearch('')" style="background:none;border:none;color:var(--dim);font-size:18px;cursor:pointer">&#10005;</button>
+    </div>
+    <button class="search-btn" onclick="applyFilters()">Search</button>
+  </div>
+  <div class="quick-filters">
+    <span style="font-size:12px;color:var(--dim);font-weight:600;margin-right:4px">Trending:</span>
+    <button class="quick-chip" onclick="setSearch('iPhone 15')">&#128241; iPhone 15</button>
+    <button class="quick-chip" onclick="setSearch('Apartments')">&#127968; Apartments Accra</button>
+    <button class="quick-chip" onclick="setSearch('Remote Jobs')">&#128188; Remote Jobs</button>
+    <button class="quick-chip" onclick="setSearch('Toyota')">&#128664; Toyota</button>
+    <button class="quick-chip" onclick="setSearch('Web Design')">&#128187; Web Design</button>
+    <button class="quick-chip" onclick="setSearch('Tailoring')">&#128	&rarr; Tailoring</button>
+  </div>
+</div>
+
+<div class="layout">
+  <div class="sidebar">
+
+    <div class="filter-section">
+      <div class="filter-title" onclick="toggleSection('type-body',this)"><span class="filter-label">Listing type</span><span class="filter-toggle">&#9660;</span></div>
+      <div id="type-body">
+        <div class="type-grid">
+          <button class="type-btn active" onclick="setType('all',this)"><span class="type-btn-icon">&#127978;</span>All</button>
+          <button class="type-btn" onclick="setType('product',this)"><span class="type-btn-icon">&#128	;&#8203;</span>Products</button>
+          <button class="type-btn" onclick="setType('service',this)"><span class="type-btn-icon">&#128	;&#8203;</span>Services</button>
+          <button class="type-btn" onclick="setType('job',this)"><span class="type-btn-icon">&#128	;&#8203;</span>Jobs</button>
+          <button class="type-btn" onclick="setType('rental',this)"><span class="type-btn-icon">&#127968;</span>Rentals</button>
+          <button class="type-btn" onclick="setType('vehicle',this)"><span class="type-btn-icon">&#128664;</span>Vehicles</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="filter-section">
+      <div class="filter-title" onclick="toggleSection('cat-body',this)"><span class="filter-label">Category</span><span class="filter-toggle">&#9660;</span></div>
+      <div id="cat-body">
+        <label class="check-item"><input type="checkbox" checked onchange="filterChange()"><span class="check-label">Electronics &amp; Gadgets</span><span class="check-count">3.2k</span></label>
+        <label class="check-item"><input type="checkbox" onchange="filterChange()"><span class="check-label">Fashion &amp; Clothing</span><span class="check-count">2.8k</span></label>
+        <label class="check-item"><input type="checkbox" onchange="filterChange()"><span class="check-label">Vehicles</span><span class="check-count">1.9k</span></label>
+        <label class="check-item"><input type="checkbox" onchange="filterChange()"><span class="check-label">Real Estate &amp; Rentals</span><span class="check-count">1.4k</span></label>
+        <label class="check-item"><input type="checkbox" onchange="filterChange()"><span class="check-label">Web &amp; Tech Services</span><span class="check-count">980</span></label>
+        <label class="check-item"><input type="checkbox" onchange="filterChange()"><span class="check-label">Food &amp; Agriculture</span><span class="check-count">740</span></label>
+      </div>
+    </div>
+
+    <div class="filter-section">
+      <div class="filter-title" onclick="toggleSection('price-body',this)"><span class="filter-label">Price range</span><span class="filter-toggle">&#9660;</span></div>
+      <div id="price-body">
+        <div class="currency-tabs">
+          <button class="curr-tab active" onclick="setCurr('GH&#8373;',this)">GH&#8373;</button>
+          <button class="curr-tab" onclick="setCurr('&#8358;',this)">&#8358;</button>
+          <button class="curr-tab" onclick="setCurr('$',this)">$</button>
+          <button class="curr-tab" onclick="setCurr('&pound;',this)">&pound;</button>
+        </div>
+        <div class="price-inputs">
+          <input class="price-inp" id="price-min" placeholder="Min" type="number" value="0" oninput="updatePriceDisplay()">
+          <input class="price-inp" id="price-max" placeholder="Max" type="number" value="20000" oninput="updatePriceDisplay()">
+        </div>
+        <input type="range" class="price-slider" min="0" max="50000" value="20000" id="price-slider" oninput="document.getElementById('price-max').value=this.value;updatePriceDisplay()">
+        <div style="display:flex;justify-content:space-between;font-size:11px;color:var(--dim);margin-top:5px">
+          <span id="pdmin">GH&#8373; 0</span><span id="pdmax">GH&#8373; 20,000</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="filter-section">
+      <div class="filter-title" onclick="toggleSection('loc-body',this)"><span class="filter-label">Location</span><span class="filter-toggle">&#9660;</span></div>
+      <div id="loc-body">
+        <div style="position:relative">
+          <input class="loc-input" placeholder="City, region or country" value="Accra, Ghana">
+          <span style="position:absolute;right:11px;top:50%;transform:translateY(-50%);font-size:15px">&#128205;</span>
+        </div>
+        <div class="radius-row">
+          <span class="radius-label">Radius</span>
+          <input type="range" class="price-slider" style="flex:1" min="5" max="500" value="50" oninput="document.getElementById('rval').textContent=this.value+'km'">
+          <span class="radius-val" id="rval">50km</span>
+        </div>
+        <label class="check-item"><input type="checkbox" onchange="filterChange()"><span class="check-label">Include remote listings</span></label>
+        <label class="check-item"><input type="checkbox" checked onchange="filterChange()"><span class="check-label">Ghana</span><span class="check-count">8.4k</span></label>
+        <label class="check-item"><input type="checkbox" onchange="filterChange()"><span class="check-label">Nigeria</span><span class="check-count">5.2k</span></label>
+        <label class="check-item"><input type="checkbox" onchange="filterChange()"><span class="check-label">Kenya</span><span class="check-count">2.1k</span></label>
+        <label class="check-item"><input type="checkbox" onchange="filterChange()"><span class="check-label">UK / Diaspora</span><span class="check-count">3.8k</span></label>
+      </div>
+    </div>
+
+    <div class="filter-section">
+      <div class="filter-title" onclick="toggleSection('cond-body',this)"><span class="filter-label">Condition</span><span class="filter-toggle">&#9660;</span></div>
+      <div id="cond-body">
+        <label class="check-item"><input type="checkbox" checked onchange="filterChange()"><span class="check-label">Brand new</span><span class="check-count">1.8k</span></label>
+        <label class="check-item"><input type="checkbox" checked onchange="filterChange()"><span class="check-label">Like new</span><span class="check-count">940</span></label>
+        <label class="check-item"><input type="checkbox" onchange="filterChange()"><span class="check-label">Good condition</span><span class="check-count">620</span></label>
+        <label class="check-item"><input type="checkbox" onchange="filterChange()"><span class="check-label">Fair condition</span><span class="check-count">280</span></label>
+      </div>
+    </div>
+
+    <div class="filter-section">
+      <div class="filter-title" onclick="toggleSection('seller-body',this)"><span class="filter-label">Seller</span><span class="filter-toggle">&#9660;</span></div>
+      <div id="seller-body">
+        <label class="check-item"><input type="checkbox" onchange="filterChange()"><span class="check-label">Verified sellers only</span></label>
+        <label class="check-item"><input type="checkbox" onchange="filterChange()"><span class="check-label">Pro sellers only</span></label>
+        <div style="height:10px"></div>
+        <div style="font-size:12px;font-weight:700;color:var(--muted);margin-bottom:10px;text-transform:uppercase;letter-spacing:.05em">Min. rating</div>
+        <div class="star-filter">
+          <div class="star-row" onclick="setRating(5,this)"><span class="stars-disp">&#9733;&#9733;&#9733;&#9733;&#9733;</span><span class="star-lbl">5 stars</span><span class="star-count">142</span></div>
+          <div class="star-row active" onclick="setRating(4,this)"><span class="stars-disp">&#9733;&#9733;&#9733;&#9733;&#9734;</span><span class="star-lbl">4+ stars</span><span class="star-count">1.2k</span></div>
+          <div class="star-row" onclick="setRating(3,this)"><span class="stars-disp">&#9733;&#9733;&#9733;&#9734;&#9734;</span><span class="star-lbl">3+ stars</span><span class="star-count">2.8k</span></div>
+          <div class="star-row" onclick="setRating(0,this)"><span class="stars-disp">&#9733;&#9734;&#9734;&#9734;&#9734;</span><span class="star-lbl">Any rating</span><span class="star-count">All</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="filter-actions">
+      <button class="clear-btn" onclick="clearFilters()">Clear all</button>
+      <button class="apply-btn" onclick="applyFilters()">Apply filters</button>
+    </div>
+  </div>
+
+  <div class="results-area">
+    <div class="results-topbar">
+      <div>
+        <div class="results-count" id="results-count">3,842 results</div>
+        <div class="results-sub" id="results-sub">for "iPhone" &middot; Electronics &middot; Accra, Ghana &middot; Within 50km</div>
+      </div>
+      <div class="sort-row">
+        <span class="sort-label">Sort:</span>
+        <select class="sort-sel" onchange="sortResults(this.value)">
+          <option value="relevance">Most relevant</option>
+          <option value="newest">Newest first</option>
+          <option value="price_asc">Price: low &rarr; high</option>
+          <option value="price_desc">Price: high &rarr; low</option>
+          <option value="rating">Highest rated</option>
+          <option value="views">Most viewed</option>
+        </select>
+        <div class="view-btns">
+          <button class="view-btn active" id="grid-btn" onclick="setView('grid',this)" title="Grid view">&#8942;&#8942;</button>
+          <button class="view-btn" id="list-btn" onclick="setView('list',this)" title="List view">&#9776;</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="active-tags" id="active-tags">
+      <div class="active-tag">iPhone <button class="tag-remove" onclick="this.closest('.active-tag').remove()">&#10005;</button></div>
+      <div class="active-tag">Electronics <button class="tag-remove" onclick="this.closest('.active-tag').remove()">&#10005;</button></div>
+      <div class="active-tag">GH&#8373; 0&ndash;20,000 <button class="tag-remove" onclick="this.closest('.active-tag').remove()">&#10005;</button></div>
+      <div class="active-tag">Brand new &middot; Like new <button class="tag-remove" onclick="this.closest('.active-tag').remove()">&#10005;</button></div>
+      <div class="active-tag">4&#9733;+ rating <button class="tag-remove" onclick="this.closest('.active-tag').remove()">&#10005;</button></div>
+      <button class="clear-all" onclick="document.querySelectorAll('.active-tag').forEach(t=>t.remove())">Clear all</button>
+    </div>
+
+    <div class="map-strip">
+      <div class="map-thumb">&#128506;</div>
+      <div>
+        <div style="font-size:13px;font-weight:700;color:var(--text)">See results on map</div>
+        <div style="font-size:12px;color:var(--muted);margin-top:2px">Browse listings near you in Accra, Ghana</div>
+      </div>
+      <div style="margin-left:auto;font-size:13px;color:var(--muted)">&rarr;</div>
+    </div>
+
+    <div id="cards-container" class="cards-grid"></div>
+    <div class="pagination" id="pagination"></div>
+  </div>
+</div>
+
+<script>
+const LISTINGS = [
+  {id:1,type:"product",badge:"Verified",bc:"#2D9E6B",title:"iPhone 15 Pro Max 256GB \u2014 All Colours",price:"GH\u20B5 8,500",pv:8500,loc:"Accra Mall, Accra",seller:"TechHub GH",rating:4.8,rev:142,img:"\ud83d\udcf1",verified:true,views:3240,days:2},
+  {id:2,type:"product",badge:"Verified",bc:"#2D9E6B",title:"iPhone 14 Pro 128GB \u2014 Space Black",price:"GH\u20B5 6,200",pv:6200,loc:"Osu, Accra",seller:"PhoneCity GH",rating:4.6,rev:87,img:"\ud83d\udcf1",verified:true,views:1840,days:5},
+  {id:3,type:"product",badge:"New",bc:"#8B5CF6",title:"iPhone 13 Pro Max 256GB \u2014 Used Once",price:"GH\u20B5 4,800",pv:4800,loc:"East Legon, Accra",seller:"Kofi Trades",rating:4.5,rev:23,img:"\ud83d\udcf1",verified:false,views:920,days:1},
+  {id:4,type:"service",badge:"Top Rated",bc:"#3B7DD8",title:"iPhone Screen Repair \u2014 All Models",price:"From GH\u20B5 180",pv:180,loc:"Tema, Ghana",seller:"FixIt GH",rating:4.9,rev:204,img:"\ud83d\udd27",verified:true,views:5100,days:30},
+  {id:5,type:"product",badge:"Popular",bc:"#C47F17",title:"iPhone 15 Plus 128GB \u2014 Yellow",price:"GH\u20B5 7,100",pv:7100,loc:"Kumasi, Ghana",seller:"TechWave KSI",rating:4.7,rev:56,img:"\ud83d\udcf1",verified:true,views:2100,days:7},
+  {id:6,type:"product",badge:"Verified",bc:"#2D9E6B",title:"iPhone 12 64GB \u2014 Good Condition",price:"GH\u20B5 3,200",pv:3200,loc:"Labone, Accra",seller:"DevicesGH",rating:4.4,rev:31,img:"\ud83d\udcf1",verified:true,views:780,days:14},
+  {id:7,type:"service",badge:"Verified",bc:"#2D9E6B",title:"iPhone Data Recovery & Backup Service",price:"GH\u20B5 250",pv:250,loc:"Remote / Accra",seller:"TechPro GH",rating:4.7,rev:68,img:"\ud83d\udcbe",verified:true,views:1200,days:21},
+  {id:8,type:"product",badge:"Urgent",bc:"#E8533A",title:"iPhone 11 128GB \u2014 Factory Sealed",price:"GH\u20B5 2,900",pv:2900,loc:"Tesano, Accra",seller:"QuickSell GH",rating:4.3,rev:19,img:"\ud83d\udcf1",verified:false,views:540,days:1},
+  {id:9,type:"product",badge:"Verified",bc:"#2D9E6B",title:"iPhone 15 Pro 256GB \u2014 Titanium",price:"GH\u20B5 8,100",pv:8100,loc:"Airport Res., Accra",seller:"ElitePhones GH",rating:4.9,rev:78,img:"\ud83d\udcf1",verified:true,views:2760,days:3},
+  {id:10,type:"service",badge:"New",bc:"#8B5CF6",title:"iPhone App Development \u2014 Custom",price:"From GH\u20B5 3,500",pv:3500,loc:"Remote Worldwide",seller:"CodeAfrica Studio",rating:4.8,rev:44,img:"\ud83d\udcbb",verified:true,views:890,days:10},
+  {id:11,type:"product",badge:"Popular",bc:"#C47F17",title:"iPhone 14 128GB \u2014 Midnight",price:"GH\u20B5 5,600",pv:5600,loc:"Adenta, Accra",seller:"MobileHub GH",rating:4.5,rev:62,img:"\ud83d\udcf1",verified:true,views:1680,days:8},
+  {id:12,type:"product",badge:"Verified",bc:"#2D9E6B",title:"iPhone SE 3rd Gen 64GB \u2014 Brand New",price:"GH\u20B5 2,400",pv:2400,loc:"Madina, Accra",seller:"BudgetPhones GH",rating:4.4,rev:28,img:"\ud83d\udcf1",verified:true,views:640,days:12},
+];
+
+let view="grid",savedIds=[],page=1,sortMode="relevance",typeFilter="all",filtered=[...LISTINGS];
+const PER=9;
+
+function render(){
+  const cont=document.getElementById("cards-container");
+  const slice=filtered.slice((page-1)*PER,page*PER);
+  if(!filtered.length){
+    cont.className="";
+    cont.innerHTML='<div class="no-results"><span class="no-results-icon">\ud83d\udd0d</span><div class="no-results-title">No results found</div><div class="no-results-sub">Try different keywords or remove some filters.</div><button class="apply-btn" style="display:inline-block;padding:10px 24px;border-radius:10px" onclick="clearFilters()">Clear filters</button></div>';
+    document.getElementById("pagination").innerHTML="";return;
+  }
+  if(view==="grid"){
+    cont.className="cards-grid";
+    cont.innerHTML=slice.map(l=>`
+      <div class="card">
+        <div class="card-img">${l.img}
+          <div class="card-badge" style="background:${l.bc}22;border:1px solid ${l.bc}55;color:${l.bc}">${l.badge}</div>
+          <button class="card-save" onclick="event.stopPropagation();toggleSave(${l.id},this)">${savedIds.includes(l.id)?"&#10084;&#65039;":"&#129293;"}</button>
+        </div>
+        <div class="card-body">
+          <div class="card-type">${l.type}</div>
+          <div class="card-title">${l.title}</div>
+          <div class="card-price">${l.price}</div>
+          <div class="card-loc">&#128205; ${l.loc}</div>
+          <div class="card-foot">
+            <span class="card-seller">by ${l.seller}${l.verified?" <span class='verified-badge'>&#10003; Verified</span>":""}</span>
+            <span class="card-rating">&#11088; ${l.rating} (${l.rev})</span>
+          </div>
+        </div>
+      </div>`).join("");
+  } else {
+    cont.className="cards-list";
+    cont.innerHTML=slice.map(l=>`
+      <div class="list-card">
+        <div class="list-img">${l.img}
+          <div class="card-badge" style="background:${l.bc}22;border:1px solid ${l.bc}55;color:${l.bc};position:absolute;top:8px;left:8px">${l.badge}</div>
+        </div>
+        <div class="list-body">
+          <div class="list-top">
+            <div style="flex:1"><div class="card-type">${l.type}</div><div class="card-title" style="font-size:14.5px">${l.title}</div></div>
+            <div class="list-price">${l.price}</div>
+          </div>
+          <div class="list-meta">
+            <span class="list-meta-item">&#128205; ${l.loc}</span>
+            <span class="list-meta-item">&#128065; ${l.views.toLocaleString()} views</span>
+            <span class="list-meta-item">&#128336; ${l.days}d ago</span>
+          </div>
+          <div class="list-foot">
+            <div style="display:flex;align-items:center;gap:8px">
+              <span class="card-seller">by ${l.seller}</span>
+              ${l.verified?"<span class='verified-badge'>&#10003; Verified</span>":""}
+              <span class="card-rating">&#11088; ${l.rating} (${l.rev})</span>
+            </div>
+            <div style="display:flex;gap:7px">
+              <button class="card-save" style="position:static;background:rgba(255,255,255,.06);border:1px solid var(--border)" onclick="toggleSave(${l.id},this)">${savedIds.includes(l.id)?"&#10084;&#65039;":"&#129293;"}</button>
+              <button class="card-btn">View &rarr;</button>
+            </div>
+          </div>
+        </div>
+      </div>`).join("");
+  }
+  renderPagination();
+}
+
+function renderPagination(){
+  const total=Math.ceil(filtered.length/PER);
+  const pg=document.getElementById("pagination");
+  if(total<=1){pg.innerHTML="";return;}
+  let h=`<button class="page-btn pn" ${page===1?"disabled style='opacity:.3'":""} onclick="goPage(${page-1})">&larr; Prev</button>`;
+  for(let i=1;i<=total;i++){
+    if(i===1||i===total||Math.abs(i-page)<=1) h+=`<button class="page-btn ${i===page?"active":""}" onclick="goPage(${i})">${i}</button>`;
+    else if(Math.abs(i-page)===2) h+=`<span style="color:var(--dim);padding:0 3px">&hellip;</span>`;
+  }
+  h+=`<button class="page-btn pn" ${page===total?"disabled style='opacity:.3'":""} onclick="goPage(${page+1})">Next &rarr;</button>`;
+  pg.innerHTML=h;
+}
+
+function goPage(p){page=p;render();window.scrollTo({top:0,behavior:"smooth"});}
+function toggleSave(id,btn){savedIds.includes(id)?savedIds=savedIds.filter(x=>x!==id):savedIds.push(id);btn.innerHTML=savedIds.includes(id)?"&#10084;&#65039;":"&#129293;";}
+function setView(v,btn){view=v;document.getElementById("grid-btn").classList.toggle("active",v==="grid");document.getElementById("list-btn").classList.toggle("active",v==="list");render();}
+function setType(t,btn){typeFilter=t;document.querySelectorAll(".type-btn").forEach(b=>b.classList.remove("active"));btn.classList.add("active");applyFilters();}
+function sortResults(s){sortMode=s;filtered=[...filtered].sort((a,b)=>{if(s==="price_asc")return a.pv-b.pv;if(s==="price_desc")return b.pv-a.pv;if(s==="rating")return b.rating-a.rating;if(s==="newest")return a.days-b.days;if(s==="views")return b.views-a.views;return 0;});page=1;render();}
+function setRating(r,row){document.querySelectorAll(".star-row").forEach(x=>x.classList.remove("active"));row.classList.add("active");}
+function setCurr(c,btn){document.querySelectorAll(".curr-tab").forEach(b=>b.classList.remove("active"));btn.classList.add("active");}
+function toggleSection(id,hdr){const body=document.getElementById(id);const t=hdr.querySelector(".filter-toggle");const coll=body.style.display==="none";body.style.display=coll?"":"none";t.classList.toggle("coll",!coll);}
+function updatePriceDisplay(){const min=document.getElementById("price-min").value||0;const max=document.getElementById("price-max").value||0;document.getElementById("pdmin").textContent="GH\u20B5 "+parseInt(min).toLocaleString();document.getElementById("pdmax").textContent="GH\u20B5 "+parseInt(max).toLocaleString();}
+function setSearch(v){document.getElementById("main-search").value=v;applyFilters();}
+function onSearch(v){applyFilters();}
+function filterChange(){setTimeout(applyFilters,100);}
+function applyFilters(){
+  const q=document.getElementById("main-search").value.toLowerCase();
+  filtered=LISTINGS.filter(l=>{
+    if(typeFilter!=="all"&&l.type!==typeFilter)return false;
+    if(q&&!l.title.toLowerCase().includes(q)&&!l.seller.toLowerCase().includes(q))return false;
+    return true;
+  });
+  if(sortMode!=="relevance")filtered=[...filtered].sort((a,b)=>{if(sortMode==="price_asc")return a.pv-b.pv;if(sortMode==="price_desc")return b.pv-a.pv;if(sortMode==="rating")return b.rating-a.rating;if(sortMode==="newest")return a.days-b.days;if(sortMode==="views")return b.views-a.views;return 0;});
+  page=1;
+  document.getElementById("results-count").textContent=filtered.length.toLocaleString()+" results";
+  document.getElementById("results-sub").textContent='for "'+( q||"all" )+'" \u00B7 Accra, Ghana \u00B7 Within 50km';
+  render();
+}
+function clearFilters(){typeFilter="all";document.querySelectorAll(".type-btn").forEach(b=>b.classList.remove("active"));document.querySelector(".type-btn").classList.add("active");document.querySelectorAll(".check-item input").forEach(i=>i.checked=false);filtered=[...LISTINGS];page=1;render();}
+updatePriceDisplay();applyFilters();
+</script>
+</body>
+</html>

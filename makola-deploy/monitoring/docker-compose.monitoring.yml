@@ -1,0 +1,59 @@
+version: "3.9"
+# Optional monitoring stack — run separately
+# docker compose -f monitoring/docker-compose.monitoring.yml up -d
+
+networks:
+  monitoring:
+    driver: bridge
+
+volumes:
+  prometheus_data:
+  grafana_data:
+
+services:
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: makola_prometheus
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - prometheus_data:/prometheus
+    command: --config.file=/etc/prometheus/prometheus.yml --storage.tsdb.retention.time=30d
+    ports: ["9090:9090"]
+    networks: [monitoring]
+    restart: unless-stopped
+
+  grafana:
+    image: grafana/grafana:latest
+    container_name: makola_grafana
+    environment:
+      GF_SECURITY_ADMIN_PASSWORD: ${GRAFANA_PASSWORD:-admin}
+      GF_SERVER_DOMAIN: monitor.makoladigital.com
+    volumes:
+      - grafana_data:/var/lib/grafana
+    ports: ["3001:3000"]
+    networks: [monitoring]
+    restart: unless-stopped
+
+  node_exporter:
+    image: prom/node-exporter:latest
+    container_name: makola_node_exporter
+    volumes:
+      - /proc:/host/proc:ro
+      - /sys:/host/sys:ro
+      - /:/rootfs:ro
+    command: --path.procfs=/host/proc --path.rootfs=/rootfs --path.sysfs=/host/sys
+    ports: ["9100:9100"]
+    networks: [monitoring]
+    restart: unless-stopped
+
+  cadvisor:
+    image: gcr.io/cadvisor/cadvisor:latest
+    container_name: makola_cadvisor
+    volumes:
+      - /:/rootfs:ro
+      - /var/run:/var/run:ro
+      - /sys:/sys:ro
+      - /var/lib/docker/:/var/lib/docker:ro
+    ports: ["8080:8080"]
+    networks: [monitoring]
+    restart: unless-stopped
