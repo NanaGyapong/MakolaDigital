@@ -5,7 +5,7 @@
     "buildCommand": "npm install --legacy-peer-deps && NEXT_PUBLIC_API_URL=https://sparkling-charm-production-cb2c.up.railway.app/api/v1 npm run build"
   },
   "deploy": {
-    "startCommand": "node server.mjs",
+    "startCommand": "node .next/standalone/server.js",
     "restartPolicyType": "ON_FAILURE"
   }
 }
