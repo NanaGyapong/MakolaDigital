@@ -1,15 +1,27 @@
-// jobs/email.job.js
-import Queue from "bull";
-import nodemailer from "nodemailer";
-const transporter = nodemailer.createTransport({ host:process.env.SMTP_HOST, port:587, auth:{user:process.env.SMTP_USER,pass:process.env.SMTP_PASS} });
-export const emailQueue = new Queue("emails", process.env.REDIS_URL);
-const t = {
-  "verify-email":({name,otp})=>({ subject:"Verify your Makola Digital account", html:`<p>Hi ${name}, your code is: <strong>${otp}</strong>. Expires in 10 minutes.</p>` }),
-  "forgot-password":({name,token})=>({ subject:"Reset your Makola Digital password", html:`<p>Hi ${name}, <a href="${process.env.CLIENT_URL}/auth/reset-password?token=${token}">reset your password</a>. Expires in 30 minutes.</p>` }),
-  "kyc-result":({name,status,note})=>({ subject:status==="verified"?"Your account is now verified!":"Makola KYC update", html:`<p>Hi ${name}. KYC status: ${status}. ${note||""}</p>` }),
+import { Resend } from "resend";
+
+const resend = new Resend(process.env.RESEND_API_KEY);
+
+export const emailQueue = {
+  add: async (type, data) => {
+    if (type === "verify-email") {
+      await resend.emails.send({
+        from: "Makola Digital <onboarding@resend.dev>",
+        to: data.to,
+        subject: "Verify your Makola Digital account",
+        html: `
+          <div style="font-family:sans-serif;max-width:480px;margin:0 auto;padding:32px;background:#0A0A0A;color:#F0EDE8;border-radius:16px">
+            <h1 style="color:#E8533A;margin-bottom:8px">🌍 Makola Digital</h1>
+            <p>Hi ${data.name},</p>
+            <p>Your verification code is:</p>
+            <div style="background:#1A1A1A;border-radius:12px;padding:24px;text-align:center;margin:24px 0">
+              <span style="font-size:36px;font-weight:900;letter-spacing:8px;color:#E8533A">${data.otp}</span>
+            </div>
+            <p style="color:rgba(240,237,232,0.5);font-size:13px">This code expires in 10 minutes. Do not share it with anyone.</p>
+            <p style="color:rgba(240,237,232,0.5);font-size:13px">— The Makola Digital Team 🇬🇭</p>
+          </div>
+        `
+      });
+    }
+  }
 };
-emailQueue.process(async(job)=>{
-  const tmpl=t[job.name]; if(!tmpl) return;
-  const{subject,html}=tmpl(job.data);
-  await transporter.sendMail({from:`"Makola Digital" <${process.env.FROM_EMAIL}>`,to:job.data.to,subject,html});
-});
