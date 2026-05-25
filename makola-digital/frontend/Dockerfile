@@ -1,5 +1,6 @@
 FROM node:18-alpine
-# Build timestamp: 2026-05-25
+ARG CACHEBUST=1
+RUN echo "Cache bust: $CACHEBUST"
 WORKDIR /app
 COPY package*.json ./
 RUN npm install --legacy-peer-deps
