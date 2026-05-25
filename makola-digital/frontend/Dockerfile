@@ -1,5 +1,5 @@
 FROM node:18-alpine
-# Force rebuild v3
+# Build timestamp: 2026-05-25
 WORKDIR /app
 COPY package*.json ./
 RUN npm install --legacy-peer-deps
