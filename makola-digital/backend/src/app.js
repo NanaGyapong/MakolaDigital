@@ -16,6 +16,7 @@ app.use(cors({
     "https://makoladigital.online",
     "https://www.makoladigital.online",
     "https://makoladigital-production.up.railway.app",
+    "https://makola-digital.vercel.app",
     "http://localhost:3000"
   ],
   credentials: true
