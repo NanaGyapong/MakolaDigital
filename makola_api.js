@@ -323,3 +323,16 @@ SMTP_USER=apikey
 SMTP_PASS=your_sendgrid_api_key
 FROM_EMAIL=hello@makoladigital.com
 */
+
+// ── SPA CATCH-ALL (MUST be last route, after all /api/* routes) ──────────────
+const path = require('path');
+const DIST = path.join(__dirname, 'makola-pwa', 'dist');
+
+// Serve static files from the PWA build
+app.use(express.static(DIST));
+
+// For any route that doesn't match an API endpoint, serve index.html
+// This lets React Router handle client-side routing
+app.get('*', (req, res) => {
+  res.sendFile(path.join(DIST, 'index.html'));
+});
