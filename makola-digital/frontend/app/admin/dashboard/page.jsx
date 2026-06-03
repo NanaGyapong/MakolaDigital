@@ -5,9 +5,9 @@ const api = axios.create({ baseURL: "http://localhost:4000/api/v1" });
 
 export default function AdminDashboard() {
   const stats = [
-    { label:"Total users", val:"22,140", change:"+89 today", color:"#3B7DD8" },
-    { label:"Active listings", val:"180,420", change:"+234 today", color:"#2D9E6B" },
-    { label:"Today revenue", val:"GH₵ 42,800", change:"+18.2%", color:"#E8533A" },
+    { label:"Total users", val:"0", change:"+0 today", color:"#3B7DD8" },
+    { label:"Active listings", val:"0", change:"+0 today", color:"#2D9E6B" },
+    { label:"Today revenue", val:"GH₵ 0", change:"+0%", color:"#E8533A" },
     { label:"KYC pending", val:"7", change:"Needs review", color:"#C47F17" },
     { label:"Open disputes", val:"3", change:"Urgent", color:"#E8533A" },
     { label:"Flagged listings", val:"12", change:"Review needed", color:"#C47F17" },
@@ -42,7 +42,7 @@ export default function AdminDashboard() {
           <div style={s.title}>🛡️ Admin Dashboard</div>
           <div style={{ fontSize:13, color:"rgba(240,237,232,0.5)", marginTop:4 }}>Makola Digital · Super Admin</div>
         </div>
-        <div style={s.badge}>⚠️ 22 alerts need attention</div>
+        <div style={s.badge}>✅ No alerts</div>
       </div>
 
       <div style={{ fontSize:13, fontWeight:700, color:"rgba(240,237,232,0.4)", textTransform:"uppercase", letterSpacing:"0.07em", marginBottom:12 }}>Platform overview</div>
