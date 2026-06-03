@@ -1,7 +1,7 @@
 "use client";
 import { useState, useEffect } from "react";
 
-const ADMIN_PASSWORD = "MakolaAdmin2024!";
+const ADMIN_PASSWORD = "Florence2026$$@makola";
 
 export default function AdminLayout({ children }) {
   const [authenticated, setAuthenticated] = useState(false);
