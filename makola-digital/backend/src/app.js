@@ -10,13 +10,13 @@ const app = express();
 const PORT = process.env.PORT || 4000;
 
 app.set("trust proxy", 1);
-app.use(helmet());
+app.use(helmet({ contentSecurityPolicy: false }));
 app.use(cors({
   origin: [
     "https://makoladigital.online",
     "https://www.makoladigital.online",
-    "https://makoladigital-production.up.railway.app",
     "https://makola-digital.vercel.app",
+    "https://makoladigital-production.up.railway.app",
     "http://localhost:3000"
   ],
   credentials: true
