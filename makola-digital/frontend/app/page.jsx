@@ -23,6 +23,14 @@ const stats = [
 export default function MakolaDigital() {
   const router = useRouter();
   const [search, setSearch] = useState("");
+  const [listings, setListings] = useState([]);
+
+  useEffect(() => {
+    fetch("https://sparkling-charm-production-cb2c.up.railway.app/api/v1/listings?limit=6")
+      .then(r => r.json())
+      .then(data => { if (data.listings) setListings(data.listings); })
+      .catch(() => {});
+  }, []);
   const [menuOpen, setMenuOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
 
