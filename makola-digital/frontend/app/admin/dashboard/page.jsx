@@ -9,8 +9,8 @@ export default function AdminDashboard() {
     { label:"Active listings", val:"0", change:"+0 today", color:"#2D9E6B" },
     { label:"Today revenue", val:"GH₵ 0", change:"+0%", color:"#E8500A" },
     { label:"
-    { label:"Open disputes", val:"0", change:"Urgent", color:"#E8500A" },
-    { label:"Flagged listings", val:"0", change:"Review needed", color:"#C40F10" },
+    { label:"Open disputes", val:"0", change:"", color:"#E8500A" },
+    { label:"Flagged listings", val:"0", change:"", color:"#C40F10" },
   ];
 
   const pages = [
