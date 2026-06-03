@@ -41,7 +41,7 @@ export default function SellPage() {
 
   const handleImageUpload = async (files) => {
     setUploading(true);
-    const token = localStorage.getItem("token");
+    const token = localStorage.getItem("makola_token");
     for (const file of files) {
       const fd = new FormData();
       fd.append("image", file);
@@ -57,7 +57,7 @@ export default function SellPage() {
   const handleSubmit = async () => {
     setLoading(true);
     setError("");
-    const token = localStorage.getItem("token");
+    const token = localStorage.getItem("makola_token");
     if (!token) { router.push("/auth/login"); return; }
     try {
       const res = await fetch(`${API}/listings`, {
