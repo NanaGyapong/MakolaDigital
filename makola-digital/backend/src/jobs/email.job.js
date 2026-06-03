@@ -6,7 +6,7 @@ export const emailQueue = {
   add: async (type, data) => {
     if (type === "verify-email") {
       await resend.emails.send({
-        from: "Makola Digital <onboarding@resend.dev>",
+        from: "Makola Digital <hello@makoladigital.online>",
         to: data.to,
         subject: "Verify your Makola Digital account",
         html: `
