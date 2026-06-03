@@ -23,10 +23,10 @@ const featuredListings = [
 ];
 
 const stats = [
-  { value: "180k+", label: "Active listings" },
+  { value: "0", label: "Active listings" },
   { value: "54", label: "African countries" },
-  { value: "22k+", label: "Verified sellers" },
-  { value: "1.2M+", label: "Community members" },
+  { value: "0", label: "Verified sellers" },
+  { value: "0", label: "Community members" },
 ];
 
 const badgeColor = { "Verified": "#2D9E6B", "Top Rated": "#3B7DD8", "New": "#8B5CF6", "Urgent": "#E8533A", "Popular": "#C47F17" };
