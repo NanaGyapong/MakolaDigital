@@ -48,6 +48,7 @@ export default function ListingPage() {
   const [reviewBody, setReviewBody] = useState("");
   const [reviewSubmitting, setReviewSubmitting] = useState(false);
   const [reviewSuccess, setReviewSuccess] = useState(false);
+  const [related, setRelated] = useState([]);
   const [reviewError, setReviewError] = useState("");
 
   useEffect(() => {
@@ -61,6 +62,7 @@ export default function ListingPage() {
       })
       .catch(() => setLoading(false));
 
+    fetch(`${API}/listings/${id}/related`).then(r=>r.json()).then(data=>setRelated(data.listings||[])).catch(()=>{});
     fetch(`${API}/reviews/listing/${id}`)
       .then(r => r.json())
       .then(data => {
@@ -335,6 +337,27 @@ export default function ListingPage() {
           )}
         </div>
       </div>
+
+      {related.length > 0 && (
+        <div style={{ marginTop: 40, borderTop: '1px solid rgba(255,255,255,0.07)', paddingTop: 32 }}>
+          <h2 style={{ fontSize: 20, fontWeight: 800, marginBottom: 20 }}>You might also like</h2>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(220px, 1fr))', gap: 14 }}>
+            {related.map(l => (
+              <div key={l.id} onClick={() => router.push('/listing/' + l.id)} style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: 14, overflow: 'hidden', cursor: 'pointer' }}>
+                {l.primary_image
+                  ? <img src={l.primary_image} alt={l.title} style={{ width: '100%', height: 130, objectFit: 'cover' }} />
+                  : <div style={{ height: 130, background: 'rgba(255,255,255,0.04)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 36 }}>{l.type === 'product' ? '🛍️' : l.type === 'service' ? '🔧' : l.type === 'job' ? '💼' : '🏠'}</div>
+                }
+                <div style={{ padding: '12px 14px' }}>
+                  <div style={{ fontSize: 13, fontWeight: 700, marginBottom: 4, lineHeight: 1.3 }}>{l.title}</div>
+                  <div style={{ fontSize: 14, fontWeight: 700, color: '#E8533A' }}>{l.price_currency} {Number(l.price).toLocaleString()}</div>
+                  <div style={{ fontSize: 11, color: 'rgba(240,237,232,0.45)', marginTop: 3 }}>📍 {l.location_text || l.city} · by {l.seller_name}</div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
     </div>
   );
 }
