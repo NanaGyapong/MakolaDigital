@@ -54,7 +54,16 @@ router.patch("/:id/status", authenticate, async (req, res) => {
       return res.status(400).json({ message: "Invalid status" });
     }
     await db.query("UPDATE listings SET status = $1, updated_at = NOW() WHERE id = $2", [status, req.params.id]);
-    res.json({ message: "Status updated" });
+    if (status === 'active') {
+      try {
+        const listing = await db.query('SELECT l.title, l.id, u.email, u.full_name FROM listings l JOIN users u ON u.id = l.seller_id WHERE l.id = $1', [req.params.id]);
+        if (listing.rows[0]) {
+          const { emailQueue } = await import('../jobs/email.job.js');
+          await emailQueue.add('listing-approved', { to: listing.rows[0].email, name: listing.rows[0].full_name, title: listing.rows[0].title, listingId: listing.rows[0].id });
+        }
+      } catch(e) { console.error('email notification:', e.message); }
+    }
+    res.json({ message: 'Status updated' });
   } catch (err) {
     console.error("update status:", err);
     res.status(500).json({ message: "Failed to update status" });
