@@ -8,32 +8,21 @@ const router = Router();
 router.post("/", authenticate, async (req, res) => {
   try {
     const { type, category, title, description, price, currency, priceLabel, isNegotiable, country, city, locationText, isRemote, images } = req.body;
-
-    if (!title || !description) return res.status(400).json({ message: "Title and description are required" });
-
     const slug = title.toLowerCase().replace(/[^a-z0-9]+/g, "-") + "-" + uuid().slice(0, 8);
-
     const catResult = await db.query("SELECT id FROM categories WHERE name = $1 LIMIT 1", [category]);
     const categoryId = catResult.rows[0]?.id || 1;
-
     const result = await db.query(
       `INSERT INTO listings (id, seller_id, category_id, type, status, title, slug, description, price, price_currency, price_label, is_negotiable, country, city, location_text, is_remote, created_at, updated_at)
        VALUES ($1,$2,$3,$4,'pending',$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,NOW(),NOW()) RETURNING id`,
       [uuid(), req.user.id, categoryId, type, title, slug, description, price || null, currency || "GHS", priceLabel || null, isNegotiable || false, country?.slice(0,2).toUpperCase() || "GH", city || null, locationText || null, isRemote || false]
     );
-
     const listingId = result.rows[0].id;
-
     if (images && images.length > 0) {
       for (let i = 0; i < images.length; i++) {
-        await db.query(
-          "INSERT INTO listing_images (id, listing_id, url, sort_order, is_primary, created_at) VALUES ($1,$2,$3,$4,$5,NOW())",
-          [uuid(), listingId, images[i], i, i === 0]
-        );
+        await db.query("INSERT INTO listing_images (id, listing_id, url, sort_order, is_primary, created_at) VALUES ($1,$2,$3,$4,$5,NOW())", [uuid(), listingId, images[i], i, i === 0]);
       }
     }
-
-    res.status(201).json({ message: "Listing created successfully", listingId });
+    res.status(201).json({ message: "Listing submitted for review", listingId });
   } catch (err) {
     console.error("create listing:", err);
     res.status(500).json({ message: "Failed to create listing" });
@@ -42,12 +31,11 @@ router.post("/", authenticate, async (req, res) => {
 
 router.get("/", async (req, res) => {
   try {
-    const { type, category, country, limit = 20, offset = 0 } = req.query;
-    let query = `SELECT l.*, u.full_name as seller_name, (SELECT url FROM listing_images WHERE listing_id = l.id AND is_primary ORDER BY sort_order LIMIT 1) as primary_image FROM listings l JOIN users u ON u.id = l.seller_id WHERE l.status = 'pending'`;
+    const { status, type, limit = 20, offset = 0 } = req.query;
+    const statusFilter = status || "active";
+    let query = `SELECT l.*, u.full_name as seller_name, (SELECT url FROM listing_images WHERE listing_id = l.id AND is_primary ORDER BY sort_order LIMIT 1) as primary_image FROM listings l JOIN users u ON u.id = l.seller_id WHERE l.status = '${statusFilter}'`;
     const params = [];
     if (type) { params.push(type); query += ` AND l.type = $${params.length}`; }
-    if (category) { params.push(category); query += ` AND l.category_id = (SELECT id FROM categories WHERE name = $${params.length} LIMIT 1)`; }
-    if (country) { params.push(country); query += ` AND l.country = $${params.length}`; }
     query += ` ORDER BY l.created_at DESC LIMIT $${params.length + 1} OFFSET $${params.length + 2}`;
     params.push(limit, offset);
     const result = await db.query(query, params);
@@ -58,12 +46,9 @@ router.get("/", async (req, res) => {
   }
 });
 
-export default router;
-
 router.patch("/:id/status", authenticate, async (req, res) => {
   try {
     const { status } = req.body;
-    if (!["active", "pending", "rejected", "flagged", "paused"].includes(status)) {
       return res.status(400).json({ message: "Invalid status" });
     }
     await db.query("UPDATE listings SET status = $1, updated_at = NOW() WHERE id = $2", [status, req.params.id]);
@@ -73,3 +58,5 @@ router.patch("/:id/status", authenticate, async (req, res) => {
     res.status(500).json({ message: "Failed to update status" });
   }
 });
+
+export default router;
