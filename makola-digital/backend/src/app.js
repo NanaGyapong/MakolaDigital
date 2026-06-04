@@ -4,6 +4,7 @@ import helmet from "helmet";
 import dotenv from "dotenv";
 dotenv.config();
 import { redis } from "./config/redis.js";
+import reviewsRoutes from "./routes/reviews.routes.js";
 import kycRoutes from "./routes/kyc.routes.js";
 import categoriesRoutes from "./routes/categories.routes.js";
 import listingsRoutes from "./routes/listings.routes.js";
@@ -34,6 +35,7 @@ app.use("/api/v1/upload", uploadRoutes);
 app.use("/api/v1/listings", listingsRoutes);
 app.use("/api/v1/categories", categoriesRoutes);
 app.use("/api/v1/kyc", kycRoutes);
+app.use("/api/v1/reviews", reviewsRoutes);
 
 app.listen(PORT, "0.0.0.0", () => console.log(`🌍 Makola Digital API running on port ${PORT}`));
 export default app;
