@@ -24,6 +24,8 @@ export default function MakolaDigital() {
   const router = useRouter();
   const [search, setSearch] = useState("");
   const [listings, setListings] = useState([]);
+  const [menuOpen, setMenuOpen] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
     fetch("https://sparkling-charm-production-cb2c.up.railway.app/api/v1/listings?limit=6")
@@ -31,8 +33,6 @@ export default function MakolaDigital() {
       .then(data => { if (data.listings) setListings(data.listings); })
       .catch(() => {});
   }, []);
-  const [menuOpen, setMenuOpen] = useState(false);
-  const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
     const check = () => setIsMobile(window.innerWidth < 768);
@@ -46,6 +46,7 @@ export default function MakolaDigital() {
   return (
     <div style={{ fontFamily: "'DM Sans', 'Segoe UI', sans-serif", background: "#0D0D0D", minHeight: "100vh", color: "#F0EDE8" }}>
 
+      {/* NAV */}
       <nav style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: `0 ${px}`, height: 56, borderBottom: "1px solid rgba(255,255,255,0.07)", background: "rgba(13,13,13,0.97)", position: "sticky", top: 0, zIndex: 100 }}>
         <div style={{ display: "flex", alignItems: "center", gap: 8, cursor: "pointer" }} onClick={() => router.push("/")}>
           <div style={{ width: 30, height: 30, borderRadius: 8, background: "linear-gradient(135deg, #E8533A, #C47F17)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 15 }}>🌍</div>
@@ -71,6 +72,7 @@ export default function MakolaDigital() {
         )}
       </nav>
 
+      {/* MOBILE MENU */}
       {menuOpen && isMobile && (
         <div style={{ background: "#111", borderBottom: "1px solid rgba(255,255,255,0.07)", padding: "12px 16px", display: "flex", flexDirection: "column", gap: 4 }}>
           {["Explore", "Sell", "Jobs", "Blog"].map(nav => (
@@ -80,6 +82,7 @@ export default function MakolaDigital() {
         </div>
       )}
 
+      {/* HERO */}
       <div style={{ padding: isMobile ? "48px 16px 40px" : "72px 32px 56px", background: "radial-gradient(ellipse 80% 60% at 50% -10%, rgba(232,83,58,0.18) 0%, transparent 70%)", textAlign: "center" }}>
         <div style={{ display: "inline-block", background: "rgba(232,83,58,0.12)", border: "1px solid rgba(232,83,58,0.3)", borderRadius: 20, padding: "4px 14px", fontSize: 11, color: "#E8533A", marginBottom: 16, fontWeight: 500 }}>
           🌍 Africa's Marketplace — Products · Services · Jobs · Rentals
@@ -107,6 +110,7 @@ export default function MakolaDigital() {
         </div>
       </div>
 
+      {/* STATS */}
       <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", borderTop: "1px solid rgba(255,255,255,0.06)", borderBottom: "1px solid rgba(255,255,255,0.06)", background: "rgba(255,255,255,0.02)" }}>
         {stats.map((s, i) => (
           <div key={i} style={{ padding: isMobile ? "16px 8px" : "20px 40px", textAlign: "center", borderRight: i < stats.length - 1 ? "1px solid rgba(255,255,255,0.06)" : "none" }}>
@@ -116,6 +120,7 @@ export default function MakolaDigital() {
         ))}
       </div>
 
+      {/* CATEGORIES */}
       <div style={{ padding: isMobile ? "28px 16px 20px" : "40px 32px 24px" }}>
         <h2 style={{ fontSize: isMobile ? 17 : 20, fontWeight: 700, marginBottom: 16, letterSpacing: "-0.02em" }}>Browse by category</h2>
         <div style={{ display: "grid", gridTemplateColumns: isMobile ? "repeat(4, 1fr)" : "repeat(auto-fit, minmax(130px, 1fr))", gap: isMobile ? 8 : 10 }}>
@@ -125,11 +130,38 @@ export default function MakolaDigital() {
               <div style={{ fontSize: isMobile ? 10 : 13, fontWeight: 600 }}>{cat.label}</div>
               <div style={{ fontSize: 10, color: cat.color, marginTop: 2 }}>{cat.count}</div>
             </button>
-      {listings.length > 0 && (<div style={{ padding: isMobile ? "8px 16px 32px" : "8px 32px 40px" }}><h2 style={{ fontSize: isMobile ? 17 : 20, fontWeight: 700, marginBottom: 16 }}>Latest listings</h2><div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr 1fr" : "repeat(auto-fill, minmax(260px, 1fr))", gap: 16 }}>{listings.map(l => (<div key={l.id} style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: 16, overflow: "hidden" }}>{l.primary_image ? <img src={l.primary_image} alt={l.title} style={{ width: "100%", height: 140, objectFit: "cover" }} /> : <div style={{ height: 140, background: "rgba(255,255,255,0.04)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 40 }}>{l.type === "product" ? "🛍️" : l.type === "service" ? "🔧" : l.type === "job" ? "💼" : "🏠"}</div>}<div style={{ padding: "12px 14px" }}><div style={{ fontSize: 11, color: "rgba(240,237,232,0.4)", marginBottom: 4, textTransform: "uppercase" }}>{l.type}</div><div style={{ fontSize: 14, fontWeight: 700, marginBottom: 6 }}>{l.title}</div><div style={{ fontSize: 16, fontWeight: 700, color: "#E8533A", marginBottom: 6 }}>{l.price_currency} {Number(l.price).toLocaleString()}{l.is_negotiable ? " · Negotiable" : ""}</div><div style={{ fontSize: 11, color: "rgba(240,237,232,0.5)" }}>📍 {l.location_text || l.city} · by {l.seller_name}</div></div></div>))}</div></div>)}
           ))}
         </div>
       </div>
 
+      {/* REAL LISTINGS */}
+      {listings.length > 0 && (
+        <div style={{ padding: isMobile ? "8px 16px 32px" : "8px 32px 40px" }}>
+          <h2 style={{ fontSize: isMobile ? 17 : 20, fontWeight: 700, marginBottom: 16, letterSpacing: "-0.02em" }}>Latest listings</h2>
+          <div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr 1fr" : "repeat(auto-fill, minmax(260px, 1fr))", gap: 16 }}>
+            {listings.map(l => (
+              <div key={l.id} style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: 16, overflow: "hidden", cursor: "pointer" }}>
+                {l.primary_image
+                  ? <img src={l.primary_image} alt={l.title} style={{ width: "100%", height: 140, objectFit: "cover" }} />
+                  : <div style={{ height: 140, background: "rgba(255,255,255,0.04)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 40 }}>
+                      {l.type === "product" ? "🛍️" : l.type === "service" ? "🔧" : l.type === "job" ? "💼" : "🏠"}
+                    </div>
+                }
+                <div style={{ padding: "12px 14px" }}>
+                  <div style={{ fontSize: 11, color: "rgba(240,237,232,0.4)", marginBottom: 4, textTransform: "uppercase" }}>{l.type}</div>
+                  <div style={{ fontSize: 14, fontWeight: 700, marginBottom: 6, lineHeight: 1.3 }}>{l.title}</div>
+                  <div style={{ fontSize: 16, fontWeight: 700, color: "#E8533A", marginBottom: 6 }}>
+                    {l.price_currency} {Number(l.price).toLocaleString()}{l.is_negotiable ? " · Negotiable" : ""}
+                  </div>
+                  <div style={{ fontSize: 11, color: "rgba(240,237,232,0.5)" }}>📍 {l.location_text || l.city || l.country} · by {l.seller_name}</div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* CTA BANNER */}
       <div style={{ margin: isMobile ? "0 16px 40px" : "0 32px 48px", background: "linear-gradient(135deg, rgba(232,83,58,0.15), rgba(196,127,23,0.15))", border: "1px solid rgba(232,83,58,0.2)", borderRadius: 20, padding: isMobile ? "28px 20px" : "40px 48px", textAlign: isMobile ? "center" : "left" }}>
         <h3 style={{ fontSize: isMobile ? 20 : 22, fontWeight: 700, margin: "0 0 8px", letterSpacing: "-0.02em" }}>Are you a business owner?</h3>
         <p style={{ fontSize: 14, color: "rgba(240,237,232,0.6)", margin: "0 0 20px", lineHeight: 1.6 }}>List your products, services, or jobs — reach millions across Africa & the diaspora.</p>
@@ -139,6 +171,7 @@ export default function MakolaDigital() {
         </div>
       </div>
 
+      {/* FOOTER */}
       <div style={{ borderTop: "1px solid rgba(255,255,255,0.07)", padding: isMobile ? "20px 16px" : "24px 32px", display: "flex", flexDirection: isMobile ? "column" : "row", alignItems: "center", justifyContent: "space-between", gap: 12, color: "rgba(240,237,232,0.35)", fontSize: 12, textAlign: isMobile ? "center" : "left" }}>
         <div>🌍 MakolaDigital — Africa's Marketplace © 2025</div>
         <div style={{ display: "flex", gap: 20 }}>
