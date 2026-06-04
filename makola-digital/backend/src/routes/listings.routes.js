@@ -59,3 +59,17 @@ router.get("/", async (req, res) => {
 });
 
 export default router;
+
+router.patch("/:id/status", authenticate, async (req, res) => {
+  try {
+    const { status } = req.body;
+    if (!["active", "pending", "rejected", "flagged", "paused"].includes(status)) {
+      return res.status(400).json({ message: "Invalid status" });
+    }
+    await db.query("UPDATE listings SET status = $1, updated_at = NOW() WHERE id = $2", [status, req.params.id]);
+    res.json({ message: "Status updated" });
+  } catch (err) {
+    console.error("update status:", err);
+    res.status(500).json({ message: "Failed to update status" });
+  }
+});
