@@ -61,4 +61,18 @@ router.patch("/:id/status", authenticate, async (req, res) => {
   }
 });
 
+
+router.get('/:id', async (req, res) => {
+  try {
+    const result = await db.query(
+      'SELECT l.*, u.full_name as seller_name FROM listings l JOIN users u ON u.id = l.seller_id WHERE l.id = $1',
+      [req.params.id]
+    );
+    const images = await db.query('SELECT url, is_primary, sort_order FROM listing_images WHERE listing_id = $1 ORDER BY sort_order', [req.params.id]);
+    res.json({ listing: result.rows[0], images: images.rows });
+  } catch (err) {
+    console.error('get listing:', err);
+    res.status(500).json({ message: 'Failed to fetch listing' });
+  }
+});
 export default router;
