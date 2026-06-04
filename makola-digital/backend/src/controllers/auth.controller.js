@@ -9,7 +9,7 @@ const JWT_SECRET = process.env.JWT_SECRET;
 const JWT_REFRESH = process.env.JWT_REFRESH_SECRET;
 
 function signAccess(userId) {
-  return jwt.sign({ sub: userId, type: "access" }, JWT_SECRET, { expiresIn: "15m" });
+  return jwt.sign({ sub: userId, type: "access" }, JWT_SECRET, { expiresIn: "24h" });
 }
 function signRefresh(userId, remember = true) {
   return jwt.sign({ sub: userId, type: "refresh" }, JWT_REFRESH, { expiresIn: remember ? "30d" : "1d" });
