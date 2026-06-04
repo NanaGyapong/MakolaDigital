@@ -28,7 +28,10 @@ export default function KycPage() {
       if (frontFile) fd.append("idFront", frontFile);
       if (backFile) fd.append("idBack", backFile);
       Object.entries(biz).forEach(([k,v]) => fd.append(k, v));
-      await authService.submitKyc(fd);
+      const token = localStorage.getItem("makola_token");
+      const res = await fetch("https://sparkling-charm-production-cb2c.up.railway.app/api/v1/kyc/submit", { method: "POST", headers: { Authorization: `Bearer ${token}` }, body: fd });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.message);
       setStep(3);
     } catch (err) { setError(err.message); }
     finally { setLoading(false); }
