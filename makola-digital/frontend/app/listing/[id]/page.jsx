@@ -242,6 +242,7 @@ export default function ListingPage() {
             </div>
 
             <div style={{ fontSize: 11, color: "rgba(240,237,232,0.3)", textAlign: "center" }}>
+            <div style={{ marginBottom: 16 }}><div style={{ fontSize: 12, color: "rgba(240,237,232,0.5)", marginBottom: 8, fontWeight: 600 }}>SHARE THIS LISTING</div><div style={{ display: "flex", gap: 8 }}><button onClick={() => { const url = window.location.href; const text = listing.title + " - " + listing.price_currency + " " + Number(listing.price).toLocaleString() + " | Makola Digital"; window.open("https://wa.me/?text=" + encodeURIComponent(text + " " + url), "_blank"); }} style={{ flex: 1, background: "rgba(37,211,102,0.12)", border: "1px solid rgba(37,211,102,0.3)", color: "#25D366", padding: "10px", borderRadius: 10, cursor: "pointer", fontSize: 13, fontWeight: 700 }}>WhatsApp</button><button onClick={() => { navigator.clipboard.writeText(window.location.href); alert("Link copied!"); }} style={{ flex: 1, background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.12)", color: "#F0EDE8", padding: "10px", borderRadius: 10, cursor: "pointer", fontSize: 13, fontWeight: 700 }}>Copy Link</button></div></div>
               🔒 Messages are sent through Makola Digital's secure platform.
             </div>
           </div>
