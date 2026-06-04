@@ -49,6 +49,8 @@ router.get("/", async (req, res) => {
 router.patch("/:id/status", authenticate, async (req, res) => {
   try {
     const { status } = req.body;
+    const valid = ["active", "pending", "rejected", "flagged", "paused"];
+    if (valid.indexOf(status) === -1) {
       return res.status(400).json({ message: "Invalid status" });
     }
     await db.query("UPDATE listings SET status = $1, updated_at = NOW() WHERE id = $2", [status, req.params.id]);
