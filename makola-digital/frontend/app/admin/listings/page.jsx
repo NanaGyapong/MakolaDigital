@@ -1,31 +1,53 @@
 "use client";
-import { useState } from "react";
-const FLAGGED = [
-  { id:1, title:"Rolex Replica Watch", seller:"QuickSell GH", reason:"Counterfeit goods", reports:4 },
-  { id:2, title:"Get rich quick scheme", seller:"EasyMoney GH", reason:"Scam/misleading", reports:11 },
-  { id:3, title:"iPhone 15 — 50% off URGENT", seller:"Deals4You", reason:"Suspected fraud", reports:3 },
-  { id:4, title:"Unlicensed pharmaceuticals", seller:"HealthShop GH", reason:"Prohibited item", reports:7 },
-];
+import { useState, useEffect } from "react";
+const API = "https://sparkling-charm-production-cb2c.up.railway.app/api/v1";
 export default function AdminListings() {
-  const [items, setItems] = useState(FLAGGED);
-  const s = { page:{ background:"#0A0A0A", minHeight:"100vh", fontFamily:"'Plus Jakarta Sans',sans-serif", color:"#F0EDE8", padding:28 }, card:{ background:"rgba(255,255,255,0.05)", border:"1px solid rgba(255,255,255,0.09)", borderRadius:13, padding:18, marginBottom:10, display:"flex", alignItems:"center", gap:14 } };
+  const [listings, setListings] = useState([]);
+  const [filter, setFilter] = useState("pending");
+  const [loading, setLoading] = useState(true);
+  const fetchListings = async () => {
+    setLoading(true);
+    try {
+      const res = await fetch(API + "/listings?status=" + filter + "&limit=50");
+      const data = await res.json();
+      setListings(data.listings || []);
+    } catch (e) {}
+    setLoading(false);
+  };
+  useEffect(() => { fetchListings(); }, [filter]);
+  const updateStatus = async (id, status) => {
+    const token = localStorage.getItem("makola_token");
+    await fetch(API + "/listings/" + id + "/status", { method: "PATCH", headers: { "Content-Type": "application/json", Authorization: "Bearer " + token }, body: JSON.stringify({ status }) });
+    fetchListings();
+  };
   return (
-    <div style={s.page}>
-      <a href="/admin/dashboard" style={{ color:"#E8533A", fontSize:13, fontWeight:700, textDecoration:"none" }}>← Admin dashboard</a>
-      <div style={{ fontSize:22, fontWeight:900, margin:"16px 0 6px", letterSpacing:"-0.03em" }}>📦 Flagged Listings</div>
-      <div style={{ fontSize:13, color:"rgba(240,237,232,0.5)", marginBottom:20 }}>{items.length} listings need review</div>
-      {items.map(item => (
-        <div key={item.id} style={{ ...s.card, borderLeft:`3px solid #E8533A` }}>
-          <div style={{ flex:1 }}>
-            <div style={{ fontWeight:800, fontSize:14 }}>{item.title}</div>
-            <div style={{ fontSize:12, color:"rgba(240,237,232,0.5)", margin:"3px 0" }}>by {item.seller}</div>
-            <div style={{ fontSize:12, background:"rgba(232,83,58,0.1)", border:"1px solid rgba(232,83,58,0.25)", color:"#E8533A", display:"inline-block", padding:"2px 8px", borderRadius:5, fontWeight:700 }}>⚠ {item.reason} · {item.reports} reports</div>
-          </div>
-          <button onClick={() => setItems(p => p.filter(i => i.id !== item.id))} style={{ background:"rgba(45,158,107,0.1)", border:"1px solid rgba(45,158,107,0.3)", color:"#2D9E6B", padding:"8px 14px", borderRadius:9, fontWeight:700, cursor:"pointer", marginRight:8, fontFamily:"inherit" }}>✓ Keep</button>
-          <button onClick={() => setItems(p => p.filter(i => i.id !== item.id))} style={{ background:"rgba(232,83,58,0.1)", border:"1px solid rgba(232,83,58,0.3)", color:"#E8533A", padding:"8px 14px", borderRadius:9, fontWeight:700, cursor:"pointer", fontFamily:"inherit" }}>🗑 Remove</button>
-        </div>
-      ))}
-      {items.length === 0 && <div style={{ textAlign:"center", padding:48, color:"rgba(240,237,232,0.4)" }}>✅ All listings reviewed</div>}
+    <div style={{ background: "#0A0A0A", minHeight: "100vh", color: "#F0EDE8", padding: 28, fontFamily: "sans-serif" }}>
+      <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 24 }}>
+        <h1 style={{ fontSize: 22, fontWeight: 900, margin: 0 }}>📦 Listings Management</h1>
+        <a href="/admin/dashboard" style={{ color: "#E8533A" }}>← Dashboard</a>
+      </div>
+      <div style={{ display: "flex", gap: 8, marginBottom: 24 }}>
+        {["pending","active","flagged","rejected"].map(s => (
+          <button key={s} onClick={() => setFilter(s)} style={{ background: filter===s?"#E8533A":"rgba(255,255,255,0.06)", border: "none", color: "#F0EDE8", padding: "8px 16px", borderRadius: 8, cursor: "pointer", textTransform: "capitalize" }}>{s}</button>
+        ))}
+      </div>
+      {loading ? <div style={{ textAlign: "center", padding: 48 }}>Loading...</div> :
+       listings.length === 0 ? <div style={{ textAlign: "center", padding: 48, color: "rgba(240,237,232,0.4)" }}>No {filter} listings</div> :
+       <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+         {listings.map(l => (
+           <div key={l.id} style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.09)", borderRadius: 14, padding: 16, display: "flex", justifyContent: "space-between", alignItems: "center", gap: 16, flexWrap: "wrap" }}>
+             <div>
+               <div style={{ fontWeight: 700 }}>{l.title}</div>
+               <div style={{ fontSize: 12, color: "rgba(240,237,232,0.5)" }}>{l.type} · {l.price_currency} {Number(l.price).toLocaleString()} · by {l.seller_name}</div>
+               <div style={{ fontSize: 11, color: "rgba(240,237,232,0.4)" }}>📍 {l.location_text||l.city} · {new Date(l.created_at).toLocaleDateString()}</div>
+             </div>
+             {filter==="pending" && <div style={{ display: "flex", gap: 8 }}>
+               <button onClick={() => updateStatus(l.id,"active")} style={{ background: "#2D9E6B", border: "none", color: "#fff", padding: "8px 16px", borderRadius: 8, cursor: "pointer", fontWeight: 700 }}>✅ Approve</button>
+               <button onClick={() => updateStatus(l.id,"rejected")} style={{ background: "#E8533A", border: "none", color: "#fff", padding: "8px 16px", borderRadius: 8, cursor: "pointer", fontWeight: 700 }}>❌ Reject</button>
+             </div>}
+           </div>
+         ))}
+       </div>}
     </div>
   );
 }
