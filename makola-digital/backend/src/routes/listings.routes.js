@@ -76,3 +76,17 @@ router.get('/:id', async (req, res) => {
   }
 });
 export default router;
+
+router.get("/mine", authenticate, async (req, res) => {
+  try {
+    const result = await db.query(
+      `SELECT l.*, (SELECT url FROM listing_images WHERE listing_id = l.id AND is_primary ORDER BY sort_order LIMIT 1) as primary_image 
+       FROM listings l WHERE l.seller_id = $1 ORDER BY l.created_at DESC`,
+      [req.user.id]
+    );
+    res.json({ listings: result.rows });
+  } catch (err) {
+    console.error("get my listings:", err);
+    res.status(500).json({ message: "Failed to fetch listings" });
+  }
+});
