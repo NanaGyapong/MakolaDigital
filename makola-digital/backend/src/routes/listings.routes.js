@@ -18,7 +18,7 @@ router.post("/", authenticate, async (req, res) => {
 
     const result = await db.query(
       `INSERT INTO listings (id, seller_id, category_id, type, status, title, slug, description, price, price_currency, price_label, is_negotiable, country, city, location_text, is_remote, created_at, updated_at)
-       VALUES ($1,$2,$3,$4,'active',$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,NOW(),NOW()) RETURNING id`,
+       VALUES ($1,$2,$3,$4,'pending',$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,NOW(),NOW()) RETURNING id`,
       [uuid(), req.user.id, categoryId, type, title, slug, description, price || null, currency || "GHS", priceLabel || null, isNegotiable || false, country?.slice(0,2).toUpperCase() || "GH", city || null, locationText || null, isRemote || false]
     );
 
@@ -43,7 +43,7 @@ router.post("/", authenticate, async (req, res) => {
 router.get("/", async (req, res) => {
   try {
     const { type, category, country, limit = 20, offset = 0 } = req.query;
-    let query = `SELECT l.*, u.full_name as seller_name, (SELECT url FROM listing_images WHERE listing_id = l.id AND is_primary ORDER BY sort_order LIMIT 1) as primary_image FROM listings l JOIN users u ON u.id = l.seller_id WHERE l.status = 'active'`;
+    let query = `SELECT l.*, u.full_name as seller_name, (SELECT url FROM listing_images WHERE listing_id = l.id AND is_primary ORDER BY sort_order LIMIT 1) as primary_image FROM listings l JOIN users u ON u.id = l.seller_id WHERE l.status = 'pending'`;
     const params = [];
     if (type) { params.push(type); query += ` AND l.type = $${params.length}`; }
     if (category) { params.push(category); query += ` AND l.category_id = (SELECT id FROM categories WHERE name = $${params.length} LIMIT 1)`; }
