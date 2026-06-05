@@ -50,3 +50,36 @@ router.post("/submit", authenticate, upload.fields([
 });
 
 export default router;
+
+router.get("/applications", authenticate, async (req, res) => {
+  try {
+    const { status = "pending" } = req.query;
+    const result = await db.query(
+      `SELECT u.id, u.full_name, u.email, u.phone, u.kyc_status, u.created_at,
+       sp.business_name, sp.description
+       FROM users u
+       LEFT JOIN seller_profiles sp ON sp.user_id = u.id
+       WHERE u.kyc_status = $1
+       ORDER BY u.created_at DESC`,
+      [status]
+    );
+    res.json({ applications: result.rows });
+  } catch (err) {
+    console.error("kyc applications:", err);
+    res.status(500).json({ message: "Failed to fetch applications" });
+  }
+});
+
+router.patch("/applications/:userId", authenticate, async (req, res) => {
+  try {
+    const { status } = req.body;
+    if (!["verified", "rejected", "pending"].includes(status)) {
+      return res.status(400).json({ message: "Invalid status" });
+    }
+    await db.query("UPDATE users SET kyc_status = $1, updated_at = NOW() WHERE id = $2", [status, req.params.userId]);
+    res.json({ message: "KYC status updated" });
+  } catch (err) {
+    console.error("kyc update:", err);
+    res.status(500).json({ message: "Failed to update KYC status" });
+  }
+});
