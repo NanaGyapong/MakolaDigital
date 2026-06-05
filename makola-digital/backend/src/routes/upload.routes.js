@@ -12,7 +12,7 @@ router.post("/image", authenticate, upload.single("image"), async (req, res) => 
 
     const result = await new Promise((resolve, reject) => {
       cloudinary.uploader.upload_stream(
-        { folder: "makola-digital", resource_type: "image", transformation: "c_limit,w_1200,q_auto,f_auto" },
+        { folder: "makola-digital", resource_type: "image",  },
         (error, result) => error ? reject(error) : resolve(result)
       ).end(req.file.buffer);
     });
