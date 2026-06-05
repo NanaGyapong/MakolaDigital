@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { authService } from "@/lib/auth.service";
 
 const ID_TYPES = [{ id:"national_id", label:"National ID", icon:"🪪" },{ id:"passport", label:"Passport", icon:"🛂" },{ id:"drivers_license", label:"Driver's License", icon:"🚗" }];
-const BIZ_TYPES = ["Sole proprietor / Individual","Registered company (Ltd / LLC)","Partnership","NGO / Non-profit"];
+const BIZ_TYPES = ["Individual (selling personal items)","Sole proprietor / Small business","Registered company (Ltd / LLC)","Partnership","NGO / Non-profit"];
 const CATEGORIES = ["Electronics & Gadgets","Fashion & Clothing","Food & Agriculture","Web & Tech Services","Real Estate & Rentals","Vehicles","Health & Beauty","Other"];
 
 export default function KycPage() {

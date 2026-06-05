@@ -57,7 +57,7 @@ export default function RegisterPage() {
 
         {/* Account type */}
         <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:10, marginBottom:20 }}>
-          {[{ t:"buyer", icon:"🛍️", name:"Buy / Browse", desc:"Shop products & services" },{ t:"seller", icon:"🏪", name:"Sell / List", desc:"List my business" }].map(({ t, icon, name, desc }) => (
+          {[{ t:"buyer", icon:"🛍️", name:"Buy / Browse", desc:"Shop products & services" },{ t:"individual_seller", icon:"👤", name:"Individual Seller", desc:"Sell personal items" },{ t:"seller", icon:"🏪", name:"Business / Company", desc:"Registered business" }].map(({ t, icon, name, desc }) => (
             <button key={t} type="button" onClick={() => setForm(f => ({ ...f, accountType: t }))}
               style={{ background: form.accountType===t ? "rgba(232,83,58,0.08)" : "rgba(255,255,255,0.04)", border: `1.5px solid ${form.accountType===t?"#E8533A":"rgba(255,255,255,0.09)"}`, borderRadius:12, padding:"14px 12px", cursor:"pointer", textAlign:"center" }}>
               <div style={{ fontSize:24, marginBottom:6 }}>{icon}</div>
