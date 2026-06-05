@@ -40,7 +40,8 @@ export default function KycQueuePage() {
   const doAction = async (id, action) => {
     setActionLoading(true);
     try {
-      await apiCall("/kyc/applications/{id}", { method:"POST", body:JSON.stringify({ action, note }) });
+      const status = action==="approve" ? "verified" : "rejected";
+      await apiCall("/kyc/applications/"+id, { method:"PATCH", body:JSON.stringify({ status }) });
       setToast(action==="approve" ? "✅ Approved!" : "❌ Rejected");
       setSelected(null); setNote(""); load();
       setTimeout(()=>setToast(""),3000);
