@@ -37,5 +37,13 @@ app.use("/api/v1/categories", categoriesRoutes);
 app.use("/api/v1/kyc", kycRoutes);
 app.use("/api/v1/reviews", reviewsRoutes);
 
+app.get('/api/v1/admin/users', async (req, res) => {
+  try {
+    const { db } = await import('./config/db.js');
+    const result = await db.query('SELECT id, full_name, email, phone, role, kyc_status, is_active, created_at FROM users ORDER BY created_at DESC');
+    res.json({ users: result.rows });
+  } catch(err) { res.status(500).json({ message: 'Failed to fetch users' }); }
+});
+
 app.listen(PORT, "0.0.0.0", () => console.log(`🌍 Makola Digital API running on port ${PORT}`));
 export default app;
