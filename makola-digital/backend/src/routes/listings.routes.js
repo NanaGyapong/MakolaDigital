@@ -22,7 +22,28 @@ router.post("/", authenticate, async (req, res) => {
         await db.query("INSERT INTO listing_images (id, listing_id, url, sort_order, is_primary, created_at) VALUES ($1,$2,$3,$4,$5,NOW())", [uuid(), listingId, images[i], i, i === 0]);
       }
     }
-    res.status(201).json({ message: "Listing submitted for review", listingId });
+    try {
+      const { Resend } = await import('resend');
+      const resend = new Resend(process.env.RESEND_API_KEY);
+      await resend.emails.send({
+        from: 'Makola Digital <hello@makoladigital.online>',
+        to: 'nanababio18@gmail.com',
+        subject: 'New listing pending review on Makola Digital',
+        html: `<div style='font-family:sans-serif;max-width:480px;margin:0 auto;padding:32px;background:#0A0A0A;color:#F0EDE8;border-radius:16px'>
+          <h1 style='color:#E8533A'>🌍 Makola Digital</h1>
+          <p>A new listing has been submitted and needs your review.</p>
+          <table style='width:100%;border-collapse:collapse;margin:16px 0'>
+            <tr><td style='padding:8px;color:rgba(240,237,232,0.5);font-size:12px'>Title</td><td style='padding:8px;font-weight:700'>${title}</td></tr>
+            <tr><td style='padding:8px;color:rgba(240,237,232,0.5);font-size:12px'>Type</td><td style='padding:8px;text-transform:capitalize'>${type}</td></tr>
+            <tr><td style='padding:8px;color:rgba(240,237,232,0.5);font-size:12px'>Price</td><td style='padding:8px'>${currency || 'GHS'} ${price || 'Not set'}</td></tr>
+            <tr><td style='padding:8px;color:rgba(240,237,232,0.5);font-size:12px'>Location</td><td style='padding:8px'>${locationText || city || 'Not set'}</td></tr>
+          </table>
+          <a href='https://makoladigital.online/admin/listings' style='display:inline-block;background:#E8533A;color:#fff;padding:12px 24px;border-radius:10px;text-decoration:none;font-weight:700'>Review Listing →</a>
+          <p style='color:rgba(240,237,232,0.5);font-size:13px;margin-top:16px'>— Makola Digital Admin 🇬🇭</p>
+        </div>`
+      });
+    } catch(e) { console.error('listing notification email:', e.message); }
+    res.status(201).json({ message: 'Listing submitted for review', listingId });
   } catch (err) {
     console.error("create listing:", err);
     res.status(500).json({ message: "Failed to create listing" });
