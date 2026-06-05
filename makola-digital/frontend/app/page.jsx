@@ -14,7 +14,7 @@ const categories = [
 ];
 
 const stats = [
-  { value: "0", label: "Listings" },
+  { value: totalListings.toString(), label: "Listings" },
   { value: "54", label: "Countries" },
   { value: "0", label: "Sellers" },
   { value: "0", label: "Members" },
@@ -24,6 +24,8 @@ export default function MakolaDigital() {
   const router = useRouter();
   const [search, setSearch] = useState("");
   const [listings, setListings] = useState([]);
+  const [categoryCounts, setCategoryCounts] = useState({});
+  const [totalListings, setTotalListings] = useState(0);
   const [menuOpen, setMenuOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
 
@@ -31,6 +33,16 @@ export default function MakolaDigital() {
     fetch("https://sparkling-charm-production-cb2c.up.railway.app/api/v1/listings?limit=6")
       .then(r => r.json())
       .then(data => { if (data.listings) setListings(data.listings); })
+      .catch(() => {});
+
+    fetch("https://sparkling-charm-production-cb2c.up.railway.app/api/v1/categories/counts")
+      .then(r => r.json())
+      .then(data => {
+        if (data.counts) {
+          setCategoryCounts(data.counts);
+          setTotalListings(Object.values(data.counts).reduce((a,b) => a+b, 0));
+        }
+      })
       .catch(() => {});
   }, []);
 
@@ -128,7 +140,7 @@ export default function MakolaDigital() {
             <button key={cat.label} onClick={() => router.push(`/search?category=${cat.label}`)} style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: isMobile ? 10 : 12, padding: isMobile ? "12px 6px" : "16px 12px", cursor: "pointer", textAlign: "center", color: "#F0EDE8" }}>
               <div style={{ fontSize: isMobile ? 22 : 26, marginBottom: 4 }}>{cat.icon}</div>
               <div style={{ fontSize: isMobile ? 10 : 13, fontWeight: 600 }}>{cat.label}</div>
-              <div style={{ fontSize: 10, color: cat.color, marginTop: 2 }}>{cat.count}</div>
+              <div style={{ fontSize: 10, color: cat.color, marginTop: 2 }}>{categoryCounts[cat.label] || categoryCounts[cat.label.replace(" & ", " & ")] || 0}</div>
             </button>
           ))}
         </div>
