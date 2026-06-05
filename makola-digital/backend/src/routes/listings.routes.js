@@ -61,4 +61,49 @@ router.patch("/:id/status", authenticate, async (req, res) => {
   }
 });
 
+
+
+router.get("/mine", authenticate, async (req, res) => {
+  try {
+    const result = await db.query(
+      `SELECT l.*, (SELECT url FROM listing_images WHERE listing_id = l.id AND is_primary ORDER BY sort_order LIMIT 1) as primary_image FROM listings l WHERE l.seller_id = $1 ORDER BY l.created_at DESC`,
+      [req.user.id]
+    );
+    res.json({ listings: result.rows });
+  } catch (err) {
+    console.error("get my listings:", err);
+    res.status(500).json({ message: "Failed to fetch listings" });
+  }
+});
+
+router.get("/:id", async (req, res) => {
+  try {
+    const result = await db.query(
+      "SELECT l.*, u.full_name as seller_name FROM listings l JOIN users u ON u.id = l.seller_id WHERE l.id = $1",
+      [req.params.id]
+    );
+    if (!result.rows[0]) return res.status(404).json({ message: "Listing not found" });
+    const images = await db.query("SELECT url, is_primary, sort_order FROM listing_images WHERE listing_id = $1 ORDER BY sort_order", [req.params.id]);
+    res.json({ listing: result.rows[0], images: images.rows });
+  } catch (err) {
+    console.error("get listing:", err);
+    res.status(500).json({ message: "Failed to fetch listing" });
+  }
+});
+
+router.get("/:id/related", async (req, res) => {
+  try {
+    const listing = await db.query("SELECT type, category_id, country FROM listings WHERE id = $1", [req.params.id]);
+    if (!listing.rows[0]) return res.json({ listings: [] });
+    const { type, category_id, country } = listing.rows[0];
+    const result = await db.query(
+      `SELECT l.*, u.full_name as seller_name, (SELECT url FROM listing_images WHERE listing_id = l.id AND is_primary ORDER BY sort_order LIMIT 1) as primary_image FROM listings l JOIN users u ON u.id = l.seller_id WHERE l.status = 'active' AND l.id != $1 AND (l.type = $2 OR l.category_id = $3 OR l.country = $4) ORDER BY RANDOM()`,
+      [req.params.id, type, category_id, country]
+    );
+    res.json({ listings: result.rows });
+  } catch (err) {
+    res.json({ listings: [] });
+  }
+});
+
 export default router;
