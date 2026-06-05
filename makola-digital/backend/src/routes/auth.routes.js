@@ -26,7 +26,7 @@ router.post("/register",
     body("email").isEmail().normalizeEmail().withMessage("Valid email required"),
     body("password").isLength({ min: 8 }).withMessage("Password must be at least 8 characters"),
     body("country").notEmpty().withMessage("Country required"),
-    body("accountType").optional().isIn(["buyer","seller"]),
+    body("accountType").optional().isIn(["buyer","seller","individual_seller"]),
   ],
   validate, auth.register
 );
