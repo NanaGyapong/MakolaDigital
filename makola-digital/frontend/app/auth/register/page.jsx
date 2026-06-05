@@ -1,5 +1,4 @@
 "use client";
-"use client";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
@@ -36,7 +35,6 @@ export default function RegisterPage() {
     setError(""); setLoading(true);
     try {
       await authService.register({ fullName:`${form.firstName} ${form.lastName}`, email:form.email, phone:`${form.dialCode}${form.phone}`, password:form.password, country:form.country, accountType:form.accountType });
-      // Store email for OTP screen
       sessionStorage.setItem("verify_email", form.email);
       router.push("/auth/verify-email");
     } catch (err) { setError(err.message); }
@@ -55,11 +53,32 @@ export default function RegisterPage() {
           <p style={{ fontSize:13, color:"rgba(240,237,232,0.5)", marginTop:6 }}>Already have one? <Link href="/auth/login" style={{ color:"#E8533A", fontWeight:700 }}>Sign in</Link></p>
         </div>
 
-        {/* Account type */}
-        <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:10, marginBottom:20 }}>
-          {[{ t:"buyer", icon:"🛍️", name:"Buy / Browse", desc:"Shop products & services" },{ t:"individual_seller", icon:"👤", name:"Individual Seller", desc:"Sell personal items" },{ t:"seller", icon:"🏪", name:"Business / Company", desc:"Registered business" }].map(({ t, icon, name, desc }) => (
-            
+        <form onSubmit={handleSubmit}>
+          {/* Account type */}
+          <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr 1fr", gap:8, marginBottom:20 }}>
+            {[
+              { t:"buyer", icon:"🛍️", name:"Buy / Browse", desc:"Shop products & services" },
+              { t:"individual_seller", icon:"👤", name:"Individual Seller", desc:"Sell personal items" },
+              { t:"seller", icon:"🏪", name:"Business / Company", desc:"Registered business" }
+            ].map(({ t, icon, name, desc }) => (
+              <button key={t} type="button" onClick={() => setForm(f => ({ ...f, accountType: t }))}
+                style={{ background: form.accountType===t ? "rgba(232,83,58,0.08)" : "rgba(255,255,255,0.04)", border:`1.5px solid ${form.accountType===t?"#E8533A":"rgba(255,255,255,0.09)"}`, borderRadius:12, padding:"12px 8px", cursor:"pointer", textAlign:"center" }}>
+                <div style={{ fontSize:22, marginBottom:4 }}>{icon}</div>
+                <div style={{ fontSize:11, fontWeight:800, color: form.accountType===t?"#E8533A":"#F0EDE8" }}>{name}</div>
+                <div style={{ fontSize:10, color:"rgba(240,237,232,0.45)", marginTop:2 }}>{desc}</div>
+              </button>
+            ))}
+          </div>
+
+          {error && <div style={{ background:"rgba(232,83,58,0.12)", border:"1px solid rgba(232,83,58,0.3)", color:"#E8533A", padding:"10px 14px", borderRadius:10, fontSize:13, marginBottom:16 }}>⚠️ {error}</div>}
+
+          <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:12, marginBottom:14 }}>
+            <div><label style={lbl}>First name</label><input style={inp} required placeholder="Kofi" value={form.firstName} onChange={set("firstName")} /></div>
+            <div><label style={lbl}>Last name</label><input style={inp} required placeholder="Mensah" value={form.lastName} onChange={set("lastName")} /></div>
+          </div>
+
           <div style={{ marginBottom:14 }}><label style={lbl}>Email</label><input style={inp} type="email" required placeholder="kofi@example.com" value={form.email} onChange={set("email")} /></div>
+
           <div style={{ marginBottom:14 }}>
             <label style={lbl}>Phone number</label>
             <div style={{ display:"flex", gap:8 }}>
@@ -69,6 +88,7 @@ export default function RegisterPage() {
               <input style={{ ...inp, flex:1 }} type="tel" placeholder="024 000 0000" value={form.phone} onChange={set("phone")} />
             </div>
           </div>
+
           <div style={{ marginBottom:14 }}>
             <label style={lbl}>Password</label>
             <div style={{ position:"relative" }}>
@@ -84,6 +104,7 @@ export default function RegisterPage() {
               </>
             )}
           </div>
+
           <div style={{ marginBottom:14 }}>
             <label style={lbl}>Country</label>
             <select style={{ ...inp, cursor:"pointer" }} required value={form.country} onChange={set("country")}>
@@ -91,10 +112,12 @@ export default function RegisterPage() {
               {COUNTRIES.map(c => <option key={c} value={c}>{c}</option>)}
             </select>
           </div>
+
           <div style={{ display:"flex", gap:10, alignItems:"flex-start", marginBottom:8 }}>
             <input type="checkbox" id="terms" required checked={form.terms} onChange={set("terms")} style={{ marginTop:3, accentColor:"#E8533A" }} />
             <label htmlFor="terms" style={{ fontSize:12.5, color:"rgba(240,237,232,0.55)", lineHeight:1.55 }}>I agree to the <Link href="/terms" style={{ color:"#E8533A", fontWeight:700 }}>Terms of Service</Link> and <Link href="/privacy" style={{ color:"#E8533A", fontWeight:700 }}>Privacy Policy</Link></label>
           </div>
+
           <button type="submit" disabled={loading}
             style={{ width:"100%", background:"linear-gradient(135deg,#E8533A,#C47F17)", border:"none", color:"#fff", padding:13, borderRadius:11, fontSize:14.5, fontWeight:900, cursor:loading?"not-allowed":"pointer", marginTop:16, opacity:loading?0.6:1 }}>
             {loading ? "Creating account..." : "Create free account →"}
