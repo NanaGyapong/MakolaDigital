@@ -36,7 +36,7 @@ export default function LoginPage() {
           </p>
         </div>
 
-        <button onClick={() => authService.loginWithGoogle()} style={{ width:"100%", display:"flex", alignItems:"center", justifyContent:"center", gap:10, background:"rgba(255,255,255,0.06)", border:"1px solid rgba(255,255,255,0.12)", color:"#F0EDE8", padding:12, borderRadius:11, fontSize:13.5, fontWeight:700, cursor:"pointer", marginBottom:20 }}>
+        <button onClick={() => alert("Google login coming soon!")} style={{ width:"100%", display:"flex", alignItems:"center", justifyContent:"center", gap:10, background:"rgba(255,255,255,0.06)", border:"1px solid rgba(255,255,255,0.12)", color:"#F0EDE8", padding:12, borderRadius:11, fontSize:13.5, fontWeight:700, cursor:"pointer", marginBottom:20 }}>
           🇬 Continue with Google
         </button>
 
