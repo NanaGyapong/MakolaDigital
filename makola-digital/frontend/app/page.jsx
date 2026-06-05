@@ -13,12 +13,7 @@ const categories = [
   { icon: "🌿", label: "Food & Agric", count: "0", color: "#2D9E6B" },
 ];
 
-const stats = [
-  { value: totalListings.toString(), label: "Listings" },
-  { value: "54", label: "Countries" },
-  { value: "0", label: "Sellers" },
-  { value: "0", label: "Members" },
-];
+
 
 export default function MakolaDigital() {
   const router = useRouter();
@@ -26,6 +21,12 @@ export default function MakolaDigital() {
   const [listings, setListings] = useState([]);
   const [categoryCounts, setCategoryCounts] = useState({});
   const [totalListings, setTotalListings] = useState(0);
+  const stats = [
+    { value: totalListings.toString(), label: "Listings" },
+    { value: "54", label: "Countries" },
+    { value: "0", label: "Sellers" },
+    { value: "0", label: "Members" },
+  ];
   const [menuOpen, setMenuOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
 
