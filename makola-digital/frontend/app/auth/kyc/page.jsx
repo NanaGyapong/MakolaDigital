@@ -74,21 +74,6 @@ export default function KycPage() {
             </div>
             <div><label style={lbl}>ID Number</label><input style={inp} placeholder="Enter ID number" value={idNumber} onChange={e => setIdNumber(e.target.value)} /></div>
             <div>
-              <label style={lbl}>Front of ID</label>
-              <div onClick={() => document.getElementById("front-inp").click()}
-                style={{ background:"rgba(255,255,255,0.03)", border:`2px dashed ${frontFile?"#2D9E6B":"rgba(255,255,255,0.12)"}`, borderRadius:13, padding:24, textAlign:"center", cursor:"pointer", marginBottom:14 }}>
-                {frontFile ? <><div style={{ fontSize:28, marginBottom:6 }}>📄</div><div style={{ fontSize:13, fontWeight:700, color:"#2D9E6B" }}>{frontFile.name}</div></> : <><div style={{ fontSize:28, marginBottom:6 }}>📄</div><div style={{ fontSize:13, fontWeight:700 }}>Upload front of ID</div><div style={{ fontSize:11.5, color:"rgba(240,237,232,0.45)", marginTop:4 }}>JPG, PNG or PDF · Max 5MB</div></>}
-              </div>
-              <input id="front-inp" type="file" hidden accept=".jpg,.jpeg,.png,.pdf" onChange={e => setFrontFile(e.target.files[0])} />
-            </div>
-            <div>
-              <label style={lbl}>Back of ID</label>
-              <div onClick={() => document.getElementById("back-inp").click()}
-                style={{ background:"rgba(255,255,255,0.03)", border:`2px dashed ${backFile?"#2D9E6B":"rgba(255,255,255,0.12)"}`, borderRadius:13, padding:24, textAlign:"center", cursor:"pointer", marginBottom:20 }}>
-                {backFile ? <><div style={{ fontSize:28, marginBottom:6 }}>📋</div><div style={{ fontSize:13, fontWeight:700, color:"#2D9E6B" }}>{backFile.name}</div></> : <><div style={{ fontSize:28, marginBottom:6 }}>📋</div><div style={{ fontSize:13, fontWeight:700 }}>Upload back of ID</div><div style={{ fontSize:11.5, color:"rgba(240,237,232,0.45)", marginTop:4 }}>JPG, PNG or PDF · Max 5MB</div></>}
-              </div>
-              <input id="back-inp" type="file" hidden accept=".jpg,.jpeg,.png,.pdf" onChange={e => setBackFile(e.target.files[0])} />
-            </div>
             <button onClick={() => setStep(2)} style={{ width:"100%", background:"linear-gradient(135deg,#E8533A,#C47F17)", border:"none", color:"#fff", padding:13, borderRadius:11, fontSize:14.5, fontWeight:900, cursor:"pointer" }}>Continue to Business Info →</button>
           </>
         )}
