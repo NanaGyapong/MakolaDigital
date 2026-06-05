@@ -54,60 +54,11 @@ router.patch("/:id/status", authenticate, async (req, res) => {
       return res.status(400).json({ message: "Invalid status" });
     }
     await db.query("UPDATE listings SET status = $1, updated_at = NOW() WHERE id = $2", [status, req.params.id]);
-    if (status === 'active') {
-      try {
-        const listing = await db.query('SELECT l.title, l.id, u.email, u.full_name FROM listings l JOIN users u ON u.id = l.seller_id WHERE l.id = $1', [req.params.id]);
-        if (listing.rows[0]) {
-          const { emailQueue } = await import('../jobs/email.job.js');
-          await emailQueue.add('listing-approved', { to: listing.rows[0].email, name: listing.rows[0].full_name, title: listing.rows[0].title, listingId: listing.rows[0].id });
-        }
-      } catch(e) { console.error('email notification:', e.message); }
-    }
-    res.json({ message: 'Status updated' });
+    res.json({ message: "Status updated" });
   } catch (err) {
     console.error("update status:", err);
     res.status(500).json({ message: "Failed to update status" });
   }
 });
 
-
-router.get('/:id', async (req, res) => {
-  try {
-    const result = await db.query(
-      'SELECT l.*, u.full_name as seller_name FROM listings l JOIN users u ON u.id = l.seller_id WHERE l.id = $1',
-      [req.params.id]
-    );
-    const images = await db.query('SELECT url, is_primary, sort_order FROM listing_images WHERE listing_id = $1 ORDER BY sort_order', [req.params.id]);
-    res.json({ listing: result.rows[0], images: images.rows });
-  } catch (err) {
-    console.error('get listing:', err);
-    res.status(500).json({ message: 'Failed to fetch listing' });
-  }
-});
-
-router.get('/:id/related', async (req, res) => {
-  try {
-    const listing = await db.query('SELECT type, category_id, country FROM listings WHERE id = $1', [req.params.id]);
-    const { type, category_id, country } = listing.rows[0];
-    const result = await db.query(
-      `SELECT l.*, u.full_name as seller_name,
-        (SELECT url FROM listing_images WHERE listing_id = l.id AND is_primary ORDER BY sort_order LIMIT 1) as primary_image
-       FROM listings l JOIN users u ON u.id = l.seller_id
-       WHERE l.status = 'active' AND l.id != $1
-       AND (l.type = $2 OR l.category_id = $3 OR l.country = $4)
-       ORDER BY RANDOM() LIMIT 6`,
-      [req.params.id, type, category_id, country]
-    );
-    res.json({ listings: result.rows });
-  } catch (err) {
-    console.error('related:', err);
-    res.json({ listings: [] });
-  }
-});
 export default router;
-
-  } catch (err) {
-    console.error("get my listings:", err);
-    res.status(500).json({ message: "Failed to fetch listings" });
-  }
-});
