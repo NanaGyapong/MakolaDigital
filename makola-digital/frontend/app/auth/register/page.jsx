@@ -58,31 +58,7 @@ export default function RegisterPage() {
         {/* Account type */}
         <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:10, marginBottom:20 }}>
           {[{ t:"buyer", icon:"🛍️", name:"Buy / Browse", desc:"Shop products & services" },{ t:"individual_seller", icon:"👤", name:"Individual Seller", desc:"Sell personal items" },{ t:"seller", icon:"🏪", name:"Business / Company", desc:"Registered business" }].map(({ t, icon, name, desc }) => (
-            <button key={t} type="button" onClick={() => setForm(f => ({ ...f, accountType: t }))}
-              style={{ background: form.accountType===t ? "rgba(232,83,58,0.08)" : "rgba(255,255,255,0.04)", border: `1.5px solid ${form.accountType===t?"#E8533A":"rgba(255,255,255,0.09)"}`, borderRadius:12, padding:"14px 12px", cursor:"pointer", textAlign:"center" }}>
-              <div style={{ fontSize:24, marginBottom:6 }}>{icon}</div>
-              <div style={{ fontSize:13, fontWeight:800, color:"#F0EDE8" }}>{name}</div>
-              <div style={{ fontSize:11, color:"rgba(240,237,232,0.5)", marginTop:3 }}>{desc}</div>
-            </button>
-          ))}
-        </div>
-
-        <button onClick={() => alert("Google login coming soon!")} style={{ width:"100%", display:"flex", alignItems:"center", justifyContent:"center", gap:10, background:"rgba(255,255,255,0.06)", border:"1px solid rgba(255,255,255,0.12)", color:"#F0EDE8", padding:12, borderRadius:11, fontSize:13.5, fontWeight:700, cursor:"pointer", marginBottom:20 }}>
-          🇬 Continue with Google
-        </button>
-        <div style={{ display:"flex", alignItems:"center", gap:12, marginBottom:20 }}>
-          <div style={{ flex:1, height:1, background:"rgba(255,255,255,0.09)" }} />
-          <span style={{ fontSize:11.5, color:"rgba(240,237,232,0.3)", fontWeight:600 }}>or with email</span>
-          <div style={{ flex:1, height:1, background:"rgba(255,255,255,0.09)" }} />
-        </div>
-
-        {error && <div style={{ background:"rgba(232,83,58,0.12)", border:"1px solid rgba(232,83,58,0.3)", color:"#E8533A", padding:"10px 14px", borderRadius:10, fontSize:13, marginBottom:16 }}>⚠️ {error}</div>}
-
-        <form onSubmit={handleSubmit}>
-          <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:12, marginBottom:14 }}>
-            <div><label style={lbl}>First name</label><input style={inp} required placeholder="Kofi" value={form.firstName} onChange={set("firstName")} /></div>
-            <div><label style={lbl}>Last name</label><input style={inp} required placeholder="Mensah" value={form.lastName} onChange={set("lastName")} /></div>
-          </div>
+            
           <div style={{ marginBottom:14 }}><label style={lbl}>Email</label><input style={inp} type="email" required placeholder="kofi@example.com" value={form.email} onChange={set("email")} /></div>
           <div style={{ marginBottom:14 }}>
             <label style={lbl}>Phone number</label>
