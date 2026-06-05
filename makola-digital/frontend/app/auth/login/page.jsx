@@ -42,7 +42,7 @@ export default function LoginPage() {
 
         <div style={{ display:"flex", alignItems:"center", gap:12, marginBottom:20 }}>
           <div style={{ flex:1, height:1, background:"rgba(255,255,255,0.09)" }} />
-          <span style={{ fontSize:11.5, color:"rgba(240,237,232,0.3)", fontWeight:600 }}>or with email</span>
+          <span style={{ fontSize:11.5, color:"rgba(240,237,232,0.3)", fontWeight:600 }}></span>
           <div style={{ flex:1, height:1, background:"rgba(255,255,255,0.09)" }} />
         </div>
 
