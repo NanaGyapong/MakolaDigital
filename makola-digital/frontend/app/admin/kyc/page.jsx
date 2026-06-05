@@ -29,7 +29,7 @@ export default function KycQueuePage() {
   const load = async () => {
     setLoading(true);
     try {
-      const d = await apiCall("/admin/kyc?status="+status+(search?"&search="+search:""));
+      const d = await apiCall("/kyc/applications?status="+status+(search?"&search="+search:""));
       setApps(d.applications);
     } catch (e) { console.error(e); }
     finally { setLoading(false); }
@@ -40,7 +40,7 @@ export default function KycQueuePage() {
   const doAction = async (id, action) => {
     setActionLoading(true);
     try {
-      await apiCall("/admin/kyc/"+id+"/review", { method:"POST", body:JSON.stringify({ action, note }) });
+      await apiCall("/kyc/applications/{id}", { method:"POST", body:JSON.stringify({ action, note }) });
       setToast(action==="approve" ? "✅ Approved!" : "❌ Rejected");
       setSelected(null); setNote(""); load();
       setTimeout(()=>setToast(""),3000);
