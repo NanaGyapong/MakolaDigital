@@ -4,7 +4,7 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 
-const API = process.env.NEXT_PUBLIC_API_URL || "http://localhost:4000/api/v1";
+const API = "https://sparkling-charm-production-cb2c.up.railway.app/api/v1";
 
 function getToken() { return typeof window !== "undefined" ? localStorage.getItem("makola_token") : null; }
 
