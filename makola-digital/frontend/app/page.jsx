@@ -39,8 +39,8 @@ export default function MakolaDigital() {
       .then(r => r.json())
       .then(data => {
         if (data.counts) {
-          setCategoryCounts(data.counts);
-          setTotalListings(Object.values(data.counts).reduce((a,b) => a+b, 0));
+          setCategoryCounts(data.typeCounts || {});
+          setTotalListings(data.total || 0);
         }
       })
       .catch(() => {});
@@ -140,7 +140,7 @@ export default function MakolaDigital() {
             <button key={cat.label} onClick={() => router.push(`/search?category=${cat.label}`)} style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: isMobile ? 10 : 12, padding: isMobile ? "12px 6px" : "16px 12px", cursor: "pointer", textAlign: "center", color: "#F0EDE8" }}>
               <div style={{ fontSize: isMobile ? 22 : 26, marginBottom: 4 }}>{cat.icon}</div>
               <div style={{ fontSize: isMobile ? 10 : 13, fontWeight: 600 }}>{cat.label}</div>
-              <div style={{ fontSize: 10, color: cat.color, marginTop: 2 }}>{categoryCounts[cat.label] || categoryCounts[cat.label.replace(" & ", " & ")] || 0}</div>
+              <div style={{ fontSize: 10, color: cat.color, marginTop: 2 }}>{categoryCounts[cat.label === "Products" ? "product" : cat.label === "Services" ? "service" : cat.label === "Jobs" ? "job" : cat.label === "Rentals" ? "rental" : cat.label === "Vehicles" ? "product" : cat.label === "Electronics" ? "product" : cat.label === "Fashion" ? "product" : "product"] || 0}</div>
             </button>
           ))}
         </div>
