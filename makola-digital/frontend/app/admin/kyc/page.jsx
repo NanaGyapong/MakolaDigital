@@ -145,14 +145,14 @@ export default function KycQueuePage() {
                   {selected.id_back_url && <a href={selected.id_back_url} target="_blank" style={{ background:"rgba(255,255,255,0.04)", border:"1px solid rgba(255,255,255,0.09)", borderRadius:10, padding:"14px 20px", textAlign:"center", color:"#3B7DD8", textDecoration:"none", fontSize:12, fontWeight:700 }}>📋 ID Back</a>}
                 </div>
               </div>
-              {selected.status === "pending" && (
+              {selected.kyc_status === "pending" && (
                 <div>
                   <div style={{ fontSize:11, fontWeight:700, color:"rgba(240,237,232,0.4)", textTransform:"uppercase", letterSpacing:".07em", marginBottom:8 }}>Review note (shown to applicant if rejecting)</div>
                   <textarea value={note} onChange={e=>setNote(e.target.value)} placeholder="Optional note..." style={{ width:"100%", background:"rgba(255,255,255,0.05)", border:"1px solid rgba(255,255,255,0.09)", borderRadius:10, padding:"12px 14px", color:"#F0EDE8", fontSize:13, outline:"none", resize:"vertical", minHeight:80, fontFamily:"inherit" }} />
                 </div>
               )}
             </div>
-            {selected.status === "pending" && (
+            {selected.kyc_status === "pending" && (
               <div style={{ padding:"16px 24px", borderTop:"1px solid rgba(255,255,255,0.07)", display:"flex", gap:10, justifyContent:"flex-end" }}>
                 <button onClick={()=>setSelected(null)} style={{ background:"rgba(255,255,255,0.06)", border:"1px solid rgba(255,255,255,0.09)", color:"#F0EDE8", padding:"9px 18px", borderRadius:10, fontWeight:700, cursor:"pointer", fontSize:13 }}>Cancel</button>
                 <button onClick={()=>doAction(selected.id,"reject")} disabled={actionLoading} style={{ background:"rgba(232,83,58,0.12)", border:"1px solid rgba(232,83,58,0.3)", color:"#E8533A", padding:"9px 18px", borderRadius:10, fontWeight:700, cursor:"pointer", fontSize:13 }}>❌ Reject</button>
