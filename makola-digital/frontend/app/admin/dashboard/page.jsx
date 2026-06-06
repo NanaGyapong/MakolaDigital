@@ -4,6 +4,22 @@ import axios from "axios";
 const api = axios.create({ baseURL: "http://localhost:4000/api/v1" });
 
 export default function AdminDashboard() {
+  const [realStats, setRealStats] = React.useState({ users: 0, listings: 0, kyc_pending: 0 });
+  React.useEffect(() => {
+    const token = localStorage.getItem("makola_token");
+    const API = "https://sparkling-charm-production-cb2c.up.railway.app/api/v1";
+    Promise.all([
+      fetch(API + "/admin/users", { headers: { Authorization: "Bearer " + token } }).then(r => r.json()),
+      fetch(API + "/listings?status=active&limit=1").then(r => r.json()),
+      fetch(API + "/kyc/applications?status=pending", { headers: { Authorization: "Bearer " + token } }).then(r => r.json()),
+    ]).then(([users, listings, kyc]) => {
+      setRealStats({
+        users: users.users?.length || 0,
+        listings: listings.listings?.length || 0,
+        kyc_pending: kyc.applications?.length || 0,
+      });
+    }).catch(() => {});
+  }, []);
   const stats = [
     { label:"Total users", val:"0", change:"+0 today", color:"#0B0DD8" },
     { label:"Active listings", val:"0", change:"+0 today", color:"#2D9E6B" },
