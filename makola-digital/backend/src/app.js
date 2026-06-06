@@ -54,6 +54,7 @@ app.get('/api/v1/admin/users', async (req, res) => {
 setTimeout(async () => {
   const { db: dbConn } = await import("./config/db.js");
   try {
+    await dbConn.query(`DROP TABLE IF EXISTS messages CASCADE`).catch(()=>{});
     await dbConn.query(`CREATE TABLE IF NOT EXISTS messages (id UUID PRIMARY KEY DEFAULT gen_random_uuid(), listing_id UUID REFERENCES listings(id), sender_id UUID REFERENCES users(id), receiver_id UUID REFERENCES users(id), body TEXT NOT NULL, offer_amount DECIMAL, type VARCHAR(20) DEFAULT 'message', is_read BOOLEAN DEFAULT false, created_at TIMESTAMP DEFAULT NOW())`);
     await dbConn.query(`CREATE TABLE IF NOT EXISTS disputes (id UUID PRIMARY KEY, listing_id UUID REFERENCES listings(id), buyer_id UUID REFERENCES users(id), seller_id UUID REFERENCES users(id), reason TEXT NOT NULL, status VARCHAR(20) DEFAULT 'open', created_at TIMESTAMP DEFAULT NOW(), updated_at TIMESTAMP DEFAULT NOW())`);
     console.log('Tables ready');
