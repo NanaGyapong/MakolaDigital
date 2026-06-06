@@ -129,6 +129,7 @@ export default function SellerDashboard() {
                         {getStatusIcon(l.status)} {l.status}
                       </span>
                       <button onClick={() => router.push(`/listing/${l.id}`)} style={{ background: "rgba(255,255,255,0.06)", border: "none", color: "#F0EDE8", padding: "8px 14px", borderRadius: 8, cursor: "pointer", fontSize: 12 }}>View →</button>
+                      <button onClick={() => router.push(`/sell/edit/${l.id}`)} style={{ background: "rgba(232,83,58,0.12)", border: "1px solid rgba(232,83,58,0.3)", color: "#E8533A", padding: "8px 14px", borderRadius: 8, cursor: "pointer", fontSize: 12 }}>✏️ Edit</button>
                     </div>
                   </div>
                 ))}
