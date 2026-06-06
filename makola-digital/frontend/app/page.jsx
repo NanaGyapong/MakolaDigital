@@ -164,9 +164,9 @@ export default function MakolaDigital() {
                   <div style={{ fontSize: 11, color: "rgba(240,237,232,0.4)", marginBottom: 4, textTransform: "uppercase" }}>{l.type}</div>
                   <div style={{ fontSize: 14, fontWeight: 700, marginBottom: 6, lineHeight: 1.3 }}>{l.title}</div>
                   <div style={{ fontSize: 16, fontWeight: 700, color: "#E8533A", marginBottom: 6 }}>
-                    {l.price_currency} {Number(l.price).toLocaleString()}{l.is_negotiable ? " · Negotiable" : ""}
+                    {l.type === "job" && (!l.price || Number(l.price) === 0) ? "Competitive" : l.price_currency + " " + Number(l.price).toLocaleString() + (l.is_negotiable ? " · Negotiable" : "")}
                   </div>
-                  <div style={{ fontSize: 11, color: "rgba(240,237,232,0.5)" }}>📍 {l.location_text || l.city || l.country} · by {l.seller_name}</div>
+                  <div style={{ fontSize: 11, color: "rgba(240,237,232,0.5)" }}>📍 {l.location_text || l.city || l.country} · by {l.type === "job" && l.title.includes(" — ") ? l.title.split(" — ").pop() : l.seller_name}</div>
                 </div>
               </div>
             ))}
