@@ -197,8 +197,8 @@ export default function ListingPage() {
             <div style={{ display: "flex", alignItems: "center", gap: 12, background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: 12, padding: "12px 16px", marginBottom: 20 }}>
               <div style={{ width: 40, height: 40, borderRadius: "50%", background: "linear-gradient(135deg, #E8533A, #C47F17)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 18 }}>👤</div>
               <div>
-                <div style={{ fontWeight: 700, fontSize: 14 }}>{listing.seller_name}</div>
-                <div style={{ fontSize: 11, color: "rgba(240,237,232,0.4)" }}>Verified seller · Makola Digital</div>
+                <div style={{ fontWeight: 700, fontSize: 14 }}>{listing.type === "job" && listing.title.includes(" — ") ? listing.title.split(" — ").pop() : listing.seller_name}</div>
+                <div style={{ fontSize: 11, color: "rgba(240,237,232,0.4)" }}>{listing.type === "job" ? "Hiring company · Makola Digital" : "Verified seller · Makola Digital"}</div>
               </div>
             </div>
 
