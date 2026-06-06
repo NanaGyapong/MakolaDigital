@@ -148,3 +148,14 @@ router.patch("/:id", authenticate, async (req, res) => {
     res.status(500).json({ message: "Failed to update listing" });
   }
 });
+
+router.delete("/:id", authenticate, async (req, res) => {
+  try {
+    await db.query("DELETE FROM listing_images WHERE listing_id = $1", [req.params.id]);
+    await db.query("DELETE FROM listings WHERE id = $1 AND seller_id = $2", [req.params.id, req.user.id]);
+    res.json({ message: "Listing deleted" });
+  } catch (err) {
+    console.error("delete listing:", err);
+    res.status(500).json({ message: "Failed to delete listing" });
+  }
+});
