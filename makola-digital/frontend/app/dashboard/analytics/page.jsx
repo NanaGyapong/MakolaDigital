@@ -9,6 +9,17 @@ export default function SellerDashboard() {
   const [listings, setListings] = useState([]);
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
+
+  const deleteListing = async (id, title) => {
+    const token = localStorage.getItem('makola_token');
+    try {
+      await fetch('https://sparkling-charm-production-cb2c.up.railway.app/api/v1/listings/' + id, {
+        method: 'DELETE',
+        headers: { Authorization: 'Bearer ' + token }
+      });
+      setListings(prev => prev.filter(l => l.id !== id));
+    } catch (e) { alert('Failed to delete listing'); }
+  };
   const [justListed, setJustListed] = useState(false);
   useEffect(() => { if (window.location.search.includes("listed=true")) setJustListed(true); }, []);
   const [activeTab, setActiveTab] = useState("listings");
@@ -130,6 +141,7 @@ export default function SellerDashboard() {
                       </span>
                       <button onClick={() => router.push(`/listing/${l.id}`)} style={{ background: "rgba(255,255,255,0.06)", border: "none", color: "#F0EDE8", padding: "8px 14px", borderRadius: 8, cursor: "pointer", fontSize: 12 }}>View →</button>
                       <button onClick={() => router.push(`/sell/edit/${l.id}`)} style={{ background: "rgba(232,83,58,0.12)", border: "1px solid rgba(232,83,58,0.3)", color: "#E8533A", padding: "8px 14px", borderRadius: 8, cursor: "pointer", fontSize: 12 }}>✏️ Edit</button>
+                      <button onClick={() => deleteListing(l.id, l.title)} style={{ background: "rgba(232,83,58,0.08)", border: "1px solid rgba(232,83,58,0.2)", color: "#E8533A", padding: "8px 14px", borderRadius: 8, cursor: "pointer", fontSize: 12 }}>🗑️ Delete</button>
                     </div>
                   </div>
                 ))}
