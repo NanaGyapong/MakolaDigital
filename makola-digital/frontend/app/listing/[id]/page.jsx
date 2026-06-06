@@ -179,7 +179,7 @@ export default function ListingPage() {
             )}
 
             <div style={{ fontSize: 26, fontWeight: 800, color: "#E8533A", marginBottom: 6 }}>
-              {listing.price_currency} {Number(listing.price).toLocaleString()}
+              {listing.type === "job" && (!listing.price || Number(listing.price) === 0) ? "Competitive salary" : listing.price_currency + " " + Number(listing.price).toLocaleString()}
               {listing.price_label && <span style={{ fontSize: 13, fontWeight: 400, color: "rgba(240,237,232,0.5)" }}> {listing.price_label}</span>}
             </div>
             {listing.is_negotiable && <div style={{ fontSize: 12, color: "#2D9E6B", marginBottom: 12 }}>✓ Open to offers</div>}
