@@ -21,6 +21,16 @@ export default function AdminUsers() {
       .catch(() => setLoading(false));
   }, []);
 
+  const verifyUser = async (userId) => {
+    const token = localStorage.getItem('makola_token');
+    await fetch(API + '/kyc/applications/' + userId, {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + token },
+      body: JSON.stringify({ status: 'verified' })
+    });
+    setUsers(prev => prev.map(u => u.id === userId ? { ...u, kyc_status: 'verified' } : u));
+  };
+
   const filtered = users.filter(u => {
     const matchFilter = filter === "all" || u.role === filter || u.kyc_status === filter;
     const matchSearch = !search || u.full_name?.toLowerCase().includes(search.toLowerCase()) || u.email?.toLowerCase().includes(search.toLowerCase());
@@ -82,6 +92,7 @@ export default function AdminUsers() {
               <div style={{ display: "flex", gap: 8, alignItems: "center", flexWrap: "wrap" }}>
                 <span style={{ fontSize: 11, fontWeight: 700, color: getRoleColor(u.role), background: getRoleColor(u.role) + "22", padding: "3px 8px", borderRadius: 6, textTransform: "capitalize" }}>{u.role}</span>
                 <span style={{ fontSize: 11, fontWeight: 700, color: getKycColor(u.kyc_status), background: getKycColor(u.kyc_status) + "22", padding: "3px 8px", borderRadius: 6, textTransform: "capitalize" }}>{u.kyc_status}</span>
+                {u.kyc_status === "unverified" && <button onClick={() => verifyUser(u.id)} style={{ background: "rgba(45,158,107,0.12)", border: "1px solid rgba(45,158,107,0.3)", color: "#2D9E6B", padding: "4px 10px", borderRadius: 6, cursor: "pointer", fontSize: 11, fontWeight: 700 }}>✅ Verify</button>}
                 <span style={{ fontSize: 11, color: "rgba(240,237,232,0.4)" }}>{new Date(u.created_at).toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" })}</span>
               </div>
             </div>
