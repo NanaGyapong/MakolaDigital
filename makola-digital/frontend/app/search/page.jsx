@@ -18,7 +18,8 @@ function SearchContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [query, setQuery] = useState(searchParams.get("q") || "");
-  const [type, setType] = useState(searchParams.get("type") || "All");
+  const initType = searchParams.get("type") ? searchParams.get("type").charAt(0).toUpperCase() + searchParams.get("type").slice(1) + "s" : "All";
+  const [type, setType] = useState(initType);
   const [category, setCategory] = useState(searchParams.get("category") || "");
   const [country, setCountry] = useState("All Countries");
   const [minPrice, setMinPrice] = useState("");
