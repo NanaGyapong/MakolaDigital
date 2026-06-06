@@ -187,7 +187,10 @@ export default function ListingPage() {
             <div style={{ fontSize: 13, color: "rgba(240,237,232,0.6)", marginBottom: 12 }}>📍 {listing.location_text || listing.city || listing.country}</div>
 
             <div style={{ fontSize: 14, color: "rgba(240,237,232,0.7)", lineHeight: 1.7, marginBottom: 20, padding: 14, background: "rgba(255,255,255,0.03)", borderRadius: 10, border: "1px solid rgba(255,255,255,0.07)" }}>
-              {listing.description}
+              {listing.description.split('**Apply here:**').map((part, i) => 
+    i === 0 ? part : 
+    <span key={i}><a href={part.trim()} target='_blank' rel='noopener noreferrer' style={{ display:'inline-block', background:'#E8533A', color:'#fff', padding:'8px 18px', borderRadius:8, textDecoration:'none', fontWeight:700, fontSize:13, marginTop:12 }}>Apply Now →</a></span>
+  )}
             </div>
 
             {/* Seller */}
