@@ -49,7 +49,7 @@ export default function AdminPostJob() {
         body: JSON.stringify({
           type: "job",
           category: form.category,
-          title: form.title,
+          title: form.title + " — " + form.company,
           description,
           price: form.salaryMin || null,
           currency: form.currency,
