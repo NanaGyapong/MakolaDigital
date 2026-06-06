@@ -274,7 +274,7 @@ export default function ListingPage() {
                       {tab === "message" ? "Send Message →" : "Submit Offer →"}
                     </button>
                   </>
-                )}
+                ))}
               </div>
             </div>
 
