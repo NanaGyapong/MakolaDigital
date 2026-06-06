@@ -4,6 +4,7 @@ import helmet from "helmet";
 import dotenv from "dotenv";
 dotenv.config();
 import { redis } from "./config/redis.js";
+import disputesRoutes from "./routes/disputes.routes.js";
 import reviewsRoutes from "./routes/reviews.routes.js";
 import kycRoutes from "./routes/kyc.routes.js";
 import categoriesRoutes from "./routes/categories.routes.js";
@@ -36,6 +37,7 @@ app.use("/api/v1/listings", listingsRoutes);
 app.use("/api/v1/categories", categoriesRoutes);
 app.use("/api/v1/kyc", kycRoutes);
 app.use("/api/v1/reviews", reviewsRoutes);
+app.use("/api/v1/disputes", disputesRoutes);
 
 app.get('/api/v1/admin/users', async (req, res) => {
   try {
