@@ -176,26 +176,6 @@ export default function AdminPostJob() {
           </div>
         </div>
 
-        {/* Salary */}
-        <div style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: 14, padding: 20, marginBottom: 20 }}>
-          <h3 style={{ fontSize: 15, fontWeight: 700, margin: "0 0 16px" }}>💰 Salary (optional)</h3>
-          <div style={{ display: "grid", gridTemplateColumns: "1fr 2fr 2fr", gap: 12 }}>
-            <div>
-              <label style={lbl}>Currency</label>
-              <select value={form.currency} onChange={set("currency")} style={inp}>
-                {["GHS", "USD", "GBP", "NGN"].map(c => <option key={c}>{c}</option>)}
-              </select>
-            </div>
-            <div>
-              <label style={lbl}>Min Salary</label>
-              <input type="number" value={form.salaryMin} onChange={set("salaryMin")} placeholder="3,500" style={inp} />
-            </div>
-            <div>
-              <label style={lbl}>Max Salary</label>
-              <input type="number" value={form.salaryMax} onChange={set("salaryMax")} placeholder="5,000" style={inp} />
-            </div>
-          </div>
-        </div>
 
         {/* Description */}
         <div style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: 14, padding: 20, marginBottom: 20 }}>
