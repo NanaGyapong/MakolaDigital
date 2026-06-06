@@ -9,6 +9,8 @@ export default function SellerDashboard() {
   const [listings, setListings] = useState([]);
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [justListed, setJustListed] = useState(false);
+  useEffect(() => { if (window.location.search.includes("listed=true")) setJustListed(true); }, []);
   const [activeTab, setActiveTab] = useState("listings");
   const [stats, setStats] = useState({ total: 0, active: 0, pending: 0, views: 0 });
 
