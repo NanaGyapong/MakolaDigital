@@ -116,7 +116,10 @@ export default function KycPage() {
                 <div style={{ fontSize:11.5, color:"rgba(240,237,232,0.5)", marginTop:2 }}>Usually completed within 24 hours</div>
               </div>
             </div>
-            <button onClick={() => router.push("/dashboard")} style={{ width:"100%", background:"linear-gradient(135deg,#E8533A,#C47F17)", border:"none", color:"#fff", padding:13, borderRadius:11, fontSize:14.5, fontWeight:900, cursor:"pointer" }}>Go to my dashboard →</button>
+            <div style={{ display:'flex', gap:10 }}>
+    <button onClick={() => router.push('/sell')} style={{ flex:2, background:'linear-gradient(135deg,#E8533A,#C47F17)', border:'none', color:'#fff', padding:13, borderRadius:11, fontSize:14.5, fontWeight:900, cursor:'pointer' }}>List your first product →</button>
+    <button onClick={() => router.push('/dashboard')} style={{ flex:1, background:'rgba(255,255,255,0.06)', border:'1px solid rgba(255,255,255,0.1)', color:'#F0EDE8', padding:13, borderRadius:11, fontSize:13, cursor:'pointer' }}>Dashboard</button>
+  </div>
           </div>
         )}
       </div>
