@@ -77,7 +77,7 @@ export default function EditListingPage() {
     setVideoUploading(true);
     const token = localStorage.getItem("makola_token");
     const fd = new FormData();
-    fd.append("video", file);
+    fd.append("image", file);
     try {
       const res = await fetch(`${API}/upload/video`, { method: "POST", headers: { Authorization: `Bearer ${token}` }, body: fd });
       const data = await res.json();
