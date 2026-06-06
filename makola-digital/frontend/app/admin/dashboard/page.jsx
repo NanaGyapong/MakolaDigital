@@ -1,11 +1,12 @@
 "use client";
+import React, { useState, useEffect } from "react";
 import { useState, useEffect } from "react";
 import axios from "axios";
 const api = axios.create({ baseURL: "http://localhost:4000/api/v1" });
 
 export default function AdminDashboard() {
-  const [realStats, setRealStats] = React.useState({ users: 0, listings: 0, kyc_pending: 0 });
-  React.useEffect(() => {
+  const [realStats, setRealStats] = useState({ users: 0, listings: 0, kyc_pending: 0 });
+  useEffect(() => {
     const token = localStorage.getItem("makola_token");
     const API = "https://sparkling-charm-production-cb2c.up.railway.app/api/v1";
     Promise.all([
