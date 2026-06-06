@@ -33,6 +33,7 @@ export default function AdminDashboard() {
     { label:"👥 Users", url:"/admin/users", color:"#2D9E6B" },
     { label:"⚖️ Disputes", url:"/admin/disputes", color:"#E8500A" },
     { label:"👑 Sellers", url:"/admin/sellers", color:"#8B5CF6" },
+    { label:"💼 Post Job", url:"/admin/post-job", color:"#2D9E6B" },
   ];
 
   const s = {
