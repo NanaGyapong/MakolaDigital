@@ -25,3 +25,19 @@ router.post("/image", authenticate, upload.single("image"), async (req, res) => 
 });
 
 export default router;
+
+router.post("/video", authenticate, upload.single("video"), async (req, res) => {
+  try {
+    if (!req.file) return res.status(400).json({ message: "No video provided" });
+    const result = await new Promise((resolve, reject) => {
+      cloudinary.uploader.upload_stream(
+        { folder: "makola-digital/videos", resource_type: "video" },
+        (error, result) => error ? reject(error) : resolve(result)
+      ).end(req.file.buffer);
+    });
+    res.json({ url: result.secure_url, public_id: result.public_id });
+  } catch (err) {
+    console.error("video upload:", err);
+    res.status(500).json({ message: "Video upload failed" });
+  }
+});
