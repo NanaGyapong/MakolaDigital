@@ -73,12 +73,24 @@ export default function ListingPage() {
       .catch(() => {});
   }, [id]);
 
-  const handleSend = () => {
-    const token = localStorage.getItem("makola_token");
-    if (!token) { router.push("/auth/login"); return; }
-    setSent(true);
-    setMessage("");
-    setOffer("");
+  const handleSend = async () => {
+    const token = localStorage.getItem('makola_token');
+    try {
+      await fetch('https://sparkling-charm-production-cb2c.up.railway.app/api/v1/messages', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + token },
+        body: JSON.stringify({
+          listingId: id,
+          receiverId: listing.seller_id,
+          body: tab === 'offer' ? 'Offer: ' + offer + ' ' + listing.price_currency + (message ? ' - ' + message : '') : message,
+          offerAmount: tab === 'offer' ? offer : null,
+          type: tab
+        })
+      });
+      setSent(true);
+      setMessage('');
+      setOffer('');
+    } catch (e) { console.error(e); }
   };
 
   const handleReviewSubmit = async () => {
