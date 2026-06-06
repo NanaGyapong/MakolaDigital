@@ -32,29 +32,6 @@ app.use(express.json());
 app.use((req, res, next) => { req.redis = redis; next(); });
 
 // Create disputes table if not exists
-db.query(`CREATE TABLE IF NOT EXISTS messages (
-  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  listing_id UUID REFERENCES listings(id),
-  sender_id UUID REFERENCES users(id),
-  receiver_id UUID REFERENCES users(id),
-  body TEXT NOT NULL,
-  offer_amount DECIMAL,
-  type VARCHAR(20) DEFAULT 'message',
-  is_read BOOLEAN DEFAULT false,
-  created_at TIMESTAMP DEFAULT NOW()
-)`).catch(e => console.log('messages table:', e.message));
-
-db.query(`CREATE TABLE IF NOT EXISTS disputes (
-  id UUID PRIMARY KEY,
-  listing_id UUID REFERENCES listings(id),
-  buyer_id UUID REFERENCES users(id),
-  seller_id UUID REFERENCES users(id),
-  reason TEXT NOT NULL,
-  status VARCHAR(20) DEFAULT 'open',
-  created_at TIMESTAMP DEFAULT NOW(),
-  updated_at TIMESTAMP DEFAULT NOW()
-)`).catch(e => console.log('disputes table:', e.message));
-
 app.get('/api/v1/health', (req, res) => res.json({ status: "ok", platform: "Makola Digital", version: "1.0.0" }));
 app.use("/api/v1/auth", authRoutes);
 app.use("/api/v1/upload", uploadRoutes);
@@ -73,5 +50,14 @@ app.get('/api/v1/admin/users', async (req, res) => {
   } catch(err) { res.status(500).json({ message: 'Failed to fetch users' }); }
 });
 
-app.listen(PORT, "0.0.0.0", () => console.log(`🌍 Makola Digital API running on port ${PORT}`));
+// Create tables after db is ready
+setTimeout(async () => {
+  try {
+    await db.query(`CREATE TABLE IF NOT EXISTS messages (id UUID PRIMARY KEY DEFAULT gen_random_uuid(), listing_id UUID REFERENCES listings(id), sender_id UUID REFERENCES users(id), receiver_id UUID REFERENCES users(id), body TEXT NOT NULL, offer_amount DECIMAL, type VARCHAR(20) DEFAULT 'message', is_read BOOLEAN DEFAULT false, created_at TIMESTAMP DEFAULT NOW())`);
+    await db.query(`CREATE TABLE IF NOT EXISTS disputes (id UUID PRIMARY KEY, listing_id UUID REFERENCES listings(id), buyer_id UUID REFERENCES users(id), seller_id UUID REFERENCES users(id), reason TEXT NOT NULL, status VARCHAR(20) DEFAULT 'open', created_at TIMESTAMP DEFAULT NOW(), updated_at TIMESTAMP DEFAULT NOW())`);
+    console.log('Tables ready');
+  } catch(e) { console.log('Table setup:', e.message); }
+}, 2000);
+
+app.listen(PORT, '0.0.0.0', () => console.log(`🌍 Makola Digital API running on port ${PORT}`));
 export default app;
