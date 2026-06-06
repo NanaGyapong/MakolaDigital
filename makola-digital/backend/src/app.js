@@ -30,7 +30,19 @@ app.use(cors({
 app.use(express.json());
 app.use((req, res, next) => { req.redis = redis; next(); });
 
-app.get("/api/v1/health", (req, res) => res.json({ status: "ok", platform: "Makola Digital", version: "1.0.0" }));
+// Create disputes table if not exists
+db.query(`CREATE TABLE IF NOT EXISTS disputes (
+  id UUID PRIMARY KEY,
+  listing_id UUID REFERENCES listings(id),
+  buyer_id UUID REFERENCES users(id),
+  seller_id UUID REFERENCES users(id),
+  reason TEXT NOT NULL,
+  status VARCHAR(20) DEFAULT 'open',
+  created_at TIMESTAMP DEFAULT NOW(),
+  updated_at TIMESTAMP DEFAULT NOW()
+)`).catch(e => console.log('disputes table:', e.message));
+
+app.get('/api/v1/health', (req, res) => res.json({ status: "ok", platform: "Makola Digital", version: "1.0.0" }));
 app.use("/api/v1/auth", authRoutes);
 app.use("/api/v1/upload", uploadRoutes);
 app.use("/api/v1/listings", listingsRoutes);
