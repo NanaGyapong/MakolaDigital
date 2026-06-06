@@ -74,6 +74,7 @@ export default function SellerDashboard() {
           <span style={{ fontWeight: 700, fontSize: 16 }}>Makola<span style={{ color: "#E8533A" }}>Digital</span></span>
         </div>
         <div style={{ display: "flex", gap: 8 }}>
+          <button onClick={() => router.push("/dashboard/inbox")} style={{ background: "rgba(255,255,255,0.06)", border: "none", color: "#F0EDE8", padding: "8px 16px", borderRadius: 8, fontSize: 13, fontWeight: 700, cursor: "pointer" }}>💬 Inbox</button>
           <button onClick={() => router.push("/sell")} style={{ background: "#E8533A", border: "none", color: "#fff", padding: "8px 16px", borderRadius: 8, fontSize: 13, fontWeight: 700, cursor: "pointer" }}>+ New Listing</button>
           <button onClick={() => { localStorage.removeItem("makola_token"); localStorage.removeItem("makola_refresh"); router.push("/"); }} style={{ background: "rgba(255,255,255,0.06)", border: "none", color: "#F0EDE8", padding: "8px 14px", borderRadius: 8, fontSize: 13, cursor: "pointer" }}>Log out</button>
         </div>
