@@ -26,7 +26,7 @@ router.post("/image", authenticate, upload.single("image"), async (req, res) => 
 
 export default router;
 
-router.post("/video", authenticate, upload.single("video"), async (req, res) => {
+router.post("/video", authenticate, upload.single("image"), async (req, res) => {
   try {
     if (!req.file) return res.status(400).json({ message: "No video provided" });
     const result = await new Promise((resolve, reject) => {
