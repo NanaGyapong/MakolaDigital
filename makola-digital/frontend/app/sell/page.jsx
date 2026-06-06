@@ -70,7 +70,7 @@ export default function SellPage() {
         body: JSON.stringify({ ...form, images }),
       });
       const data = await res.json();
-      if (res.ok) { router.push("/auth/kyc"); }
+      if (res.ok) { router.push("/dashboard/analytics?listed=true"); }
       else setError(data.message || "Failed to create listing");
     } catch (e) { setError("Network error. Please try again."); }
     setLoading(false);
