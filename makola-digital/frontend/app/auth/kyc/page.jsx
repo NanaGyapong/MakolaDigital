@@ -1,10 +1,12 @@
 "use client";
-"use client";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { authService } from "@/lib/auth.service";
 
-const ID_TYPES = [{ id:"national_id", label:"National ID", icon:"🪪" },{ id:"passport", label:"Passport", icon:"🛂" },{ id:"drivers_license", label:"Driver's License", icon:"🚗" }];
+const ID_TYPES = [
+  { id:"national_id", label:"National ID", icon:"🪪" },
+  { id:"passport", label:"Passport", icon:"🛂" },
+  { id:"drivers_license", label:"Driver's License", icon:"🚗" }
+];
 const BIZ_TYPES = ["Individual (selling personal items)","Sole proprietor / Small business","Registered company (Ltd / LLC)","Partnership","NGO / Non-profit"];
 const CATEGORIES = ["Electronics & Gadgets","Fashion & Clothing","Food & Agriculture","Web & Tech Services","Real Estate & Rentals","Vehicles","Health & Beauty","Other"];
 
@@ -12,8 +14,6 @@ export default function KycPage() {
   const router = useRouter();
   const [step, setStep] = useState(1);
   const [idType, setIdType] = useState("national_id");
-  const [frontFile, setFrontFile] = useState(null);
-  const [backFile, setBackFile] = useState(null);
   const [idNumber, setIdNumber] = useState("");
   const [biz, setBiz] = useState({ name:"", type:"", category:"", address:"", description:"", regNo:"" });
   const [loading, setLoading] = useState(false);
@@ -25,11 +25,13 @@ export default function KycPage() {
       const fd = new FormData();
       fd.append("idType", idType);
       fd.append("idNumber", idNumber);
-      if (frontFile) fd.append("idFront", frontFile);
-      if (backFile) fd.append("idBack", backFile);
       Object.entries(biz).forEach(([k,v]) => fd.append(k, v));
       const token = localStorage.getItem("makola_token");
-      const res = await fetch("https://sparkling-charm-production-cb2c.up.railway.app/api/v1/kyc/submit", { method: "POST", headers: { Authorization: `Bearer ${token}` }, body: fd });
+      const res = await fetch("https://sparkling-charm-production-cb2c.up.railway.app/api/v1/kyc/submit", {
+        method: "POST",
+        headers: { Authorization: `Bearer ${token}` },
+        body: fd
+      });
       const data = await res.json();
       if (!res.ok) throw new Error(data.message);
       setStep(3);
@@ -47,22 +49,20 @@ export default function KycPage() {
         {/* Step Indicator */}
         <div style={{ display:"flex", alignItems:"center", gap:8, marginBottom:28 }}>
           {["Account","Email","Identity","Business"].map((s, i) => (
-            <>
-              <div key={s} style={{ display:"flex", alignItems:"center", gap:6 }}>
-                <div style={{ width:26, height:26, borderRadius:"50%", display:"flex", alignItems:"center", justifyContent:"center", fontSize:11, fontWeight:800, background: i < step+1 ? "#2D9E6B" : i === step ? "#E8533A" : "transparent", border: `1.5px solid ${i < step ? "#2D9E6B" : i === step ? "#E8533A" : "rgba(255,255,255,0.15)"}`, color: i <= step ? "#fff" : "rgba(240,237,232,0.4)" }}>
-                  {i < step ? "✓" : i+1}
-                </div>
-                <span style={{ fontSize:11.5, fontWeight:600, color: i === step ? "#F0EDE8" : "rgba(240,237,232,0.4)" }}>{s}</span>
+            <div key={s} style={{ display:"flex", alignItems:"center", gap:6 }}>
+              <div style={{ width:26, height:26, borderRadius:"50%", display:"flex", alignItems:"center", justifyContent:"center", fontSize:11, fontWeight:800, background: i < step+1 ? "#2D9E6B" : i === step ? "#E8533A" : "transparent", border: `1.5px solid ${i < step ? "#2D9E6B" : i === step ? "#E8533A" : "rgba(255,255,255,0.15)"}`, color: i <= step ? "#fff" : "rgba(240,237,232,0.4)" }}>
+                {i < step ? "✓" : i+1}
               </div>
-              {i < 3 && <div style={{ flex:1, height:1.5, background: i < step ? "#2D9E6B" : "rgba(255,255,255,0.09)" }} />}
-            </>
+              <span style={{ fontSize:11.5, fontWeight:600, color: i === step ? "#F0EDE8" : "rgba(240,237,232,0.4)" }}>{s}</span>
+              {i < 3 && <div style={{ flex:1, height:1.5, background: i < step ? "#2D9E6B" : "rgba(255,255,255,0.09)", width:20 }} />}
+            </div>
           ))}
         </div>
 
         {step === 1 && (
           <>
             <h2 style={{ fontSize:22, fontWeight:900, color:"#F0EDE8", letterSpacing:"-.03em", marginBottom:6 }}>Identity verification</h2>
-            <p style={{ fontSize:13, color:"rgba(240,237,232,0.5)", marginBottom:24 }}>Step 3 of 4 — Choose your ID type</p>
+            <p style={{ fontSize:13, color:"rgba(240,237,232,0.5)", marginBottom:24 }}>Step 3 of 4 — Choose your ID type and enter your ID number</p>
             <div style={{ display:"grid", gridTemplateColumns:"repeat(3,1fr)", gap:8, marginBottom:18 }}>
               {ID_TYPES.map(t => (
                 <button key={t.id} type="button" onClick={() => setIdType(t.id)}
@@ -72,8 +72,7 @@ export default function KycPage() {
                 </button>
               ))}
             </div>
-            <div><label style={lbl}>ID Number</label><input style={inp} placeholder="Enter ID number" value={idNumber} onChange={e => setIdNumber(e.target.value)} /></div>
-            <div>
+            <div><label style={lbl}>ID Number</label><input style={inp} placeholder="Enter your ID number" value={idNumber} onChange={e => setIdNumber(e.target.value)} /></div>
             <button onClick={() => setStep(2)} style={{ width:"100%", background:"linear-gradient(135deg,#E8533A,#C47F17)", border:"none", color:"#fff", padding:13, borderRadius:11, fontSize:14.5, fontWeight:900, cursor:"pointer" }}>Continue to Business Info →</button>
           </>
         )}
@@ -84,8 +83,18 @@ export default function KycPage() {
             <p style={{ fontSize:13, color:"rgba(240,237,232,0.5)", marginBottom:24 }}>Step 4 of 4 — Almost done!</p>
             {error && <div style={{ background:"rgba(232,83,58,0.12)", border:"1px solid rgba(232,83,58,0.3)", color:"#E8533A", padding:"10px 14px", borderRadius:10, fontSize:13, marginBottom:16 }}>⚠️ {error}</div>}
             <div><label style={lbl}>Business / Trading Name</label><input style={inp} placeholder="e.g. TechHub GH" value={biz.name} onChange={e => setBiz(b=>({...b,name:e.target.value}))} /></div>
-            <div><label style={lbl}>Business Type</label><select style={{ ...inp, cursor:"pointer" }} value={biz.type} onChange={e => setBiz(b=>({...b,type:e.target.value}))}><option value="">Select type</option>{BIZ_TYPES.map(t=><option key={t}>{t}</option>)}</select></div>
-            <div><label style={lbl}>Primary Category</label><select style={{ ...inp, cursor:"pointer" }} value={biz.category} onChange={e => setBiz(b=>({...b,category:e.target.value}))}><option value="">What do you sell?</option>{CATEGORIES.map(c=><option key={c}>{c}</option>)}</select></div>
+            <div><label style={lbl}>Business Type</label>
+              <select style={{ ...inp, cursor:"pointer" }} value={biz.type} onChange={e => setBiz(b=>({...b,type:e.target.value}))}>
+                <option value="">Select type</option>
+                {BIZ_TYPES.map(t=><option key={t}>{t}</option>)}
+              </select>
+            </div>
+            <div><label style={lbl}>Primary Category</label>
+              <select style={{ ...inp, cursor:"pointer" }} value={biz.category} onChange={e => setBiz(b=>({...b,category:e.target.value}))}>
+                <option value="">What do you sell?</option>
+                {CATEGORIES.map(c=><option key={c}>{c}</option>)}
+              </select>
+            </div>
             <div><label style={lbl}>Business Address</label><input style={inp} placeholder="Street, City, Country" value={biz.address} onChange={e => setBiz(b=>({...b,address:e.target.value}))} /></div>
             <div><label style={lbl}>Description</label><textarea style={{ ...inp, minHeight:80, resize:"vertical" }} placeholder="Describe what you sell in 2-3 sentences..." value={biz.description} onChange={e => setBiz(b=>({...b,description:e.target.value}))} /></div>
             <div style={{ display:"flex", gap:12, marginTop:4 }}>
@@ -99,10 +108,13 @@ export default function KycPage() {
           <div style={{ textAlign:"center", padding:"16px 0" }}>
             <div style={{ fontSize:56, marginBottom:18 }}>🎉</div>
             <h2 style={{ fontSize:24, fontWeight:900, color:"#F0EDE8", letterSpacing:"-.03em", marginBottom:10 }}>Application submitted!</h2>
-            <p style={{ fontSize:13.5, color:"rgba(240,237,232,0.55)", lineHeight:1.65, marginBottom:24 }}>Your KYC is under review. You'll hear from us within 24 hours. You can start listing while we process your verification.</p>
+            <p style={{ fontSize:13.5, color:"rgba(240,237,232,0.55)", lineHeight:1.65, marginBottom:24 }}>Your KYC is under review. You will hear from us within 24 hours. You can start listing while we process your verification.</p>
             <div style={{ display:"flex", alignItems:"center", gap:12, background:"rgba(45,158,107,0.08)", border:"1px solid rgba(45,158,107,0.25)", borderRadius:12, padding:"14px 16px", marginBottom:24, textAlign:"left" }}>
               <span style={{ fontSize:24 }}>⏳</span>
-              <div><div style={{ fontSize:13, fontWeight:700, color:"#2D9E6B" }}>Verification pending</div><div style={{ fontSize:11.5, color:"rgba(240,237,232,0.5)", marginTop:2 }}>Usually completed within 24 hours</div></div>
+              <div>
+                <div style={{ fontSize:13, fontWeight:700, color:"#2D9E6B" }}>Verification pending</div>
+                <div style={{ fontSize:11.5, color:"rgba(240,237,232,0.5)", marginTop:2 }}>Usually completed within 24 hours</div>
+              </div>
             </div>
             <button onClick={() => router.push("/dashboard")} style={{ width:"100%", background:"linear-gradient(135deg,#E8533A,#C47F17)", border:"none", color:"#fff", padding:13, borderRadius:11, fontSize:14.5, fontWeight:900, cursor:"pointer" }}>Go to my dashboard →</button>
           </div>
