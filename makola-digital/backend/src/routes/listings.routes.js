@@ -128,3 +128,23 @@ router.get("/:id/related", async (req, res) => {
 });
 
 export default router;
+
+router.patch("/:id", authenticate, async (req, res) => {
+  try {
+    const { title, description, price, currency, priceLabel, isNegotiable, country, city, locationText, isRemote, images } = req.body;
+    await db.query(
+      `UPDATE listings SET title=$1, description=$2, price=$3, price_currency=$4, price_label=$5, is_negotiable=$6, country=$7, city=$8, location_text=$9, is_remote=$10, status='pending', updated_at=NOW() WHERE id=$11 AND seller_id=$12`,
+      [title, description, price||null, currency||"GHS", priceLabel||null, isNegotiable||false, country?.slice(0,2).toUpperCase()||"GH", city||null, locationText||null, isRemote||false, req.params.id, req.user.id]
+    );
+    if (images) {
+      await db.query("DELETE FROM listing_images WHERE listing_id=$1", [req.params.id]);
+      for (let i=0; i<images.length; i++) {
+        await db.query("INSERT INTO listing_images (id,listing_id,url,sort_order,is_primary,created_at) VALUES (gen_random_uuid(),$1,$2,$3,$4,NOW())", [req.params.id, images[i], i, i===0]);
+      }
+    }
+    res.json({ message: "Listing updated successfully" });
+  } catch (err) {
+    console.error("update listing:", err);
+    res.status(500).json({ message: "Failed to update listing" });
+  }
+});
