@@ -33,6 +33,25 @@ export default function LoginPage() {
     } finally { setLoading(false); }
   };
 
+  const verifyOtp = async () => {
+    setOtpLoading(true); setError('');
+    try {
+      const API = 'https://sparkling-charm-production-cb2c.up.railway.app/api/v1';
+      const res = await fetch(API + '/auth/verify-login-otp', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: otpEmail, otp })
+      });
+      const data = await res.json();
+      if (res.ok) {
+        localStorage.setItem('makola_token', data.accessToken);
+        localStorage.setItem('makola_refresh', data.refreshToken);
+        router.push('/dashboard');
+      } else { setError(data.message); }
+    } catch(e) { setError('Verification failed'); }
+    setOtpLoading(false);
+  };
+
   if (otpRequired) return (
     <div style={{ minHeight:'100vh', background:'#0A0A0A', display:'flex', alignItems:'center', justifyContent:'center', padding:'32px 16px' }}>
       <div style={{ width:'100%', maxWidth:420, background:'#0F0F0F', border:'1px solid rgba(255,255,255,0.09)', borderRadius:20, padding:'40px 36px', textAlign:'center' }}>
