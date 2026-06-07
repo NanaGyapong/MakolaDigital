@@ -14,6 +14,7 @@ export default function LoginPage() {
   const [otpRequired, setOtpRequired] = useState(false);
   const [otpEmail, setOtpEmail] = useState("");
   const [otp, setOtp] = useState("");
+  const [otpLoading, setOtpLoading] = useState(false);
 
   const set = (k) => (e) => setForm((f) => ({ ...f, [k]: e.target.value ?? e.target.checked }));
 
