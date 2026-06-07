@@ -77,6 +77,7 @@ export default function ListingPage() {
 
   const handleSend = async () => {
     const token = localStorage.getItem('makola_token');
+    if (!token) { router.push('/auth/login'); return; }
     try {
       await fetch('https://sparkling-charm-production-cb2c.up.railway.app/api/v1/messages', {
         method: 'POST',
