@@ -1,3 +1,4 @@
+import jwt from "jsonwebtoken";
 // routes/auth.routes.js
 import { Router } from "express";
 import { body, validationResult } from "express-validator";
