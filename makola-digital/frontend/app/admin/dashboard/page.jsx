@@ -65,7 +65,7 @@ export default function AdminDashboard() {
           <div style={{ fontSize: 24, fontWeight: 900 }}>🛡️ Admin Dashboard</div>
           <div style={{ fontSize: 12, color: "rgba(240,237,232,0.5)", marginTop: 4 }}>Makola Digital · Super Admin</div>
         </div>
-        <div style={{ background: "rgba(45,158,107,0.12)", border: "1px solid rgba(45,158,107,0.3)", color: "#2D9E6B", padding: "6px 14px", borderRadius: 8, fontSize: 12, fontWeight: 700 }}>✅ Live</div>
+        <div style={{ display: "flex", gap: 8, alignItems: "center" }}><div style={{ background: "rgba(45,158,107,0.12)", border: "1px solid rgba(45,158,107,0.3)", color: "#2D9E6B", padding: "6px 14px", borderRadius: 8, fontSize: 12, fontWeight: 700 }}>✅ Live</div><button onClick={() => { localStorage.removeItem("makola_token"); localStorage.removeItem("makola_refresh"); window.location.href = "/"; }} style={{ background: "rgba(232,83,58,0.1)", border: "1px solid rgba(232,83,58,0.3)", color: "#E8533A", padding: "6px 14px", borderRadius: 8, fontSize: 12, fontWeight: 700, cursor: "pointer" }}>🚪 Logout</button></div>
       </div>
 
       {/* Stats Grid */}
