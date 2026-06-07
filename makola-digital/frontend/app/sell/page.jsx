@@ -44,6 +44,8 @@ const CATEGORIES = {
     'Property > For Rent', 'Property > For Sale', 'Property > Shortlet', 'Property > Commercial',
   ],
 };
+const GHANA_REGIONS = ["Greater Accra","Ashanti","Western","Central","Eastern","Northern","Upper East","Upper West","Volta","Brong-Ahafo","Oti","Bono East","Ahafo","Savannah","North East","Western North"];
+
 const CURRENCIES = ["GHS", "NGN", "USD", "GBP", "EUR"];
 const COUNTRIES = ["Ghana", "Nigeria", "Kenya", "South Africa", "United Kingdom", "United States"];
 
@@ -62,7 +64,7 @@ export default function SellPage() {
   const [form, setForm] = useState({
     type: "product", category: "", title: "", description: "",
     price: "", currency: "GHS", priceLabel: "", isNegotiable: false,
-    country: "Ghana", city: "", locationText: "", isRemote: false,
+    country: "Ghana", city: "", region: "", locationText: "", isRemote: false,
   });
 
   const set = (k, v) => setForm(f => ({ ...f, [k]: v }));
@@ -196,7 +198,16 @@ export default function SellPage() {
         <select value={form.country} onChange={e => set("country", e.target.value)} style={{ ...inp, marginBottom: 16 }}>
           {COUNTRIES.map(c => <option key={c} value={c}>{c}</option>)}
         </select>
-        <label style={lbl}>City</label>
+        {form.country === 'Ghana' && (
+          <div style={{ marginBottom: 16 }}>
+            <label style={lbl}>Region</label>
+            <select value={form.region || ''} onChange={e => set('region', e.target.value)} style={{ ...inp }}>
+              <option value=''>Select region</option>
+              {GHANA_REGIONS.map(r => <option key={r} value={r}>{r} Region</option>)}
+            </select>
+          </div>
+        )}
+        <label style={lbl}>City / Town</label>
         <input value={form.city} onChange={e => set("city", e.target.value)} placeholder="e.g. Accra, Lagos, Nairobi" style={{ ...inp, marginBottom: 16 }} />
         <label style={lbl}>Location details</label>
         <input value={form.locationText} onChange={e => set("locationText", e.target.value)} placeholder="e.g. East Legon, Accra" style={{ ...inp, marginBottom: 16 }} />
