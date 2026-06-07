@@ -24,7 +24,6 @@ router.post("/image", authenticate, upload.single("image"), async (req, res) => 
   }
 });
 
-export default router;
 
 router.post("/video", authenticate, upload.single("image"), async (req, res) => {
   try {
