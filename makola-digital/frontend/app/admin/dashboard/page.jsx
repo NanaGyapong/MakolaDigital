@@ -2,19 +2,21 @@
 import React, { useState, useEffect } from "react";
 
 export default function AdminDashboard() {
-  const [realStats, setRealStats] = useState({ users: 0, listings: 0, kyc_pending: 0 });
+  const [realStats, setRealStats] = useState({ users: 0, listings: 0, kyc_pending: 0, listings_pending: 0 });
   useEffect(() => {
     const token = localStorage.getItem("makola_token");
     const API = "https://sparkling-charm-production-cb2c.up.railway.app/api/v1";
     Promise.all([
       fetch(API + "/admin/users", { headers: { Authorization: "Bearer " + token } }).then(r => r.json()),
       fetch(API + "/categories/counts").then(r => r.json()),
+      fetch(API + "/listings?status=pending&limit=50").then(r => r.json()),
       fetch(API + "/kyc/applications?status=pending", { headers: { Authorization: "Bearer " + token } }).then(r => r.json()),
-    ]).then(([users, listings, kyc]) => {
+    ]).then(([users, listings, pending, kyc]) => {
       setRealStats({
         users: users.users?.length || 0,
         listings: listings.total || 0,
         kyc_pending: kyc.applications?.length || 0,
+        listings_pending: pending.listings?.length || 0,
       });
     }).catch(() => {});
   }, []);
@@ -23,7 +25,7 @@ export default function AdminDashboard() {
     { label:"Active listings", val:realStats.listings.toString(), change:"", color:"#2D9E6B" },
     { label:"Today revenue", val:"GH₵ 0", change:"+0%", color:"#E8500A" },
     { label:"KYC pending", val:realStats.kyc_pending.toString(), change:"", color:"#8B5CF6" },
-    { label:"Open disputes", val:"0", change:"", color:"#E8500A" },
+    { label:"Pending listings", val:realStats.listings_pending.toString(), change:"", color:"#C47F17" },
     { label:"Flagged listings", val:"0", change:"", color:"#C40F10" },
   ];
 
