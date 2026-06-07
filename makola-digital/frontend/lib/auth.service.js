@@ -11,6 +11,7 @@ export const authService = {
   async register(payload) { return api("/auth/register",{method:"POST",body:JSON.stringify(payload)}); },
   async login(email,password,remember=true) {
     const d = await api("/auth/login",{method:"POST",body:JSON.stringify({email,password,remember})});
+    if (d.requiresOtp) return d;
     s.set("makola_token",d.accessToken); s.set("makola_refresh",d.refreshToken);
     return d.user;
   },
