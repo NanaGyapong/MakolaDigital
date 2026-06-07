@@ -11,10 +11,10 @@ const TYPES = [
   { icon: "🏠", label: "Rental", val: "rental", desc: "Property & vehicle rentals" },
 ];
 const CATEGORIES = {
-  product: ["Electronics", "Vehicles", "Fashion", "Food & Agriculture", "Home & Garden"],
-  service: ["Web Development", "Design & Creative", "Construction", "Cleaning", "Tutoring"],
-  job: ["Tech Jobs", "Sales & Marketing", "Finance", "Healthcare", "Education"],
-  rental: ["Apartments", "Car Rentals", "Equipment", "Event Spaces"],
+  product: ["Electronics", "Fashion & Clothing", "Home & Garden", "Beauty & Health", "Food & Beverages", "Agriculture & Farm Produce", "Farm Animals & Pets", "Arts & Crafts", "Vehicles & Spare Parts"],
+  service: ["Business Services", "Tech & Digital", "Education & Training", "Home Services"],
+  job: ["Jobs & Careers"],
+  rental: ["Property & Land"],
 };
 const CURRENCIES = ["GHS", "NGN", "USD", "GBP", "EUR"];
 const COUNTRIES = ["Ghana", "Nigeria", "Kenya", "South Africa", "United Kingdom", "United States"];
