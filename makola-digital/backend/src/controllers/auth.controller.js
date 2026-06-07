@@ -92,6 +92,22 @@ export async function login(req, res) {
       [uuid(), user.id, tokenHash, new Date(Date.now() + (remember ? 30 : 1) * 24 * 60 * 60 * 1000)]
     );
 
+
+    // OTP for sellers and admins
+    if (user.role === 'seller' || user.role === 'admin') {
+      const otp = Math.floor(100000 + Math.random() * 900000).toString();
+      const otpExpiry = new Date(Date.now() + 10 * 60 * 1000);
+      await db.query('UPDATE users SET otp_code = $1, otp_expires_at = $2 WHERE id = $3', [otp, otpExpiry, user.id]);
+      const { Resend } = await import('resend');
+      const resend = new Resend(process.env.RESEND_API_KEY);
+      await resend.emails.send({
+        from: 'Makola Digital <hello@makoladigital.online>',
+        to: user.email,
+        subject: 'Your Makola Digital login code',
+        html: '<div style="font-family:sans-serif;padding:32px;background:#0A0A0A;color:#F0EDE8"><h2 style="color:#E8533A">Login Verification Code</h2><p>Hi ' + user.full_name + ',</p><p>Your login code is:</p><div style="background:#1A1A1A;padding:24px;text-align:center;border-radius:12px;margin:16px 0"><h1 style="font-size:48px;letter-spacing:8px;color:#E8533A;margin:0">' + otp + '</h1></div><p style="color:rgba(240,237,232,0.5)">Expires in 10 minutes. Do not share.</p></div>'
+      });
+      return res.json({ requiresOtp: true, email: user.email });
+    }
     res.json({
       accessToken, refreshToken,
       user: { id: user.id, email: user.email, fullName: user.full_name, role: user.role }
