@@ -11,6 +11,9 @@ export default function LoginPage() {
   const [showPw, setShowPw] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [otpRequired, setOtpRequired] = useState(false);
+  const [otpEmail, setOtpEmail] = useState("");
+  const [otp, setOtp] = useState("");
 
   const set = (k) => (e) => setForm((f) => ({ ...f, [k]: e.target.value ?? e.target.checked }));
 
@@ -18,8 +21,13 @@ export default function LoginPage() {
     e.preventDefault();
     setError(""); setLoading(true);
     try {
-      await authService.login(form.email, form.password, form.remember);
-      router.push("/dashboard");
+      const result = await authService.login(form.email, form.password, form.remember);
+      if (result && result.requiresOtp) {
+        setOtpEmail(result.email);
+        setOtpRequired(true);
+        return;
+      }
+      router.push('/dashboard');
     } catch (err) {
       setError(err.message || "Invalid email or password");
     } finally { setLoading(false); }
