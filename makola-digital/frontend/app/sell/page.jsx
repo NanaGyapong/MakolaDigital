@@ -11,10 +11,38 @@ const TYPES = [
   { icon: "🏠", label: "Rental", val: "rental", desc: "Property & vehicle rentals" },
 ];
 const CATEGORIES = {
-  product: ["Electronics", "Fashion & Clothing", "Home & Garden", "Beauty & Health", "Food & Beverages", "Agriculture & Farm Produce", "Farm Animals & Pets", "Arts & Crafts", "Vehicles & Spare Parts"],
-  service: ["Business Services", "Tech & Digital", "Education & Training", "Home Services"],
-  job: ["Jobs & Careers"],
-  rental: ["Property & Land"],
+  product: [
+    'Electronics > Phones & Tablets', 'Electronics > Computers', 'Electronics > TV & Audio',
+    'Electronics > Cameras', 'Electronics > Gaming', 'Electronics > Power & Solar',
+    'Fashion & Clothing > Men Wear', 'Fashion & Clothing > Women Wear', 'Fashion & Clothing > Kids',
+    'Fashion & Clothing > Shoes', 'Fashion & Clothing > Bags & Accessories', 'Fashion & Clothing > Fabrics & Textiles',
+    'Home & Garden > Furniture', 'Home & Garden > Kitchen & Dining', 'Home & Garden > Appliances',
+    'Home & Garden > Home Decor', 'Home & Garden > Tools & DIY', 'Home & Garden > Garden',
+    'Beauty & Health > Skincare', 'Beauty & Health > Hair', 'Beauty & Health > Makeup',
+    'Beauty & Health > Fragrances', 'Beauty & Health > Health Supplements',
+    'Food & Beverages > Processed Foods', 'Food & Beverages > Snacks & Sweets',
+    'Food & Beverages > Drinks', 'Food & Beverages > Spices & Seasoning', 'Food & Beverages > Bulk Food',
+    'Agriculture > Grains & Cereals', 'Agriculture > Tubers & Vegetables', 'Agriculture > Fruits',
+    'Agriculture > Seeds & Seedlings', 'Agriculture > Farm Equipment', 'Agriculture > Raw Materials',
+    'Farm Animals & Pets > Poultry', 'Farm Animals & Pets > Livestock', 'Farm Animals & Pets > Pets',
+    'Farm Animals & Pets > Animal Feed',
+    'Arts & Crafts > Handmade', 'Arts & Crafts > Wood & Carvings', 'Arts & Crafts > Paintings & Art',
+    'Arts & Crafts > Cultural Items',
+    'Vehicles > Cars', 'Vehicles > Motorbikes & Tricycles', 'Vehicles > Spare Parts',
+  ],
+  service: [
+    'Business Services > Professional', 'Business Services > Marketing', 'Business Services > Logistics',
+    'Business Services > Finance',
+    'Tech & Digital > Web & App', 'Tech & Digital > Graphics & Media', 'Tech & Digital > IT Support',
+    'Education & Training > Courses', 'Education & Training > Tutoring', 'Education & Training > Skills Training',
+    'Home Services > Cleaning', 'Home Services > Repairs', 'Home Services > Events', 'Home Services > Personal Care',
+  ],
+  job: [
+    'Jobs > Full-time', 'Jobs > Part-time', 'Jobs > Contract', 'Jobs > Internship', 'Jobs > Remote',
+  ],
+  rental: [
+    'Property > For Rent', 'Property > For Sale', 'Property > Shortlet', 'Property > Commercial',
+  ],
 };
 const CURRENCIES = ["GHS", "NGN", "USD", "GBP", "EUR"];
 const COUNTRIES = ["Ghana", "Nigeria", "Kenya", "South Africa", "United Kingdom", "United States"];
