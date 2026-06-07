@@ -41,3 +41,5 @@ router.post("/video", authenticate, upload.single("image"), async (req, res) => 
     res.status(500).json({ message: "Video upload failed" });
   }
 });
+
+export default router;
