@@ -6,11 +6,13 @@ const categories = [
   { icon: "🛍️", label: "Products", count: "0", color: "#E8533A" },
   { icon: "🔧", label: "Services", count: "0", color: "#2D9E6B" },
   { icon: "💼", label: "Jobs", count: "0", color: "#C47F17" },
-  { icon: "🏠", label: "Rentals", count: "0", color: "#3B7DD8" },
-  { icon: "🚗", label: "Vehicles", count: "0", color: "#8B5CF6" },
+  { icon: "🏘️", label: "Rentals", count: "0", color: "#3B7DD8" },
+  { icon: "🚗", label: "Vehicles & Spare Parts", count: "0", color: "#8B5CF6" },
   { icon: "📱", label: "Electronics", count: "0", color: "#E8533A" },
-  { icon: "👗", label: "Fashion", count: "0", color: "#DB2777" },
-  { icon: "🌿", label: "Food & Agric", count: "0", color: "#2D9E6B" },
+  { icon: "👗", label: "Fashion & Clothing", count: "0", color: "#DB2777" },
+  { icon: "🌾", label: "Agriculture & Farm Produce", count: "0", color: "#2D9E6B" },
+  { icon: "💄", label: "Beauty & Health", count: "0", color: "#EC4899" },
+  { icon: "🎨", label: "Arts & Crafts", count: "0", color: "#F59E0B" },
 ];
 
 
