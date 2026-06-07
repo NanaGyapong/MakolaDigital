@@ -1,5 +1,5 @@
 import jwt from "jsonwebtoken";
-import { db } from "./config/db.js";
+import { db } from "../config/db.js";
 // routes/auth.routes.js
 import { Router } from "express";
 import { body, validationResult } from "express-validator";
