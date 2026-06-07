@@ -33,8 +33,22 @@ export default function LoginPage() {
     } finally { setLoading(false); }
   };
 
+  if (otpRequired) return (
+    <div style={{ minHeight:'100vh', background:'#0A0A0A', display:'flex', alignItems:'center', justifyContent:'center', padding:'32px 16px' }}>
+      <div style={{ width:'100%', maxWidth:420, background:'#0F0F0F', border:'1px solid rgba(255,255,255,0.09)', borderRadius:20, padding:'40px 36px', textAlign:'center' }}>
+        <div style={{ fontSize:48, marginBottom:16 }}>🔐</div>
+        <h1 style={{ fontSize:22, fontWeight:900, color:'#F0EDE8', marginBottom:8 }}>Check your email</h1>
+        <p style={{ fontSize:13, color:'rgba(240,237,232,0.5)', marginBottom:24 }}>We sent a 6-digit code to <strong style={{ color:'#E8533A' }}>{otpEmail}</strong></p>
+        {error && <div style={{ background:'rgba(232,83,58,0.12)', border:'1px solid rgba(232,83,58,0.3)', color:'#E8533A', padding:'10px 14px', borderRadius:10, fontSize:13, marginBottom:16 }}>⚠️ {error}</div>}
+        <input value={otp} onChange={e => setOtp(e.target.value)} placeholder='Enter 6-digit code' maxLength={6} style={{ width:'100%', background:'rgba(255,255,255,0.05)', border:'1px solid rgba(255,255,255,0.09)', borderRadius:10, padding:'14px', color:'#F0EDE8', fontSize:24, outline:'none', textAlign:'center', letterSpacing:'8px', marginBottom:16, boxSizing:'border-box' }} />
+        <button onClick={verifyOtp} disabled={otpLoading || otp.length !== 6} style={{ width:'100%', background:'linear-gradient(135deg,#E8533A,#C47F17)', border:'none', color:'#fff', padding:13, borderRadius:11, fontSize:14.5, fontWeight:900, cursor:'pointer', opacity: otp.length !== 6 ? 0.5 : 1 }}>{otpLoading ? 'Verifying...' : 'Verify Code →'}</button>
+        <button onClick={() => { setOtpRequired(false); setOtp(''); setError(''); }} style={{ marginTop:12, background:'none', border:'none', color:'rgba(240,237,232,0.5)', fontSize:13, cursor:'pointer' }}>← Back to login</button>
+      </div>
+    </div>
+  );
+
   return (
-    <div style={{ minHeight:"100vh", display:"flex", alignItems:"center", justifyContent:"center", background:"#0A0A0A" }}>
+    <div style={{ minHeight:'100vh', display:"flex", alignItems:"center", justifyContent:"center", background:"#0A0A0A" }}>
       <div style={{ width:"100%", maxWidth:420, padding:"40px 32px", background:"#0F0F0F", border:"1px solid rgba(255,255,255,0.09)", borderRadius:20 }}>
         <div style={{ textAlign:"center", marginBottom:28 }}>
           <div style={{ fontSize:32, marginBottom:8 }}>🌍</div>
