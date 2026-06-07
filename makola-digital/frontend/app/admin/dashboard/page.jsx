@@ -19,10 +19,10 @@ export default function AdminDashboard() {
     }).catch(() => {});
   }, []);
   const stats = [
-    { label:"Total users", val:"0", change:"+0 today", color:"#0B0DD8" },
-    { label:"Active listings", val:"0", change:"+0 today", color:"#2D9E6B" },
+    { label:"Total users", val:realStats.users.toString(), change:"", color:"#0B0DD8" },
+    { label:"Active listings", val:realStats.listings.toString(), change:"", color:"#2D9E6B" },
     { label:"Today revenue", val:"GH₵ 0", change:"+0%", color:"#E8500A" },
-    { label:"KYC pending", val:"0", change:"", color:"#8B5CF6" },
+    { label:"KYC pending", val:realStats.kyc_pending.toString(), change:"", color:"#8B5CF6" },
     { label:"Open disputes", val:"0", change:"", color:"#E8500A" },
     { label:"Flagged listings", val:"0", change:"", color:"#C40F10" },
   ];
