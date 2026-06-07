@@ -8,7 +8,7 @@ export default function AdminDashboard() {
   const [recentUsers, setRecentUsers] = useState([]);
   const [recentListings, setRecentListings] = useState([]);
 
-  useEffect(() => {
+  useEffect(() => { (async () => {
     let token = localStorage.getItem('makola_token');
     const refresh = localStorage.getItem('makola_refresh');
     if (refresh) {
@@ -33,8 +33,7 @@ export default function AdminDashboard() {
       });
       if (users.users) setRecentUsers(users.users.slice(0, 5));
       if (recent.listings) setRecentListings(recent.listings.slice(0, 5));
-    }).catch(() => {});
-  }, []);
+    }).catch(() => {}); })(); }, []);
 
   const stats = [
     { label: "Total users", val: realStats.users.toString(), color: "#3B7DD8" },
