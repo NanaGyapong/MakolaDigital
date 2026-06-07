@@ -9,7 +9,15 @@ export default function AdminDashboard() {
   const [recentListings, setRecentListings] = useState([]);
 
   useEffect(() => {
-    const token = localStorage.getItem("makola_token");
+    let token = localStorage.getItem('makola_token');
+    const refresh = localStorage.getItem('makola_refresh');
+    if (refresh) {
+      try {
+        const r = await fetch(API + '/auth/refresh', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ refreshToken: refresh }) });
+        const d = await r.json();
+        if (d.accessToken) { localStorage.setItem('makola_token', d.accessToken); token = d.accessToken; }
+      } catch(e) {}
+    }
     Promise.all([
       fetch(API + "/admin/users", { headers: { Authorization: "Bearer " + token } }).then(r => r.json()),
       fetch(API + "/categories/counts").then(r => r.json()),
