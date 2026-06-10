@@ -170,7 +170,7 @@ export default function SellPage() {
       {step === 3 && <>
         <h2 style={{ fontSize: 22, fontWeight: 900, marginBottom: 6 }}>Photos</h2>
         <p style={{ color: "rgba(240,237,232,0.5)", fontSize: 14, marginBottom: 24 }}>Add up to 8 photos. First photo is the cover image.</p>
-        <div onClick={() => fileRef.current?.click()} style={{ border: "2px dashed rgba(255,255,255,0.15)", borderRadius: 14, padding: "32px 20px", textAlign: "center", cursor: "pointer", marginBottom: 16, background: "rgba(255,255,255,0.02)" }}>
+        <div onClick={() => fileRef.current?.click()} style={{ border: "2px dashed rgba(232,83,58,0.3)", borderRadius: 14, padding: "32px 20px", textAlign: "center", cursor: "pointer", marginBottom: 16, background: "rgba(232,83,58,0.03)" }}>
           <div style={{ fontSize: 36, marginBottom: 8 }}>📸</div>
           <div style={{ fontWeight: 600, marginBottom: 4 }}>{uploading ? "Uploading..." : "Click to upload photos"}</div>
           <div style={{ fontSize: 12, color: "rgba(240,237,232,0.4)" }}>JPG, PNG, WebP up to 10MB each</div>
