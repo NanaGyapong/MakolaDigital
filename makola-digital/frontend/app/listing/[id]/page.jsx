@@ -201,7 +201,7 @@ export default function ListingPage() {
             )}
 
             <div style={{ fontSize: 26, fontWeight: 800, color: "#E8533A", marginBottom: 6 }}>
-              {listing.type === "job" && (!listing.price || Number(listing.price) === 0) ? "Competitive salary" : listing.price_currency + " " + Number(listing.price).toLocaleString()}
+              {listing.is_sold_out ? <span style={{ background: 'rgba(232,83,58,0.15)', border: '1px solid rgba(232,83,58,0.4)', color: '#E8533A', padding: '4px 12px', borderRadius: 6, fontSize: 14, fontWeight: 700 }}>SOLD OUT</span> : listing.type === "job" && (!listing.price || Number(listing.price) === 0) ? "Competitive salary" : listing.price_currency + " " + Number(listing.price).toLocaleString()}
               {listing.price_label && <span style={{ fontSize: 13, fontWeight: 400, color: "rgba(240,237,232,0.5)" }}> {listing.price_label}</span>}
             </div>
             {listing.is_negotiable && <div style={{ fontSize: 12, color: "#2D9E6B", marginBottom: 12 }}>✓ Open to offers</div>}
