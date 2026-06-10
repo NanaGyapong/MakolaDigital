@@ -160,3 +160,13 @@ router.delete("/:id", authenticate, async (req, res) => {
     res.status(500).json({ message: "Failed to delete listing" });
   }
 });
+
+router.patch("/:id/sold-out", authenticate, async (req, res) => {
+  try {
+    const { isSoldOut } = req.body;
+    await db.query("UPDATE listings SET is_sold_out = $1, updated_at = NOW() WHERE id = $2 AND seller_id = $3", [isSoldOut, req.params.id, req.user.id]);
+    res.json({ message: isSoldOut ? "Marked as sold out" : "Marked as available" });
+  } catch (err) {
+    res.status(500).json({ message: "Failed to update" });
+  }
+});
