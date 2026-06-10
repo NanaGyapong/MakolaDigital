@@ -151,6 +151,7 @@ export default function SellerDashboard() {
                       <span style={{ fontSize: 12, fontWeight: 700, color: getStatusColor(l.status), background: getStatusColor(l.status) + "22", padding: "4px 10px", borderRadius: 20 }}>
                         {getStatusIcon(l.status)} {l.status}
                       </span>
+                      <span style={{ fontSize: 11, color: 'rgba(240,237,232,0.4)', marginRight: 8 }}>👁️ {l.views_count || 0} views</span>
                       <button onClick={() => router.push(`/listing/${l.id}`)} style={{ background: "rgba(255,255,255,0.06)", border: "none", color: "#F0EDE8", padding: "8px 14px", borderRadius: 8, cursor: "pointer", fontSize: 12 }}>View →</button>
                       <button onClick={() => router.push(`/sell/edit/${l.id}`)} style={{ background: "rgba(232,83,58,0.12)", border: "1px solid rgba(232,83,58,0.3)", color: "#E8533A", padding: "8px 14px", borderRadius: 8, cursor: "pointer", fontSize: 12 }}>✏️ Edit</button>
                       <button onClick={() => deleteListing(l.id, l.title)} style={{ background: "rgba(232,83,58,0.08)", border: "1px solid rgba(232,83,58,0.2)", color: "#E8533A", padding: "8px 14px", borderRadius: 8, cursor: "pointer", fontSize: 12 }}>🗑️ Delete</button>
