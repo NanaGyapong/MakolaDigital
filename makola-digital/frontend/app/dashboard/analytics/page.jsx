@@ -10,6 +10,17 @@ export default function SellerDashboard() {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
 
+  const toggleSoldOut = async (id, currentState) => {
+    const token = localStorage.getItem('makola_token');
+    const newState = !currentState;
+    await fetch('https://sparkling-charm-production-cb2c.up.railway.app/api/v1/listings/' + id + '/sold-out', {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + token },
+      body: JSON.stringify({ isSoldOut: newState })
+    });
+    setListings(prev => prev.map(l => l.id === id ? { ...l, is_sold_out: newState } : l));
+  };
+
   const deleteListing = async (id, title) => {
     const token = localStorage.getItem('makola_token');
     try {
@@ -143,6 +154,7 @@ export default function SellerDashboard() {
                       <button onClick={() => router.push(`/listing/${l.id}`)} style={{ background: "rgba(255,255,255,0.06)", border: "none", color: "#F0EDE8", padding: "8px 14px", borderRadius: 8, cursor: "pointer", fontSize: 12 }}>View →</button>
                       <button onClick={() => router.push(`/sell/edit/${l.id}`)} style={{ background: "rgba(232,83,58,0.12)", border: "1px solid rgba(232,83,58,0.3)", color: "#E8533A", padding: "8px 14px", borderRadius: 8, cursor: "pointer", fontSize: 12 }}>✏️ Edit</button>
                       <button onClick={() => deleteListing(l.id, l.title)} style={{ background: "rgba(232,83,58,0.08)", border: "1px solid rgba(232,83,58,0.2)", color: "#E8533A", padding: "8px 14px", borderRadius: 8, cursor: "pointer", fontSize: 12 }}>🗑️ Delete</button>
+                      <button onClick={() => toggleSoldOut(l.id, l.is_sold_out)} style={{ background: l.is_sold_out ? 'rgba(45,158,107,0.12)' : 'rgba(196,127,23,0.12)', border: '1px solid rgba(196,127,23,0.3)', color: l.is_sold_out ? '#2D9E6B' : '#C47F17', padding: '8px 14px', borderRadius: 8, cursor: 'pointer', fontSize: 12 }}>{l.is_sold_out ? '✅ Mark Available' : '🏷️ Mark Sold Out'}</button>
                     </div>
                   </div>
                 ))}
