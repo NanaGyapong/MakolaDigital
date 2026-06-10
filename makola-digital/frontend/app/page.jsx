@@ -46,7 +46,7 @@ export default function MakolaDigital() {
         if (data.counts) {
           setCategoryCounts(data.typeCounts || {});
           setTotalListings(data.total || 0);
-          fetch("https://sparkling-charm-production-cb2c.up.railway.app/api/v1/stats").then(r => r.json()).then(d => { setTotalSellers(d.sellers || 0); setTotalMembers(d.users || 0); }).catch(() => {});
+          
         }
       })
       .catch(() => {});
