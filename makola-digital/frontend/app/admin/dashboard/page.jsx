@@ -7,6 +7,7 @@ export default function AdminDashboard() {
   const [realStats, setRealStats] = useState({ users: 0, listings: 0, kyc_pending: 0, listings_pending: 0 });
   const [recentUsers, setRecentUsers] = useState([]);
   const [recentListings, setRecentListings] = useState([]);
+  const [visitStats, setVisitStats] = useState({ today: 0, week: 0, total: 0 });
 
   useEffect(() => { (async () => {
     let token = localStorage.getItem('makola_token');
@@ -42,6 +43,9 @@ export default function AdminDashboard() {
     { label: "KYC pending", val: realStats.kyc_pending.toString(), color: "#8B5CF6" },
     { label: "Today revenue", val: "GH₵ 0", color: "#E8533A" },
     { label: "Flagged listings", val: "0", color: "#C40F10" },
+    { label: "Today visitors", val: visitStats.today.toString(), color: "#3B7DD8" },
+    { label: "Week visitors", val: visitStats.week.toString(), color: "#2D9E6B" },
+    { label: "Total visitors", val: visitStats.total.toString(), color: "#C47F17" },
   ];
 
   const pages = [
