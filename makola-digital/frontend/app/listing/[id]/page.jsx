@@ -167,6 +167,12 @@ export default function ListingPage() {
                 : <div style={{ fontSize: 72 }}>{listing.type === "product" ? "🛍️" : listing.type === "service" ? "🔧" : listing.type === "job" ? "💼" : "🏠"}</div>
               }
             </div>
+            {listing.video && (
+              <div style={{ marginTop: 12 }}>
+                <div style={{ fontSize: 12, fontWeight: 700, color: "rgba(240,237,232,0.5)", marginBottom: 6 }}>🎥 PRODUCT VIDEO</div>
+                <video src={listing.video} controls style={{ width: "100%", borderRadius: 10, maxHeight: 240, background: "#000" }} />
+              </div>
+            )}
             {images.length > 1 && (
               <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 8, marginBottom: 16 }}>
                 {images.map((img, i) => (
