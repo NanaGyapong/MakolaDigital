@@ -1,6 +1,6 @@
 import express from "express";
 import { sendWeeklyAnalytics } from "./jobs/weekly-analytics.js";
-import { sendBuyerRecommendations } from "./jobs/weekly-analytics.js";
+import { sendBuyerRecommendations } from "./jobs/buyer-recommendations.js";
 import cors from "cors";
 import helmet from "helmet";
 import dotenv from "dotenv";
