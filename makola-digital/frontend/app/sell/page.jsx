@@ -52,6 +52,9 @@ export default function SellPage() {
   const [error, setError] = useState("");
   const [images, setImages] = useState([]);
   const [uploading, setUploading] = useState(false);
+  const [video, setVideo] = useState(null);
+  const [videoUploading, setVideoUploading] = useState(false);
+  const videoRef = useRef();
   const fileRef = useRef();
 
   const [form, setForm] = useState({
@@ -84,6 +87,21 @@ export default function SellPage() {
     setUploading(false);
   };
 
+  const handleVideoUpload = async (file) => {
+    if (file.size > 50 * 1024 * 1024) { alert("Video must be under 50MB"); return; }
+    setVideoUploading(true);
+    const token = localStorage.getItem("makola_token");
+    const fd = new FormData();
+    fd.append("image", file);
+    try {
+      const res = await fetch(API + "/upload/video", { method: "POST", headers: { Authorization: "Bearer " + token }, body: fd });
+      const data = await res.json();
+      if (data.url) setVideo(data.url);
+      else alert("Video upload failed");
+    } catch (e) { alert("Video upload failed"); }
+    setVideoUploading(false);
+  };
+
   const handleSubmit = async () => {
     setLoading(true);
     setError("");
@@ -95,7 +113,7 @@ export default function SellPage() {
       const res = await fetch(`${API}/listings`, {
         method: "POST",
         headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
-        body: JSON.stringify({ ...form, images }),
+        body: JSON.stringify({ ...form, images, video }),
       });
       const data = await res.json();
       if (res.ok) { router.push("/dashboard/analytics?listed=true"); }
@@ -176,6 +194,14 @@ export default function SellPage() {
           <div style={{ fontSize: 12, color: "rgba(240,237,232,0.4)" }}>JPG, PNG, WebP up to 10MB each</div>
         </div>
         <input ref={fileRef} type="file" accept="image/*" multiple style={{ display: "none" }} onChange={e => handleImageUpload(Array.from(e.target.files))} />
+        <div style={{ marginTop: 16 }}>
+          <div style={{ fontSize: 13, fontWeight: 700, color: "rgba(240,237,232,0.7)", marginBottom: 8 }}>🎥 Product Video (optional · max 10 seconds · 50MB)</div>
+          <div onClick={() => videoRef.current?.click()} style={{ border: "2px dashed rgba(45,158,107,0.3)", borderRadius: 12, padding: "20px", textAlign: "center", cursor: "pointer", background: "rgba(45,158,107,0.03)" }}>
+            {videoUploading ? <div style={{ color: "#2D9E6B", fontWeight: 700 }}>⏳ Uploading video...</div> : video ? <div style={{ color: "#2D9E6B", fontWeight: 700 }}>✅ Video uploaded! Click to replace.</div> : <div><div style={{ fontSize: 28, marginBottom: 6 }}>🎥</div><div style={{ fontSize: 13, fontWeight: 600 }}>Click to upload a short product video</div><div style={{ fontSize: 11, color: "rgba(240,237,232,0.4)", marginTop: 4 }}>MP4, MOV · Max 10 seconds · 50MB</div></div>}
+          </div>
+          <input ref={videoRef} type="file" accept="video/*" style={{ display: "none" }} onChange={e => e.target.files[0] && handleVideoUpload(e.target.files[0])} />
+          {video && <video src={video} controls style={{ width: "100%", borderRadius: 10, marginTop: 10, maxHeight: 200 }} />}
+        </div>
         {images.length > 0 && (
           <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 8 }}>
             {images.map((url, i) => (
