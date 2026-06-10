@@ -3,16 +3,16 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 
 const categories = [
-  { icon: "🛍️", label: "Products", count: "0", color: "#E8533A" },
-  { icon: "🔧", label: "Services", count: "0", color: "#2D9E6B" },
-  { icon: "💼", label: "Jobs", count: "0", color: "#C47F17" },
-  { icon: "🏘️", label: "Rentals", count: "0", color: "#3B7DD8" },
-  { icon: "🚗", label: "Vehicles & Spare Parts", count: "0", color: "#8B5CF6" },
-  { icon: "📱", label: "Electronics", count: "0", color: "#E8533A" },
-  { icon: "👗", label: "Fashion & Clothing", count: "0", color: "#DB2777" },
-  { icon: "🌾", label: "Agriculture & Farm Produce", count: "0", color: "#2D9E6B" },
-  { icon: "💄", label: "Beauty & Health", count: "0", color: "#EC4899" },
-  { icon: "🎨", label: "Arts & Crafts", count: "0", color: "#F59E0B" },
+  { icon: "🛍️", label: "Products", count: (categoryCounts["product"] || 0).toString(), color: "#E8533A", type: "product" },
+  { icon: "🔧", label: "Services", count: (categoryCounts["service"] || 0).toString(), color: "#2D9E6B", type: "service" },
+  { icon: "💼", label: "Jobs", count: (categoryCounts["job"] || 0).toString(), color: "#C47F17", type: "job" },
+  { icon: "🏘️", label: "Rentals", count: (categoryCounts["rental"] || 0).toString(), color: "#3B7DD8", type: "rental" },
+  { icon: "🚗", label: "Vehicles & Spare Parts", count: (counts["Vehicles & Spare Parts"] || 0).toString(), color: "#8B5CF6", cat: "Vehicles & Spare Parts" },
+  { icon: "📱", label: "Electronics", count: (counts["Electronics"] || 0).toString(), color: "#E8533A", cat: "Electronics" },
+  { icon: "👗", label: "Fashion & Clothing", count: (counts["Fashion & Clothing"] || 0).toString(), color: "#DB2777", cat: "Fashion & Clothing" },
+  { icon: "🌾", label: "Agriculture & Farm Produce", count: (counts["Agriculture & Farm Produce"] || 0).toString(), color: "#2D9E6B", cat: "Agriculture & Farm Produce" },
+  { icon: "💄", label: "Beauty & Health", count: (counts["Beauty & Health"] || 0).toString(), color: "#EC4899", cat: "Beauty & Health" },
+  { icon: "🎨", label: "Arts & Crafts", count: (counts["Arts & Crafts"] || 0).toString(), color: "#F59E0B", cat: "Arts & Crafts" },
 ];
 
 
@@ -22,6 +22,7 @@ export default function MakolaDigital() {
   const [search, setSearch] = useState("");
   const [listings, setListings] = useState([]);
   const [categoryCounts, setCategoryCounts] = useState({});
+  const [counts, setCounts] = useState({});
   const [totalListings, setTotalListings] = useState(0);
   const [totalSellers, setTotalSellers] = useState(0);
   const [totalMembers, setTotalMembers] = useState(0);
@@ -53,6 +54,7 @@ export default function MakolaDigital() {
       .then(data => {
         if (data.counts) {
           setCategoryCounts(data.typeCounts || {});
+          setCounts(data.counts || {});
           setTotalListings(data.total || 0);
           
         }
