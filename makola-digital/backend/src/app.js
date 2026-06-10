@@ -1,4 +1,5 @@
 import express from "express";
+import { sendWeeklyAnalytics } from "./jobs/weekly-analytics.js";
 import cors from "cors";
 import helmet from "helmet";
 import dotenv from "dotenv";
@@ -60,6 +61,14 @@ setTimeout(async () => {
     console.log('Tables ready');
   } catch(e) { console.log('Table setup:', e.message); }
 }, 2000);
+
+// Run weekly analytics every Monday at 8am
+setInterval(async () => {
+  const now = new Date();
+  if (now.getDay() === 1 && now.getHours() === 8) {
+    await sendWeeklyAnalytics();
+  }
+}, 60 * 60 * 1000); // Check every hour
 
 app.listen(PORT, '0.0.0.0', () => console.log(`🌍 Makola Digital API running on port ${PORT}`));
 export default app;
