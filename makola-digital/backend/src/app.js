@@ -33,6 +33,21 @@ app.use(express.json());
 app.use((req, res, next) => { req.redis = redis; next(); });
 
 // Create disputes table if not exists
+app.get('/api/v1/stats', async (req, res) => {
+  try {
+    const { db: dbConn } = await import('./config/db.js');
+    const [users, listings] = await Promise.all([
+      dbConn.query('SELECT COUNT(*) as total, COUNT(CASE WHEN role = 'seller' THEN 1 END) as sellers FROM users'),
+      dbConn.query('SELECT COUNT(*) as total FROM listings WHERE status = 'active'')
+    ]);
+    res.json({
+      users: parseInt(users.rows[0].total),
+      sellers: parseInt(users.rows[0].sellers),
+      listings: parseInt(listings.rows[0].total)
+    });
+  } catch(err) { res.status(500).json({ error: err.message }); }
+});
+
 app.get('/api/v1/health', (req, res) => res.json({ status: "ok", platform: "Makola Digital", version: "1.0.0" }));
 app.use("/api/v1/auth", authRoutes);
 app.use("/api/v1/upload", uploadRoutes);
