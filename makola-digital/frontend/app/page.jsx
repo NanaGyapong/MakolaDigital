@@ -39,6 +39,13 @@ export default function MakolaDigital() {
       .then(r => r.json())
       .then(data => { if (data.listings) setListings(data.listings); })
       .catch(() => {});
+    // Track homepage visit
+    const visitorId = localStorage.getItem('visitor_id') || Math.random().toString(36).slice(2);
+    localStorage.setItem('visitor_id', visitorId);
+    fetch("https://sparkling-charm-production-cb2c.up.railway.app/api/v1/track-visit", {
+      method: "GET",
+      headers: { "x-visitor-id": visitorId }
+    }).catch(() => {});
     fetch("https://sparkling-charm-production-cb2c.up.railway.app/api/v1/stats").then(r => r.json()).then(d => { setTotalSellers(d.sellers || 0); setTotalMembers(d.users || 0); }).catch(() => {});
 
     fetch("https://sparkling-charm-production-cb2c.up.railway.app/api/v1/categories/counts")
