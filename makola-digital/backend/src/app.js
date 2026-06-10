@@ -1,5 +1,6 @@
 import express from "express";
 import { sendWeeklyAnalytics } from "./jobs/weekly-analytics.js";
+import { sendBuyerRecommendations } from "./jobs/weekly-analytics.js";
 import cors from "cors";
 import helmet from "helmet";
 import dotenv from "dotenv";
@@ -99,6 +100,7 @@ setInterval(async () => {
   const now = new Date();
   if (now.getDay() === 1 && now.getHours() === 8) {
     await sendWeeklyAnalytics();
+    await sendBuyerRecommendations();
   }
 }, 60 * 60 * 1000); // Check every hour
 
