@@ -28,18 +28,18 @@ export default function MakolaDigital() {
   const stats = [
     { value: totalListings.toString(), label: "Listings" },
     { value: "54", label: "Countries" },
-    { value: totalSellers.toString(), label: "Sellers" },
-    { value: totalMembers.toString(), label: "Members" },
+    { value: totalSellers > 0 ? totalSellers.toString() : "...", label: "Sellers" },
+    { value: totalMembers > 0 ? totalMembers.toString() : "...", label: "Members" },
   ];
   const [menuOpen, setMenuOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
     fetch("https://sparkling-charm-production-cb2c.up.railway.app/api/v1/listings?limit=6")
-    fetch("https://sparkling-charm-production-cb2c.up.railway.app/api/v1/stats").then(r => r.json()).then(d => { setTotalSellers(d.sellers || 0); setTotalMembers(d.users || 0); }).catch(() => {});
+    fetch("https://sparkling-charm-production-cb2c.up.railway.app/api/v1/stats").then(r => r.json()).then(d => { setTotalSellers(d.sellers || 0); setTotalMembers(d.users || 0); }).catch(e => console.error("stats error:", e));
       .then(r => r.json())
       .then(data => { if (data.listings) setListings(data.listings); })
-      .catch(() => {});
+      .catch(e => console.error("stats error:", e));
 
     fetch("https://sparkling-charm-production-cb2c.up.railway.app/api/v1/categories/counts")
       .then(r => r.json())
@@ -50,7 +50,7 @@ export default function MakolaDigital() {
           
         }
       })
-      .catch(() => {});
+      .catch(e => console.error("stats error:", e));
   }, []);
 
   useEffect(() => {
