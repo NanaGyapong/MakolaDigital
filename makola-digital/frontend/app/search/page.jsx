@@ -21,6 +21,15 @@ function SearchContent() {
   const initType = searchParams.get("type") ? searchParams.get("type").charAt(0).toUpperCase() + searchParams.get("type").slice(1) + "s" : "All";
   const [type, setType] = useState(initType);
   const [category, setCategory] = useState(searchParams.get("category") || "");
+  const [nearMe, setNearMe] = useState(false);
+  const handleNearMe = () => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(pos => {
+        setNearMe(true);
+        setCountry("Ghana");
+      }, () => alert("Location access denied"));
+    }
+  };
   const [country, setCountry] = useState("All Countries");
   const [minPrice, setMinPrice] = useState("");
   const [maxPrice, setMaxPrice] = useState("");
@@ -105,7 +114,8 @@ function SearchContent() {
       <button onClick={search} style={{ width: "100%", background: "#E8533A", border: "none", color: "#fff", padding: "10px", borderRadius: 10, fontSize: 14, fontWeight: 700, cursor: "pointer" }}>Apply Filters</button>
 
       {(query || type !== "All" || category || country !== "All Countries" || minPrice || maxPrice) && (
-        <button onClick={() => { setQuery(""); setType("All"); setCategory(""); setCountry("All Countries"); setMinPrice(""); setMaxPrice(""); }} style={{ width: "100%", background: "none", border: "1px solid rgba(255,255,255,0.1)", color: "rgba(240,237,232,0.5)", padding: "8px", borderRadius: 10, fontSize: 13, cursor: "pointer", marginTop: 8 }}>Clear all filters</button>
+        <button onClick={handleNearMe} style={{ width: "100%", background: nearMe ? "rgba(45,158,107,0.15)" : "rgba(255,255,255,0.04)", border: "1px solid " + (nearMe ? "rgba(45,158,107,0.4)" : "rgba(255,255,255,0.1)"), color: nearMe ? "#2D9E6B" : "#F0EDE8", padding: "8px", borderRadius: 10, fontSize: 13, cursor: "pointer", marginBottom: 8, fontWeight: nearMe ? 700 : 400 }}>📍 Near Me</button>
+        <button onClick={() => { setQuery(""); setType("All"); setCategory(""); setCountry("All Countries"); setMinPrice(""); setMaxPrice(""); setNearMe(false); }} style={{ width: "100%", background: "none", border: "1px solid rgba(255,255,255,0.1)", color: "rgba(240,237,232,0.5)", padding: "8px", borderRadius: 10, fontSize: 13, cursor: "pointer", marginTop: 8 }}>Clear all filters</button>
       )}
     </div>
   );
