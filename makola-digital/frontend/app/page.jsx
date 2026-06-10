@@ -131,8 +131,8 @@ export default function MakolaDigital() {
 
       {/* STATS */}
       <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", borderTop: "1px solid rgba(255,255,255,0.06)", borderBottom: "1px solid rgba(255,255,255,0.06)", background: "rgba(255,255,255,0.02)" }}>
-        {stats.map((s, i) => (
-          <div key={i} style={{ padding: isMobile ? "16px 8px" : "20px 40px", textAlign: "center", borderRight: i < stats.length - 1 ? "1px solid rgba(255,255,255,0.06)" : "none" }}>
+        {[{v:listings_val,l:"Listings"},{v:"54",l:"Countries"},{v:sellers_val,l:"Sellers"},{v:members_val,l:"Members"}].map((s, i) => (
+          <div key={i} style={{ padding: isMobile ? "16px 8px" : "20px 40px", textAlign: "center", borderRight: i < 3 ? "1px solid rgba(255,255,255,0.06)" : "none" }}>
             <div style={{ fontSize: isMobile ? 18 : 22, fontWeight: 700, color: "#E8533A" }}>{s.value}</div>
             <div style={{ fontSize: isMobile ? 10 : 12, color: "rgba(240,237,232,0.5)", marginTop: 2 }}>{s.label}</div>
           </div>
