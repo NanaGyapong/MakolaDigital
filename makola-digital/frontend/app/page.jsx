@@ -23,10 +23,11 @@ export default function MakolaDigital() {
   const [listings, setListings] = useState([]);
   const [categoryCounts, setCategoryCounts] = useState({});
   const [totalListings, setTotalListings] = useState(0);
+  const [totalSellers, setTotalSellers] = useState(0);
   const stats = [
     { value: totalListings.toString(), label: "Listings" },
     { value: "54", label: "Countries" },
-    { value: "0", label: "Sellers" },
+    { value: totalSellers.toString(), label: "Sellers" },
     { value: "0", label: "Members" },
   ];
   const [menuOpen, setMenuOpen] = useState(false);
@@ -44,6 +45,7 @@ export default function MakolaDigital() {
         if (data.counts) {
           setCategoryCounts(data.typeCounts || {});
           setTotalListings(data.total || 0);
+          fetch("https://sparkling-charm-production-cb2c.up.railway.app/api/v1/admin/users").then(r => r.json()).then(d => setTotalSellers((d.users || []).filter(u => u.role === "seller").length)).catch(() => {});
         }
       })
       .catch(() => {});
