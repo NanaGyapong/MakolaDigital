@@ -105,6 +105,7 @@ router.get("/:id", async (req, res) => {
       [req.params.id]
     );
     if (!result.rows[0]) return res.status(404).json({ message: "Listing not found" });
+    db.query("UPDATE listings SET views_count = views_count + 1 WHERE id = $1", [req.params.id]).catch(() => {});
     const images = await db.query("SELECT url, is_primary, sort_order FROM listing_images WHERE listing_id = $1 ORDER BY sort_order", [req.params.id]);
     res.json({ listing: result.rows[0], images: images.rows });
   } catch (err) {
