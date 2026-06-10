@@ -37,8 +37,8 @@ app.get('/api/v1/stats', async (req, res) => {
   try {
     const { db: dbConn } = await import('./config/db.js');
     const [users, listings] = await Promise.all([
-      dbConn.query('SELECT COUNT(*) as total, COUNT(CASE WHEN role = 'seller' THEN 1 END) as sellers FROM users'),
-      dbConn.query('SELECT COUNT(*) as total FROM listings WHERE status = 'active'')
+      dbConn.query("SELECT COUNT(*) as total, COUNT(CASE WHEN role = 'seller' THEN 1 END) as sellers FROM users"),
+      dbConn.query("SELECT COUNT(*) as total FROM listings WHERE status = 'active'")
     ]);
     res.json({
       users: parseInt(users.rows[0].total),
