@@ -13,6 +13,20 @@ router.post("/submit", authenticate, upload.fields([
 ]), async (req, res) => {
   try {
     const { idType, idNumber, name, type, category, address, description, regNo } = req.body;
+    
+    // Check if ID number already used by another account
+    if (idNumber) {
+      const existing = await db.query(
+        'SELECT id, full_name FROM users WHERE id_number = $1 AND id != $2',
+        [idNumber, req.user.id]
+      );
+      if (existing.rows.length > 0) {
+        return res.status(409).json({ 
+          message: 'This ID number is already linked to another account. Each ID can only be used once.' 
+        });
+      }
+      await db.query('UPDATE users SET id_number = $1 WHERE id = $2', [idNumber, req.user.id]);
+    }
 
     const uploadToCloudinary = async (file, folder) => {
       return new Promise((resolve, reject) => {
