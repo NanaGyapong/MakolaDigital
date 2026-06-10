@@ -63,19 +63,24 @@ export default function SellPage() {
   const set = (k, v) => setForm(f => ({ ...f, [k]: v }));
 
   const handleImageUpload = async (files) => {
+    if (images.length + files.length > 10) { alert("Maximum 10 photos allowed"); return; }
     setUploading(true);
-    const { authService } = await import("@/lib/auth.service");
     let token = localStorage.getItem("makola_token");
     if (!token) { router.push("/auth/login"); return; }
-    for (const file of files) {
+    // Upload all files in parallel
+    const uploads = Array.from(files).map(async (file) => {
+      if (file.size > 10 * 1024 * 1024) { alert(file.name + " is too large. Max 10MB per image."); return null; }
       const fd = new FormData();
       fd.append("image", file);
       try {
-        const res = await fetch(`${API}/upload/image`, { method: "POST", headers: { Authorization: `Bearer ${token}` }, body: fd });
+        const res = await fetch(API + "/upload/image", { method: "POST", headers: { Authorization: "Bearer " + token }, body: fd });
         const data = await res.json();
-        if (data.url) setImages(prev => [...prev, data.url]);
-      } catch (e) { console.error(e); }
-    }
+        return data.url || null;
+      } catch (e) { return null; }
+    });
+    const urls = await Promise.all(uploads);
+    const valid = urls.filter(Boolean);
+    setImages(prev => [...prev, ...valid]);
     setUploading(false);
   };
 
