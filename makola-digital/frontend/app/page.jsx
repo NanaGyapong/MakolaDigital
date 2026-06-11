@@ -13,21 +13,21 @@ export default function MakolaDigital() {
   const [counts, setCounts] = useState({});
 
   const categories = [
-    { icon: "🚗", label: "Vehicles", color: "#E8533A", cat: "Vehicles & Spare Parts" },
-    { icon: "🏘️", label: "Property", color: "#3B7DD8", type: "rental" },
-    { icon: "📱", label: "Phones & Tablets", color: "#8B5CF6", cat: "Electronics" },
-    { icon: "💻", label: "Electronics", color: "#2D9E6B", cat: "Electronics" },
-    { icon: "🏠", label: "Home & Furniture", color: "#C47F17", cat: "Home & Garden" },
-    { icon: "👗", label: "Fashion", color: "#DB2777", cat: "Fashion & Clothing" },
-    { icon: "💄", label: "Beauty & Care", color: "#EC4899", cat: "Beauty & Health" },
-    { icon: "🔧", label: "Services", color: "#2D9E6B", type: "service" },
-    { icon: "🌾", label: "Food & Agriculture", color: "#16A34A", cat: "Agriculture & Farm Produce" },
-    { icon: "🐓", label: "Animals & Pets", color: "#F59E0B", cat: "Farm Animals & Pets" },
-    { icon: "💼", label: "Jobs", color: "#C47F17", type: "job" },
-    { icon: "📚", label: "Education", color: "#6366F1", cat: "Education & Training" },
-    { icon: "🎨", label: "Arts & Crafts", color: "#F59E0B", cat: "Arts & Crafts" },
-    { icon: "👶", label: "Babies & Kids", color: "#EC4899", cat: "Fashion & Clothing" },
-    { icon: "💼", label: "Business Services", color: "#3B7DD8", cat: "Business Services" },
+    { icon: "🚗", label: "Vehicles", count: (counts["Vehicles & Spare Parts"] || 0).toString(), color: "#E8533A", cat: "Vehicles & Spare Parts" },
+    { icon: "🏘️", label: "Property", count: (counts["Property & Land"] || 0).toString(), color: "#3B7DD8", cat: "Property & Land" },
+    { icon: "📱", label: "Phones & Tablets", count: (counts["Electronics"] || 0).toString(), color: "#8B5CF6", cat: "Electronics" },
+    { icon: "💻", label: "Electronics", count: (counts["Tech & Digital"] || 0).toString(), color: "#2D9E6B", cat: "Tech & Digital" },
+    { icon: "🏠", label: "Home & Furniture", count: (counts["Home & Garden"] || 0).toString(), color: "#C47F17", cat: "Home & Garden" },
+    { icon: "👗", label: "Fashion", count: (counts["Fashion & Clothing"] || 0).toString(), color: "#DB2777", cat: "Fashion & Clothing" },
+    { icon: "💄", label: "Beauty & Care", count: (counts["Beauty & Health"] || 0).toString(), color: "#EC4899", cat: "Beauty & Health" },
+    { icon: "🔧", label: "Services", count: (categoryCounts["service"] || 0).toString(), color: "#2D9E6B", type: "service" },
+    { icon: "🌾", label: "Food & Agriculture", count: (counts["Agriculture & Farm Produce"] || 0).toString(), color: "#16A34A", cat: "Agriculture & Farm Produce" },
+    { icon: "🐓", label: "Animals & Pets", count: (counts["Farm Animals & Pets"] || 0).toString(), color: "#F59E0B", cat: "Farm Animals & Pets" },
+    { icon: "💼", label: "Jobs", count: (categoryCounts["job"] || 0).toString(), color: "#C47F17", type: "job" },
+    { icon: "📚", label: "Education", count: (counts["Education & Training"] || 0).toString(), color: "#6366F1", cat: "Education & Training" },
+    { icon: "🎨", label: "Arts & Crafts", count: (counts["Arts & Crafts"] || 0).toString(), color: "#F59E0B", cat: "Arts & Crafts" },
+    { icon: "🏢", label: "Business Services", count: (counts["Business Services"] || 0).toString(), color: "#3B7DD8", cat: "Business Services" },
+    { icon: "🔨", label: "Home Services", count: (counts["Home Services"] || 0).toString(), color: "#8B5CF6", cat: "Home Services" },
   ];
   const [totalListings, setTotalListings] = useState(0);
   const [totalSellers, setTotalSellers] = useState(0);
