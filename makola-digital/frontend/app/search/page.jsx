@@ -201,7 +201,10 @@ function SearchContent() {
                       {l.price_currency} {Number(l.price).toLocaleString()}
                       {l.is_negotiable && <span style={{ fontSize: 10, color: "#2D9E6B", fontWeight: 400, marginLeft: 6 }}>· Neg.</span>}
                     </div>
-                    <div style={{ fontSize: 11, color: "rgba(240,237,232,0.45)" }}>📍 {l.location_text || l.city || l.country}</div>
+                    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                      <div style={{ fontSize: 11, color: "rgba(240,237,232,0.45)" }}>📍 {l.location_text || l.city || l.country}</div>
+                      {new Date() - new Date(l.created_at) < 48 * 60 * 60 * 1000 && <span style={{ background: "linear-gradient(135deg,#E8533A,#C47F17)", color: "#fff", fontSize: 9, fontWeight: 900, padding: "2px 7px", borderRadius: 20 }}>NEW</span>}
+                    </div>
                     <div style={{ fontSize: 11, color: "rgba(240,237,232,0.35)", marginTop: 2 }}>by {l.seller_name}</div>
                   </div>
                 </div>
