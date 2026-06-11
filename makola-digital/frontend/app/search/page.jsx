@@ -11,7 +11,7 @@ const CATEGORIES = {
   Jobs: ["Tech Jobs", "Sales & Marketing", "Finance", "Healthcare", "Education"],
   Rentals: ["Apartments", "Car Rentals", "Equipment", "Event Spaces"],
 };
-const COUNTRIES = ["All Countries", "Ghana", "Nigeria", "Kenya", "South Africa", "United Kingdom", "United States"];
+const COUNTRIES = ["All Countries", "Ghana", "Nigeria", "Kenya", "South Africa", "Cameroon", "Ivory Coast", "Senegal", "Tanzania", "Uganda", "Rwanda", "Ethiopia", "Egypt", "Morocco", "United Kingdom", "United States", "Canada"];
 const CURRENCIES = ["GHS", "NGN", "USD", "GBP"];
 
 function SearchContent() {
