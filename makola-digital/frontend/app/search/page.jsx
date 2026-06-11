@@ -68,6 +68,7 @@ function SearchContent() {
       if (maxPrice) results = results.filter(l => Number(l.price) <= Number(maxPrice));
 
       setTotalCount(results.length);
+      setTotal(results.length);
       const start = (page - 1) * PER_PAGE;
       setListings(results.slice(start, start + PER_PAGE));
     } catch (e) { console.error(e); }
