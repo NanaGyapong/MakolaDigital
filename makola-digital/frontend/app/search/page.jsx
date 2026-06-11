@@ -64,8 +64,9 @@ function SearchContent() {
       if (minPrice) results = results.filter(l => Number(l.price) >= Number(minPrice));
       if (maxPrice) results = results.filter(l => Number(l.price) <= Number(maxPrice));
 
-      setListings(results);
-      setTotal(results.length);
+      setTotalCount(results.length);
+      const start = (page - 1) * PER_PAGE;
+      setListings(results.slice(start, start + PER_PAGE));
     } catch (e) { console.error(e); }
     setLoading(false);
   };
