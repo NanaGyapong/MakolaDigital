@@ -38,6 +38,8 @@ function SearchContent() {
   const [loading, setLoading] = useState(false);
   const [total, setTotal] = useState(0);
   const [totalCount, setTotalCount] = useState(0);
+  const [page, setPage] = useState(1);
+  const PER_PAGE = 20;
   const [isMobile, setIsMobile] = useState(false);
   const [showFilters, setShowFilters] = useState(false);
 
