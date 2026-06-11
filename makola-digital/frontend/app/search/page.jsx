@@ -52,7 +52,8 @@ function SearchContent() {
     try {
       const params = new URLSearchParams();
       if (type !== "All") params.set("type", type.toLowerCase().replace("s", "").replace("product", "product").replace("service", "service").replace("job", "job").replace("rental", "rental"));
-      params.set("limit", "100");
+      params.set("limit", PER_PAGE.toString());
+      params.set("offset", ((page - 1) * PER_PAGE).toString());
       params.set("status", "active");
       const res = await fetch(`${API}/listings?${params}`);
       const data = await res.json();
