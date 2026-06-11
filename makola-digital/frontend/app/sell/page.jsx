@@ -49,6 +49,7 @@ export default function SellPage() {
   const router = useRouter();
   const [step, setStep] = useState(0);
   const [loading, setLoading] = useState(false);
+  const [tcAccepted, setTcAccepted] = useState(false);
   const [error, setError] = useState("");
   const [images, setImages] = useState([]);
   const [uploading, setUploading] = useState(false);
