@@ -118,7 +118,11 @@ export default function RegisterPage() {
             <label htmlFor="terms" style={{ fontSize:12.5, color:"rgba(240,237,232,0.55)", lineHeight:1.55 }}>I agree to the <Link href="/terms" style={{ color:"#E8533A", fontWeight:700 }}>Terms of Service</Link> and <Link href="/privacy" style={{ color:"#E8533A", fontWeight:700 }}>Privacy Policy</Link></label>
           </div>
 
-          <button type="submit" disabled={loading}
+          <label style={{ display: 'flex', alignItems: 'flex-start', gap: 10, cursor: 'pointer', marginBottom: 16 }}>
+          <input type='checkbox' required style={{ marginTop: 3, accentColor: '#E8533A', width: 16, height: 16 }} />
+          <span style={{ fontSize: 13, color: 'rgba(240,237,232,0.6)' }}>I agree to the <a href='/terms' target='_blank' style={{ color: '#E8533A', textDecoration: 'none', fontWeight: 700 }}>Terms & Conditions</a> and <a href='/terms' target='_blank' style={{ color: '#E8533A', textDecoration: 'none', fontWeight: 700 }}>Privacy Policy</a> of Makola Digital</span>
+        </label>
+        <button type='submit' disabled={loading}
             style={{ width:"100%", background:"linear-gradient(135deg,#E8533A,#C47F17)", border:"none", color:"#fff", padding:13, borderRadius:11, fontSize:14.5, fontWeight:900, cursor:loading?"not-allowed":"pointer", marginTop:16, opacity:loading?0.6:1 }}>
             {loading ? "Creating account..." : "Create free account →"}
           </button>
