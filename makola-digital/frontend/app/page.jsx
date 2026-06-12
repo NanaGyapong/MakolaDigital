@@ -189,7 +189,10 @@ export default function MakolaDigital() {
                   <div style={{ fontSize: 16, fontWeight: 700, color: "#E8533A", marginBottom: 6 }}>
                     {l.type === "job" && (!l.price || Number(l.price) === 0) ? "Competitive" : l.price_currency + " " + Number(l.price).toLocaleString() + (l.is_negotiable ? " · Negotiable" : "")}
                   </div>
-                  <div style={{ fontSize: 11, color: "rgba(240,237,232,0.5)" }}>📍 {l.location_text || l.city || l.country} · by {l.type === "job" && l.title.includes(" — ") ? l.title.split(" — ").pop() : l.seller_name}</div>
+                  <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 4 }}>
+                  <div style={{ fontSize: 11, color: "rgba(240,237,232,0.5)", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>📍 {l.location_text || l.city || l.country} · by {l.type === "job" && l.title.includes(" — ") ? l.title.split(" — ").pop() : l.seller_name}</div>
+                  {new Date() - new Date(l.created_at) < 7 * 24 * 60 * 60 * 1000 && <span style={{ background: "#E8533A", color: "#fff", fontSize: 9, fontWeight: 900, padding: "2px 6px", borderRadius: 10, flexShrink: 0 }}>NEW</span>}
+                </div>
                 </div>
               </div>
             ))}
