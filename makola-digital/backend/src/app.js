@@ -34,10 +34,10 @@ app.use(express.json());
 app.use((req, res, next) => { req.redis = redis; next(); });
 
 // Create disputes table if not exists
-app.get('/api/v1/track-visit', async (req, res) => {
+app.post('/api/v1/track-visit', async (req, res) => {
   try {
     const visitorId = req.headers['x-visitor-id'] || req.ip;
-    await db.query('INSERT INTO page_visits (visitor_id, page) VALUES ($1, $2) ON CONFLICT DO NOTHING', [visitorId, 'homepage']);
+    await db.query('INSERT INTO page_visits (visitor_id, page) VALUES ($1, $2)', [visitorId, 'homepage']);
     res.json({ ok: true });
   } catch(err) { res.json({ ok: false }); }
 });
