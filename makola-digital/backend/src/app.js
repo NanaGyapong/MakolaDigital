@@ -39,7 +39,7 @@ app.post('/api/v1/track-visit', async (req, res) => {
     const visitorId = req.headers['x-visitor-id'] || req.ip;
     await db.query('INSERT INTO page_visits (visitor_id, page) VALUES ($1, $2)', [visitorId, 'homepage']);
     res.json({ ok: true });
-  } catch(err) { res.json({ ok: false }); }
+  } catch(err) { console.error("track-visit error:", err.message); res.json({ ok: false, error: err.message }); }
 });
 
 app.get('/api/v1/visit-stats', async (req, res) => {
