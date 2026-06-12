@@ -36,6 +36,7 @@ app.use((req, res, next) => { req.redis = redis; next(); });
 // Create disputes table if not exists
 app.post('/api/v1/track-visit', async (req, res) => {
   try {
+    const { db } = await import('./config/db.js');
     const visitorId = req.headers['x-visitor-id'] || req.ip;
     await db.query('INSERT INTO page_visits (visitor_id, page) VALUES ($1, $2)', [visitorId, 'homepage']);
     res.json({ ok: true });
