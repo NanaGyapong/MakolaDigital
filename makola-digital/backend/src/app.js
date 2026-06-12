@@ -45,6 +45,7 @@ app.post('/api/v1/track-visit', async (req, res) => {
 
 app.get('/api/v1/visit-stats', async (req, res) => {
   try {
+    const { db } = await import('./config/db.js');
     const today = await db.query('SELECT COUNT(*) as count FROM page_visits WHERE created_at > NOW() - INTERVAL \'24 hours\'');
     const week = await db.query('SELECT COUNT(*) as count FROM page_visits WHERE created_at > NOW() - INTERVAL \'7 days\'');
     const total = await db.query('SELECT COUNT(*) as count FROM page_visits');
