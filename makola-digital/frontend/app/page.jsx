@@ -42,6 +42,12 @@ export default function MakolaDigital() {
   const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
+    if (typeof window !== 'undefined' && 'serviceWorker' in navigator) {
+      navigator.serviceWorker.register('/sw.js').catch(() => {});
+    }
+  }, []);
+
+  useEffect(() => {
     fetch("https://sparkling-charm-production-cb2c.up.railway.app/api/v1/listings?limit=6")
       .then(r => r.json())
       .then(data => { if (data.listings) setListings(data.listings); })
