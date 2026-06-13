@@ -10,7 +10,27 @@ router.post("/", authenticate, async (req, res) => {
     const { type, category, title, description, price, currency, priceLabel, isNegotiable, country, city, locationText, isRemote, images, phone, dialCode, showWhatsapp } = req.body;
     const contactPhone = phone ? (dialCode || "+233") + phone.replace(/^0/, "") : null;
     const slug = title.toLowerCase().replace(/[^a-z0-9]+/g, "-") + "-" + uuid().slice(0, 8);
-    const catResult = await db.query("SELECT id FROM categories WHERE name = $1 LIMIT 1", [category]);
+    // Extract main category from subcategory string e.g. 'Beauty & Care > Skincare' -> 'Beauty & Health'
+    const catMap = {
+      'Beauty & Care': 'Beauty & Health',
+      'Home & Furniture': 'Home & Garden',
+      'Phones & Tablets': 'Electronics',
+      'Food & Agriculture': 'Agriculture & Farm Produce',
+      'Animals & Pets': 'Farm Animals & Pets',
+      'Fashion': 'Fashion & Clothing',
+      'Vehicles': 'Vehicles & Spare Parts',
+      'Jobs': 'Jobs & Careers',
+      'Property': 'Property & Land',
+      'Services': 'Business Services',
+      'Tech & Digital': 'Tech & Digital',
+      'Education & Training': 'Education & Training',
+      'Home Services': 'Home Services',
+      'Arts & Crafts': 'Arts & Crafts',
+      'Business Services': 'Business Services',
+    };
+    const mainCat = category?.includes(' > ') ? category.split(' > ')[0].trim() : category;
+    const mappedCat = catMap[mainCat] || mainCat;
+    const catResult = await db.query('SELECT id FROM categories WHERE name = $1 LIMIT 1', [mappedCat]);
     const categoryId = catResult.rows[0]?.id || 1;
     const result = await db.query(
       `INSERT INTO listings (id, seller_id, category_id, type, status, title, slug, description, price, price_currency, price_label, is_negotiable, country, city, location_text, is_remote, contact_phone, show_whatsapp, video, created_at, updated_at)
