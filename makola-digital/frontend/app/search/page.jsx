@@ -64,7 +64,7 @@ function SearchContent() {
       // Client-side filtering
       if (query) results = results.filter(l => l.title?.toLowerCase().includes(query.toLowerCase()) || l.description?.toLowerCase().includes(query.toLowerCase()) || l.location_text?.toLowerCase().includes(query.toLowerCase()));
       if (country !== "All Countries") results = results.filter(l => l.city?.toLowerCase().includes(country.toLowerCase()) || l.country?.toLowerCase().includes(country.toLowerCase().slice(0, 2)));
-      if (category) results = results.filter(l => l.category_name?.toLowerCase().includes(category.toLowerCase()));
+      if (category) results = results.filter(l => l.category_name?.toLowerCase() === category.toLowerCase());
       if (minPrice) results = results.filter(l => Number(l.price) >= Number(minPrice));
       if (maxPrice) results = results.filter(l => Number(l.price) <= Number(maxPrice));
 
