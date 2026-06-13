@@ -218,7 +218,7 @@ export default function MakolaDigital() {
 
       {/* FOOTER */}
       <div style={{ borderTop: "1px solid rgba(255,255,255,0.07)", padding: isMobile ? "20px 16px" : "24px 32px", display: "flex", flexDirection: isMobile ? "column" : "row", alignItems: "center", justifyContent: "space-between", gap: 12, color: "rgba(240,237,232,0.35)", fontSize: 12, textAlign: isMobile ? "center" : "left" }}>
-        <div>🌍 MakolaDigital — Africa's Marketplace © 2025</div>
+        <div>© 2026 Makola Digital Technologies Ltd</div>
         <div style={{ display: "flex", gap: 20 }}>
           {["Privacy", "Terms", "Help", "Contact"].map(f => (
             <span key={f} style={{ cursor: "pointer" }}>{f}</span>
