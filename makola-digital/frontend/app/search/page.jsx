@@ -211,6 +211,13 @@ function SearchContent() {
               ))}
             </div>
           )}
+          {totalCount > PER_PAGE && (
+            <div style={{ display: "flex", justifyContent: "center", alignItems: "center", gap: 10, marginTop: 28, paddingBottom: 20 }}>
+              <button onClick={() => { setPage(p => Math.max(1, p - 1)); window.scrollTo(0,0); }} disabled={page === 1} style={{ background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.1)", color: "#F0EDE8", padding: "10px 20px", borderRadius: 10, cursor: "pointer", fontSize: 13, opacity: page === 1 ? 0.4 : 1 }}>← Prev</button>
+              <span style={{ color: "rgba(240,237,232,0.5)", fontSize: 13 }}>Page {page} of {Math.ceil(totalCount / PER_PAGE)}</span>
+              <button onClick={() => { setPage(p => p + 1); window.scrollTo(0,0); }} disabled={page >= Math.ceil(totalCount / PER_PAGE)} style={{ background: "#E8533A", border: "none", color: "#fff", padding: "10px 20px", borderRadius: 10, cursor: "pointer", fontSize: 13, fontWeight: 700, opacity: page >= Math.ceil(totalCount / PER_PAGE) ? 0.4 : 1 }}>Next →</button>
+            </div>
+          )}
         </div>
       </div>
     </div>
