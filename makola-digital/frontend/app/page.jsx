@@ -218,7 +218,13 @@ export default function MakolaDigital() {
 
       {/* FOOTER */}
       <div style={{ borderTop: "1px solid rgba(255,255,255,0.07)", padding: isMobile ? "20px 16px" : "24px 32px", display: "flex", flexDirection: isMobile ? "column" : "row", alignItems: "center", justifyContent: "space-between", gap: 12, color: "rgba(240,237,232,0.35)", fontSize: 12, textAlign: isMobile ? "center" : "left" }}>
-        <div>© 2026 Makola Digital Technologies Ltd</div>
+        <div>© 2026 Makola Digital Technologies Ltd
+          <div style={{ display: "flex", gap: 16, justifyContent: "center", marginTop: 10, flexWrap: "wrap" }}>
+            <a href="https://www.instagram.com/makoladigital" target="_blank" rel="noopener noreferrer" style={{ color: "#E8533A", fontSize: 13, textDecoration: "none" }}>📸 Instagram</a>
+            <a href="https://x.com/makoladigitalon" target="_blank" rel="noopener noreferrer" style={{ color: "#F0EDE8", fontSize: 13, textDecoration: "none" }}>🐦 X (Twitter)</a>
+            <a href="https://www.facebook.com/MakolaDigital" target="_blank" rel="noopener noreferrer" style={{ color: "#3B7DD8", fontSize: 13, textDecoration: "none" }}>👍 Facebook</a>
+            <a href="https://www.linkedin.com/company/makoladigital" target="_blank" rel="noopener noreferrer" style={{ color: "#2D9E6B", fontSize: 13, textDecoration: "none" }}>💼 LinkedIn</a>
+          </div></div>
         <div style={{ display: "flex", gap: 20 }}>
           {["Privacy", "Terms", "Help", "Contact"].map(f => (
             <span key={f} style={{ cursor: "pointer" }}>{f}</span>
