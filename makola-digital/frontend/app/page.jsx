@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { useRouter } from "next/navigation";
 
 
@@ -12,7 +12,7 @@ export default function MakolaDigital() {
   const [categoryCounts, setCategoryCounts] = useState({});
   const [counts, setCounts] = useState({});
 
-  const categories = [
+  const categories = useMemo(() => [
     { icon: "🚗", label: "Vehicles", count: (counts["Vehicles & Spare Parts"] || 0).toString(), color: "#E8533A", cat: "Vehicles & Spare Parts" },
     { icon: "🏘️", label: "Property", count: (counts["Property & Land"] || 0).toString(), color: "#3B7DD8", cat: "Property & Land" },
     { icon: "📱", label: "Phones & Tablets", count: (counts["Electronics"] || 0).toString(), color: "#8B5CF6", cat: "Electronics" },
@@ -28,7 +28,7 @@ export default function MakolaDigital() {
     { icon: "🎨", label: "Arts & Crafts", count: (counts["Arts & Crafts"] || 0).toString(), color: "#F59E0B", cat: "Arts & Crafts" },
     { icon: "🏢", label: "Business Services", count: (counts["Business Services"] || 0).toString(), color: "#3B7DD8", cat: "Business Services" },
     { icon: "🔨", label: "Home Services", count: (counts["Home Services"] || 0).toString(), color: "#8B5CF6", cat: "Home Services" },
-  ];
+  ], [counts, categoryCounts]);
   const [totalListings, setTotalListings] = useState(0);
   const [totalSellers, setTotalSellers] = useState(0);
   const [totalMembers, setTotalMembers] = useState(0);
