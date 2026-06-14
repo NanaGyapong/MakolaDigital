@@ -76,7 +76,7 @@ function SearchContent() {
     setLoading(false);
   };
 
-  useEffect(() => { search(); }, [type, country, page]);
+  useEffect(() => { search(); }, [type, country, page, category]);
   useEffect(() => { search(); }, []);
 
   const handleSearch = (e) => {
