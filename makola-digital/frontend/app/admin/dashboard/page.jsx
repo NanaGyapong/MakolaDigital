@@ -8,6 +8,9 @@ export default function AdminDashboard() {
   const [recentUsers, setRecentUsers] = useState([]);
   const [recentListings, setRecentListings] = useState([]);
   const [visitStats, setVisitStats] = useState({ today: 0, week: 0, total: 0 });
+  useEffect(() => {
+    fetch(API + "/visit-stats").then(r => r.json()).then(d => setVisitStats(d)).catch(() => {});
+  }, []);
 
   useEffect(() => { (async () => {
     let token = localStorage.getItem('makola_token');
