@@ -15,6 +15,7 @@ router.post("/", authenticate, async (req, res) => {
       'Beauty & Care': 'Beauty & Health',
       'Home & Furniture': 'Home & Garden',
       'Phones & Tablets': 'Electronics',
+      'Electronics': 'Tech & Digital',
       'Food & Agriculture': 'Agriculture & Farm Produce',
       'Animals & Pets': 'Farm Animals & Pets',
       'Fashion': 'Fashion & Clothing',
