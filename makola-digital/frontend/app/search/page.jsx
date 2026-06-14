@@ -11,6 +11,24 @@ const CATEGORIES = {
   Jobs: ["Tech Jobs", "Sales & Marketing", "Finance", "Healthcare", "Education"],
   Rentals: ["Apartments", "Car Rentals", "Equipment", "Event Spaces"],
 };
+
+const SUBCATEGORIES = {
+  "Vehicles & Spare Parts": ["Cars", "Motorbikes & Tricycles", "Spare Parts", "Trucks & Machinery"],
+  "Property & Land": ["Apartment for Rent", "House for Rent", "Land for Sale", "House for Sale", "Shortlet / Airbnb", "Office & Commercial", "Shop for Rent"],
+  "Electronics": ["Smartphones", "Feature Phones", "Tablets", "Accessories"],
+  "Tech & Digital": ["TVs & Audio", "Computers & Laptops", "Cameras", "Gaming", "Power & Solar"],
+  "Home & Garden": ["Furniture", "Appliances", "Kitchen & Dining", "Decor & Garden", "Tools & DIY", "Towels & Bedding", "Slippers & Footwear", "Cleaning Supplies", "Storage & Organisation"],
+  "Fashion & Clothing": ["Men Wear", "Women Wear", "Kids & Babies", "Shoes", "Bags & Accessories", "Fabrics"],
+  "Beauty & Health": ["Skincare", "Hair", "Makeup", "Fragrances", "Health Supplements", "Soaps & Body Wash", "Perfumes & Deodorants", "Pomade & Hair Cream", "Lotions & Oils"],
+  "Agriculture & Farm Produce": ["Fresh Produce", "Grains & Cereals", "Processed Foods", "Farm Equipment", "Seedlings & Inputs"],
+  "Farm Animals & Pets": ["Poultry", "Livestock", "Pets", "Animal Feed"],
+  "Jobs & Careers": ["Full-time", "Part-time", "Contract", "Internship", "Remote", "Seeking Work / CV"],
+  "Education & Training": ["Tutoring", "Online Courses", "Skills Training"],
+  "Arts & Crafts": ["Handmade", "Wood & Carvings", "Paintings", "Cultural Items"],
+  "Business Services": ["Accounting & Legal", "Marketing & Branding", "Finance & Insurance"],
+  "Home Services": ["Plumbing", "Electrical", "AC & Appliance Repair", "Salon & Barber"],
+};
+
 const COUNTRIES = ["All Countries", "Ghana", "Nigeria", "Kenya", "South Africa", "Cameroon", "Ivory Coast", "Senegal", "Tanzania", "Uganda", "Rwanda", "Ethiopia", "Egypt", "Morocco", "United Kingdom", "United States", "Canada"];
 const CURRENCIES = ["GHS", "NGN", "USD", "GBP"];
 
@@ -21,6 +39,7 @@ function SearchContent() {
   const initType = searchParams.get("type") ? searchParams.get("type").charAt(0).toUpperCase() + searchParams.get("type").slice(1) + "s" : "All";
   const [type, setType] = useState(initType);
   const [category, setCategory] = useState(searchParams.get("category") || "");
+  const [subcategory, setSubcategory] = useState("");
   const [nearMe, setNearMe] = useState(false);
   const handleNearMe = () => {
     if (navigator.geolocation) {
@@ -106,6 +125,15 @@ function SearchContent() {
       <div onClick={() => setCategory("Business Services")} style={{ padding: "8px 14px", borderRadius: 8, cursor: "pointer", marginBottom: 4, background: category === "Business Services" ? "rgba(232,83,58,0.08)" : "transparent", color: category === "Business Services" ? "#E8533A" : "rgba(240,237,232,0.6)", fontSize: 13, fontWeight: category === "Business Services" ? 700 : 400 }}>Business Services</div>
       <div onClick={() => setCategory("Home Services")} style={{ padding: "8px 14px", borderRadius: 8, cursor: "pointer", marginBottom: 4, background: category === "Home Services" ? "rgba(232,83,58,0.08)" : "transparent", color: category === "Home Services" ? "#E8533A" : "rgba(240,237,232,0.6)", fontSize: 13, fontWeight: category === "Home Services" ? 700 : 400 }}>Home Services</div>
 
+      {category && SUBCATEGORIES[category] && (
+        <div style={{ marginTop: 8, marginBottom: 12 }}>
+          <div style={{ fontWeight: 800, marginBottom: 8, fontSize: 13, color: "rgba(240,237,232,0.7)" }}>Subcategory</div>
+          <select value={subcategory} onChange={e => setSubcategory(e.target.value)} style={{ width: "100%", background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.09)", borderRadius: 8, padding: "8px 12px", color: "#F0EDE8", fontSize: 13, outline: "none" }}>
+            <option value="">All {category}</option>
+            {SUBCATEGORIES[category].map(sc => <option key={sc} value={sc}>{sc}</option>)}
+          </select>
+        </div>
+      )}
       <div style={{ fontWeight: 800, marginBottom: 16, marginTop: 20, fontSize: 14 }}>Listing type</div>
       {TYPES.map(t => (
         <div key={t} onClick={() => setType(t)} style={{ padding: "10px 14px", borderRadius: 10, cursor: "pointer", marginBottom: 4, background: type === t ? "rgba(232,83,58,0.1)" : "transparent", color: type === t ? "#E8533A" : "rgba(240,237,232,0.7)", fontWeight: type === t ? 700 : 400, fontSize: 14 }}>{t}</div>
