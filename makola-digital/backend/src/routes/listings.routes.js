@@ -76,7 +76,7 @@ router.get("/", async (req, res) => {
   try {
     const { status, type, limit = 20, offset = 0 } = req.query;
     const statusFilter = status || "active";
-    let query = `SELECT l.*, u.full_name as seller_name, c.name as category_name, (SELECT url FROM listing_images WHERE listing_id = l.id AND is_primary ORDER BY sort_order LIMIT 1) as primary_image FROM listings l JOIN users u ON u.id = l.seller_id LEFT JOIN categories c ON c.id = l.category_id WHERE l.status = '${statusFilter}'`;
+    let query = `SELECT l.*, COALESCE(u.display_name, u.full_name) as seller_name, c.name as category_name, (SELECT url FROM listing_images WHERE listing_id = l.id AND is_primary ORDER BY sort_order LIMIT 1) as primary_image FROM listings l JOIN users u ON u.id = l.seller_id LEFT JOIN categories c ON c.id = l.category_id WHERE l.status = '${statusFilter}'`;
     const params = [];
     if (type) { params.push(type); query += ` AND l.type = $${params.length}`; }
     query += ` ORDER BY l.created_at DESC LIMIT $${params.length + 1} OFFSET $${params.length + 2}`;
