@@ -51,6 +51,33 @@ export default function SellPage() {
   const router = useRouter();
   const [step, setStep] = useState(0);
   const [loading, setLoading] = useState(false);
+
+  // Auto-fill from previous listing
+  useEffect(() => {
+    const token = localStorage.getItem('makola_token');
+    if (!token) return;
+    fetch('https://sparkling-charm-production-cb2c.up.railway.app/api/v1/listings/my', {
+      headers: { Authorization: 'Bearer ' + token }
+    })
+    .then(r => r.json())
+    .then(data => {
+      if (data.listings && data.listings.length > 0) {
+        const last = data.listings[0];
+        setForm(prev => ({
+          ...prev,
+          country: last.country || prev.country,
+          city: last.city || prev.city,
+          locationText: last.location_text || prev.locationText,
+          currency: last.price_currency || prev.currency,
+          dialCode: last.contact_phone ? last.contact_phone.slice(0, 4) : prev.dialCode,
+          phone: last.contact_phone ? last.contact_phone.slice(4) : prev.phone,
+          showWhatsapp: last.show_whatsapp || prev.showWhatsapp,
+          region: last.region || prev.region,
+        }));
+      }
+    })
+    .catch(() => {});
+  }, []);
   const [tcAccepted, setTcAccepted] = useState(false);
   const [error, setError] = useState("");
   const [images, setImages] = useState([]);
