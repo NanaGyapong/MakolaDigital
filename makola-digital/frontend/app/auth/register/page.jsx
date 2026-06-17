@@ -22,7 +22,7 @@ function pwStrength(v) {
 
 export default function RegisterPage() {
   const router = useRouter();
-  const [form, setForm] = useState({ firstName:"", lastName:"", displayName:"", email:"", dialCode:"+233", phone:"", password:"", country:"", accountType:"buyer", terms:false });
+  const [form, setForm] = useState({ firstName:"", lastName:"", displayName:"", email:"", confirmPassword:"", dialCode:"+233", phone:"", password:"", country:"", accountType:"buyer", terms:false });
   const [showPw, setShowPw] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
@@ -30,6 +30,10 @@ export default function RegisterPage() {
   const pw = pwStrength(form.password);
 
   const handleSubmit = async (e) => {
+    if (form.password !== form.confirmPassword) {
+      setError("Passwords do not match");
+      return;
+    }
     e.preventDefault();
     if (!form.terms) { setError("Please accept the terms of service"); return; }
     setError(""); setLoading(true);
