@@ -42,7 +42,7 @@ export default function RegisterPage() {
     if (!form.terms) { setError("Please accept the terms of service"); return; }
     setError(""); setLoading(true);
     try {
-      await authService.register({ fullName:`${form.firstName} ${form.lastName}`, displayName:form.displayName, email:form.email, phone:`${form.dialCode}${form.phone}`, password:form.password, country:form.country, accountType:form.accountType });
+      await authService.register({ fullName: form.accountType === "seller" ? form.firstName : `${form.firstName} ${form.lastName}`, displayName:form.displayName, email:form.email, phone:`${form.dialCode}${form.phone}`, password:form.password, country:form.country, accountType:form.accountType });
       sessionStorage.setItem("verify_email", form.email);
       router.push("/auth/verify-email");
     } catch (err) { setError(err.message); }
@@ -81,8 +81,17 @@ export default function RegisterPage() {
           {error && <div style={{ background:"rgba(232,83,58,0.12)", border:"1px solid rgba(232,83,58,0.3)", color:"#E8533A", padding:"10px 14px", borderRadius:10, fontSize:13, marginBottom:16 }}>⚠️ {error}</div>}
 
           <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:12, marginBottom:14 }}>
-            <div><label style={lbl}>First name</label><input style={inp} required placeholder="Kofi" value={form.firstName} onChange={set("firstName")} /></div>
-            <div><label style={lbl}>Last name</label><input style={inp} required placeholder="Mensah" value={form.lastName} onChange={set("lastName")} /></div>
+            {form.accountType === "seller" ? (
+              <div style={{ gridColumn: "1 / -1" }}>
+                <label style={lbl}>Business Name</label>
+                <input style={inp} required placeholder="e.g. Makola Phones Ltd" value={form.firstName} onChange={set("firstName")} />
+              </div>
+            ) : (
+              <>
+                <div><label style={lbl}>First name</label><input style={inp} required placeholder="Kofi" value={form.firstName} onChange={set("firstName")} /></div>
+                <div><label style={lbl}>Last name</label><input style={inp} required placeholder="Mensah" value={form.lastName} onChange={set("lastName")} /></div>
+              </>
+            )}
             <div style={{ marginBottom:14 }}><label style={lbl}>Display Name <span style={{ color:"rgba(240,237,232,0.4)", fontWeight:400, fontSize:11 }}>(optional — shown publicly on listings)</span></label><input style={inp} placeholder="e.g. Accra Phones Shop or Queen Abena" value={form.displayName||""} onChange={set("displayName")} /><div style={{ fontSize:11, color:"rgba(240,237,232,0.4)", marginTop:4 }}>Leave blank to use your real name</div></div>
           </div>
 
