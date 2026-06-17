@@ -32,8 +32,8 @@ export async function register(req, res) {
     const otpExpiry = new Date(Date.now() + 10 * 60 * 1000); // 10 minutes
 
     const result = await db.query(
-      `INSERT INTO users (id, full_name, email, phone, password_hash, username, country, role, created_at, updated_at)
-       VALUES ($1,$2,$3,$4,$5,$6,$7,$8,NOW(),NOW()) RETURNING id, email, full_name`,
+      `INSERT INTO users (id, full_name, display_name, email, phone, password_hash, username, country, role, created_at, updated_at)
+       VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,NOW(),NOW()) RETURNING id, email, full_name`,
       [uuid(), fullName, email, phone, passwordHash, username, country, accountType === "seller" || accountType === "individual_seller" ? "seller" : "buyer"]
     );
     const user = result.rows[0];
