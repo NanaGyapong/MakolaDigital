@@ -22,7 +22,7 @@ function pwStrength(v) {
 
 export default function RegisterPage() {
   const router = useRouter();
-  const [form, setForm] = useState({ firstName:"", lastName:"", email:"", dialCode:"+233", phone:"", password:"", country:"", accountType:"buyer", terms:false });
+  const [form, setForm] = useState({ firstName:"", lastName:"", displayName:"", email:"", dialCode:"+233", phone:"", password:"", country:"", accountType:"buyer", terms:false });
   const [showPw, setShowPw] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
@@ -34,7 +34,7 @@ export default function RegisterPage() {
     if (!form.terms) { setError("Please accept the terms of service"); return; }
     setError(""); setLoading(true);
     try {
-      await authService.register({ fullName:`${form.firstName} ${form.lastName}`, email:form.email, phone:`${form.dialCode}${form.phone}`, password:form.password, country:form.country, accountType:form.accountType });
+      await authService.register({ fullName:`${form.firstName} ${form.lastName}`, displayName:form.displayName, email:form.email, phone:`${form.dialCode}${form.phone}`, password:form.password, country:form.country, accountType:form.accountType });
       sessionStorage.setItem("verify_email", form.email);
       router.push("/auth/verify-email");
     } catch (err) { setError(err.message); }
@@ -75,6 +75,7 @@ export default function RegisterPage() {
           <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:12, marginBottom:14 }}>
             <div><label style={lbl}>First name</label><input style={inp} required placeholder="Kofi" value={form.firstName} onChange={set("firstName")} /></div>
             <div><label style={lbl}>Last name</label><input style={inp} required placeholder="Mensah" value={form.lastName} onChange={set("lastName")} /></div>
+            <div style={{ marginBottom:14 }}><label style={lbl}>Display Name <span style={{ color:"rgba(240,237,232,0.4)", fontWeight:400, fontSize:11 }}>(optional — shown publicly on listings)</span></label><input style={inp} placeholder="e.g. Accra Phones Shop or Queen Abena" value={form.displayName||""} onChange={set("displayName")} /><div style={{ fontSize:11, color:"rgba(240,237,232,0.4)", marginTop:4 }}>Leave blank to use your real name</div></div>
           </div>
 
           <div style={{ marginBottom:14 }}><label style={lbl}>Email</label><input style={inp} type="email" required placeholder="kofi@example.com" value={form.email} onChange={set("email")} /></div>
