@@ -192,3 +192,21 @@ router.patch("/:id/sold-out", authenticate, async (req, res) => {
     res.status(500).json({ message: "Failed to update" });
   }
 });
+
+router.get("/sellers/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+    const seller = await db.query(
+      "SELECT id, full_name, display_name, country, created_at, is_verified FROM users WHERE id = $1 AND role IN ('seller', 'individual_seller')",
+      [id]
+    );
+    if (!seller.rows[0]) return res.status(404).json({ message: "Seller not found" });
+    const listings = await db.query(
+      `SELECT l.*, c.name as category_name, (SELECT url FROM listing_images WHERE listing_id = l.id AND is_primary ORDER BY sort_order LIMIT 1) as primary_image FROM listings l LEFT JOIN categories c ON c.id = l.category_id WHERE l.seller_id = $1 AND l.status = 'active' ORDER BY l.created_at DESC`,
+      [id]
+    );
+    res.json({ seller: seller.rows[0], listings: listings.rows });
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+});
