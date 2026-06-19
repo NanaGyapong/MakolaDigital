@@ -197,7 +197,7 @@ router.get("/sellers/:id", async (req, res) => {
   try {
     const { id } = req.params;
     const seller = await db.query(
-      "SELECT id, full_name, display_name, country, created_at, is_verified FROM users WHERE id = $1 AND role IN ('seller', 'individual_seller')",
+      "SELECT id, full_name, display_name, country, created_at, is_verified FROM users WHERE id = $1",
       [id]
     );
     if (!seller.rows[0]) return res.status(404).json({ message: "Seller not found" });
