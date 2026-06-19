@@ -20,7 +20,7 @@ export default function SellerProfile() {
   }, []);
 
   useEffect(() => {
-    fetch(`${API}/sellers/${id}`)
+    fetch(`${API}/listings/sellers/${id}`)
       .then(r => r.json())
       .then(data => {
         setSeller(data.seller);
