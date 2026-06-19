@@ -227,6 +227,7 @@ export default function ListingPage() {
               <div>
                 <div style={{ fontWeight: 700, fontSize: 14 }}>{listing.type === "job" && listing.title.includes(" — ") ? listing.title.split(" — ").pop() : listing.seller_name}</div>
                 <div style={{ fontSize: 11, color: "rgba(240,237,232,0.4)" }}>{listing.type === "job" ? "Hiring company · Makola Digital" : "Verified seller · Makola Digital"}</div>
+              <button onClick={() => router.push("/seller/" + listing.seller_id)} style={{ background: "none", border: "none", color: "#E8533A", fontSize: 12, cursor: "pointer", padding: 0, marginTop: 4, textDecoration: "underline" }}>View all listings →</button>
               </div>
             </div>
 
