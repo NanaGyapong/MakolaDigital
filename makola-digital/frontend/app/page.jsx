@@ -89,7 +89,9 @@ export default function MakolaDigital() {
       {/* NAV */}
       <nav style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: `0 ${px}`, height: 56, borderBottom: "1px solid rgba(255,255,255,0.07)", background: "rgba(13,13,13,0.97)", position: "sticky", top: 0, zIndex: 100 }}>
         <div style={{ display: "flex", alignItems: "center", gap: 8, cursor: "pointer" }} onClick={() => router.push("/")}>
-          <div style={{ width: 30, height: 30, borderRadius: 8, background: "linear-gradient(135deg, #E8533A, #C47F17)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 15 }}>🌍</div>
+          <div style={{ width: 34, height: 34, borderRadius: 8, background: "#E8533A", display: "flex", alignItems: "center", justifyContent: "center", overflow: "hidden" }}>
+            <img src="/icon-192.png" style={{ width: 34, height: 34, objectFit: "cover" }} alt="Makola Digital" />
+          </div>
           <span style={{ fontWeight: 700, fontSize: 17, letterSpacing: "-0.02em" }}>Makola<span style={{ color: "#E8533A" }}>Digital</span></span>
         </div>
         {isMobile ? (
