@@ -3,12 +3,14 @@
   "short_name": "Makola",
   "description": "Africa's Discovery Marketplace — Buy, Sell & Connect across Ghana and Africa",
   "start_url": "/",
+  "id": "/",
   "display": "standalone",
   "background_color": "#0A0A0A",
   "theme_color": "#E8533A",
   "orientation": "portrait",
   "lang": "en",
   "scope": "/",
+  "dir": "ltr",
   "categories": ["shopping", "business"],
   "icons": [
     {
@@ -16,18 +18,14 @@
       "sizes": "any",
       "type": "image/svg+xml",
       "purpose": "any maskable"
-    },
+    }
+  ],
+  "screenshots": [
     {
-      "src": "/icon-192.png",
-      "sizes": "192x192",
+      "src": "/screenshot1.png",
+      "sizes": "1280x720",
       "type": "image/png",
-      "purpose": "any maskable"
-    },
-    {
-      "src": "/icon-512.png",
-      "sizes": "512x512",
-      "type": "image/png",
-      "purpose": "any maskable"
+      "label": "Makola Digital Homepage"
     }
   ],
   "shortcuts": [
