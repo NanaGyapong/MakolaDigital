@@ -210,3 +210,28 @@ router.get("/sellers/:id", async (req, res) => {
     res.status(500).json({ message: err.message });
   }
 });
+
+// Newsletter signup - creates lightweight user record
+router.post("/newsletter/subscribe", async (req, res) => {
+  try {
+    const { email } = req.body;
+    if (!email || !email.includes("@")) return res.status(400).json({ message: "Valid email required" });
+
+    const existing = await db.query("SELECT id FROM users WHERE email = $1", [email]);
+    if (existing.rows[0]) return res.json({ message: "Already subscribed", existing: true });
+
+    const { v4: uuidv4 } = await import("uuid");
+    const bcrypt = await import("bcryptjs");
+    const tempPassword = await bcrypt.default.hash(uuidv4(), 10);
+
+    await db.query(
+      `INSERT INTO users (id, full_name, email, password_hash, username, country, role, is_newsletter_only, created_at, updated_at)
+       VALUES ($1,$2,$3,$4,$5,$6,$7,$8,NOW(),NOW())`,
+      [uuidv4(), email.split("@")[0], email, tempPassword, email.split("@")[0] + "_" + Date.now(), "Ghana", "buyer", true]
+    );
+
+    res.json({ message: "Subscribed successfully" });
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+});
