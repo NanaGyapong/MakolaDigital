@@ -11,6 +11,9 @@ export default function MakolaDigital() {
   const [listings, setListings] = useState([]);
   const [categoryCounts, setCategoryCounts] = useState({});
   const [counts, setCounts] = useState({});
+  const [showNewsletter, setShowNewsletter] = useState(false);
+  const [newsletterEmail, setNewsletterEmail] = useState("");
+  const [newsletterSent, setNewsletterSent] = useState(false);
 
   const categories = useMemo(() => [
     { icon: "🚗", label: "Vehicles", count: (counts["Vehicles & Spare Parts"] || 0).toString(), color: "#E8533A", cat: "Vehicles & Spare Parts" },
@@ -40,6 +43,32 @@ export default function MakolaDigital() {
   ];
   const [menuOpen, setMenuOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    if (typeof window !== 'undefined' && !localStorage.getItem('makola_newsletter_seen')) {
+      const t = setTimeout(() => setShowNewsletter(true), 4000);
+      return () => clearTimeout(t);
+    }
+  }, []);
+
+  const closeNewsletter = () => {
+    setShowNewsletter(false);
+    localStorage.setItem('makola_newsletter_seen', '1');
+  };
+
+  const submitNewsletter = async () => {
+    if (!newsletterEmail || !newsletterEmail.includes('@')) return;
+    try {
+      await fetch('https://sparkling-charm-production-cb2c.up.railway.app/api/v1/newsletter/subscribe', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: newsletterEmail })
+      });
+    } catch (e) {}
+    setNewsletterSent(true);
+    localStorage.setItem('makola_newsletter_seen', '1');
+    setTimeout(() => setShowNewsletter(false), 2000);
+  };
 
   useEffect(() => {
     if (typeof window !== 'undefined' && 'serviceWorker' in navigator) {
@@ -233,6 +262,30 @@ export default function MakolaDigital() {
           ))}
         </div>
       </div>
+      {showNewsletter && (
+        <div style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.7)", display: "flex", alignItems: "center", justifyContent: "center", zIndex: 1000, padding: 16 }} onClick={closeNewsletter}>
+          <div onClick={e => e.stopPropagation()} style={{ background: "#0D0D0D", border: "1px solid rgba(232,83,58,0.3)", borderRadius: 20, padding: isMobile ? "28px 22px" : "36px 40px", maxWidth: 420, width: "100%", textAlign: "center", position: "relative" }}>
+            <button onClick={closeNewsletter} style={{ position: "absolute", top: 14, right: 14, background: "none", border: "none", color: "rgba(240,237,232,0.4)", fontSize: 20, cursor: "pointer" }}>×</button>
+            {!newsletterSent ? (
+              <>
+                <div style={{ fontSize: 40, marginBottom: 10 }}>🌍🔥</div>
+                <div style={{ fontWeight: 900, fontSize: 22, marginBottom: 8, lineHeight: 1.3 }}>Don't miss the best deals in Ghana!</div>
+                <div style={{ fontSize: 14, color: "rgba(240,237,232,0.6)", marginBottom: 20, lineHeight: 1.5 }}>Get fresh listings, hot deals & seller tips straight to your inbox — every week, for free.</div>
+                <div style={{ display: "flex", gap: 8, marginBottom: 10 }}>
+                  <input type="email" placeholder="your@email.com" value={newsletterEmail} onChange={e => setNewsletterEmail(e.target.value)} style={{ flex: 1, background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.15)", borderRadius: 10, padding: "12px 14px", color: "#F0EDE8", fontSize: 14, outline: "none" }} />
+                </div>
+                <button onClick={submitNewsletter} style={{ width: "100%", background: "#E8533A", border: "none", color: "#fff", padding: "13px", borderRadius: 10, fontSize: 14, fontWeight: 700, cursor: "pointer" }}>Sign me up 🎉</button>
+                <div style={{ fontSize: 11, color: "rgba(240,237,232,0.35)", marginTop: 12 }}>No spam. Unsubscribe anytime.</div>
+              </>
+            ) : (
+              <>
+                <div style={{ fontSize: 40, marginBottom: 10 }}>✅</div>
+                <div style={{ fontWeight: 900, fontSize: 20 }}>You're in! Welcome to Makola Digital 🌍</div>
+              </>
+            )}
+          </div>
+        </div>
+      )}
     </div>
   );
 }
