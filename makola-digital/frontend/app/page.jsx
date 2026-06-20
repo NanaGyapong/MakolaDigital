@@ -59,7 +59,7 @@ export default function MakolaDigital() {
   const submitNewsletter = async () => {
     if (!newsletterEmail || !newsletterEmail.includes('@')) return;
     try {
-      await fetch('https://sparkling-charm-production-cb2c.up.railway.app/api/v1/newsletter/subscribe', {
+      await fetch('https://sparkling-charm-production-cb2c.up.railway.app/api/v1/listings/newsletter/subscribe', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email: newsletterEmail })
