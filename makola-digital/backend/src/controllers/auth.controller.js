@@ -69,12 +69,10 @@ export async function login(req, res) {
       [email]
     );
     const user = result.rows[0];
-    if (!user) { console.log("LOGIN DEBUG: no user found for email:", JSON.stringify(email)); return res.status(401).json({ message: "Invalid email or password" }); }
+    if (!user) return res.status(401).json({ message: "Invalid email or password" });
     if (!user.is_active) return res.status(403).json({ message: "Your account has been suspended" });
 
-    console.log("LOGIN DEBUG: comparing for", user.email, "| password length:", password ? password.length : null, "| password JSON:", JSON.stringify(password), "| hash:", user.password_hash);
     const valid = await bcrypt.compare(password, user.password_hash);
-    console.log("LOGIN DEBUG: bcrypt result:", valid);
     if (!valid) return res.status(401).json({ message: "Invalid email or password" });
 
     if (!user.email_verified) {
