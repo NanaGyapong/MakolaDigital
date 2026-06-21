@@ -4,7 +4,11 @@ const s = { get: (k) => typeof window!=="undefined"?localStorage.getItem(k):null
 async function api(path, opts={}) {
   const res = await fetch(`${API}${path}`, { headers:{"Content-Type":"application/json",...opts.headers}, ...opts });
   const d = await res.json();
-  if(!res.ok) throw new Error(d.message||"Request failed");
+  if(!res.ok) {
+    const err = new Error(d.message||"Request failed");
+    err.status = res.status;
+    throw err;
+  }
   return d;
 }
 export const authService = {
@@ -38,7 +42,10 @@ export const authService = {
   async getMe() {
     const t=s.get("makola_token"); if(!t) return null;
     try { const d=await api("/users/me",{headers:{Authorization:`Bearer ${t}`}}); return d.user; }
-    catch { s.del("makola_token"); return null; }
+    catch (err) {
+      if (err.status === 401) { s.del("makola_token"); s.del("makola_refresh"); }
+      return null;
+    }
   },
   async submitKyc(formData) {
     const t=s.get("makola_token");
