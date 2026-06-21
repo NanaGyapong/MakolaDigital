@@ -43,6 +43,16 @@ app.post('/api/v1/track-visit', async (req, res) => {
   } catch(err) { console.error("track-visit error:", err.message); res.json({ ok: false, error: err.message }); }
 });
 
+app.get('/api/v1/admin/send-fathers-day', async (req, res) => {
+  try {
+    const { sendFathersDayCampaign } = await import('./jobs/fathers-day-campaign.js');
+    sendFathersDayCampaign();
+    res.json({ message: 'Father\'s Day campaign started — check Railway logs for progress' });
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+});
+
 app.get('/api/v1/visit-stats', async (req, res) => {
   try {
     const { db } = await import('./config/db.js');
