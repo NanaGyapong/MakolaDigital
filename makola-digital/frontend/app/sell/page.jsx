@@ -3,7 +3,7 @@ import { useState, useRef, useEffect } from "react";
 import { useRouter } from "next/navigation";
 
 const API = process.env.NEXT_PUBLIC_API_URL || "https://sparkling-charm-production-cb2c.up.railway.app/api/v1";
-const STEPS = ["What & Details", "Photos & Pricing", "Location & Review"];
+
 const TYPES = [
   { icon: "🛍️", label: "Product", val: "product", desc: "Physical or digital goods" },
   { icon: "🔧", label: "Service", val: "service", desc: "Skills & professional services" },
@@ -49,7 +49,7 @@ const lbl = { fontSize: 12, fontWeight: 600, color: "rgba(240,237,232,0.5)", mar
 
 export default function SellPage() {
   const router = useRouter();
-  const [step, setStep] = useState(0);
+
   const [loading, setLoading] = useState(false);
 
   // Auto-fill from previous listing
@@ -155,16 +155,14 @@ export default function SellPage() {
   return (
     <div style={{ background: "#0A0A0A", minHeight: "100vh", color: "#F0EDE8", fontFamily: "sans-serif", padding: 28, maxWidth: 700, margin: "0 auto" }}>
       <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 28 }}>
-        <button onClick={() => step > 0 ? setStep(s => s - 1) : router.push("/")} style={{ background: "rgba(255,255,255,0.06)", border: "none", color: "#F0EDE8", borderRadius: 8, padding: "8px 14px", cursor: "pointer", fontSize: 14 }}>← Back</button>
+        <button onClick={() => router.push("/")} style={{ background: "rgba(255,255,255,0.06)", border: "none", color: "#F0EDE8", borderRadius: 8, padding: "8px 14px", cursor: "pointer", fontSize: 14 }}>← Back</button>
         <div style={{ flex: 1 }}>
-          <div style={{ fontSize: 11, fontWeight: 700, color: "rgba(240,237,232,0.4)", textTransform: "uppercase", letterSpacing: "0.07em" }}>STEP {step + 1} OF {STEPS.length} — {STEPS[step].toUpperCase()}</div>
-          <div style={{ display: "flex", gap: 4, marginTop: 6 }}>
-            {STEPS.map((s, i) => <div key={s} style={{ flex: 1, height: 3, borderRadius: 2, background: i <= step ? "#E8533A" : "rgba(255,255,255,0.1)" }} />)}
-          </div>
+          <div style={{ fontSize: 18, fontWeight: 900, color: "#F0EDE8" }}>Create a listing</div>
+          <div style={{ fontSize: 12, color: "rgba(240,237,232,0.4)", marginTop: 2 }}>Fill in the details below and publish</div>
         </div>
       </div>
 
-      {step === 0 && <>
+      <>
         <h2 style={{ fontSize: 22, fontWeight: 900, marginBottom: 6 }}>What are you listing?</h2>
         <p style={{ color: "rgba(240,237,232,0.5)", fontSize: 14, marginBottom: 24 }}>Choose the type and describe your listing.</p>
         <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12, marginBottom: 24 }}>
@@ -185,11 +183,8 @@ export default function SellPage() {
         <input value={form.title} onChange={e => set("title", e.target.value)} placeholder="e.g. iPhone 14 Pro 256GB" style={{ ...inp, marginBottom: 16 }} />
         <label style={lbl}>Description *</label>
         <textarea value={form.description} onChange={e => set("description", e.target.value)} placeholder="Describe your listing in detail..." rows={4} style={{ ...inp, resize: "vertical", marginBottom: 16 }} />
-      </>}
 
-      {step === 1 && <>
-        <h2 style={{ fontSize: 22, fontWeight: 900, marginBottom: 6 }}>Pricing</h2>
-        <p style={{ color: "rgba(240,237,232,0.5)", fontSize: 14, marginBottom: 24 }}>Set your price or leave blank to negotiate.</p>
+        <h2 style={{ fontSize: 18, fontWeight: 900, marginBottom: 6, marginTop: 8 }}>Pricing</h2>
         <div style={{ display: "grid", gridTemplateColumns: "1fr 2fr", gap: 12, marginBottom: 16 }}>
           <div>
             <label style={lbl}>Currency</label>
@@ -208,8 +203,8 @@ export default function SellPage() {
           <input type="checkbox" checked={form.isNegotiable} onChange={e => set("isNegotiable", e.target.checked)} style={{ width: 18, height: 18, accentColor: "#E8533A" }} />
           <span style={{ fontSize: 14, color: "rgba(240,237,232,0.7)" }}>Price is negotiable</span>
         </label>
-        <h2 style={{ fontSize: 18, fontWeight: 900, marginBottom: 6 }}>Photos & Video</h2>
-        <p style={{ color: "rgba(240,237,232,0.5)", fontSize: 14, marginBottom: 24 }}>Add up to 8 photos. First photo is the cover image.</p>
+        <h2 style={{ fontSize: 18, fontWeight: 900, marginBottom: 6, marginTop: 8 }}>Photos & Video</h2>
+        <p style={{ color: "rgba(240,237,232,0.5)", fontSize: 14, marginBottom: 16 }}>Add up to 8 photos. First photo is the cover image.</p>
         <div onClick={() => fileRef.current?.click()} style={{ border: "2px dashed rgba(232,83,58,0.3)", borderRadius: 14, padding: "32px 20px", textAlign: "center", cursor: "pointer", marginBottom: 16, background: "rgba(232,83,58,0.03)" }}>
           <div style={{ fontSize: 36, marginBottom: 8 }}>📸</div>
           <div style={{ fontWeight: 600, marginBottom: 4 }}>{uploading ? "Uploading..." : "Click to upload photos"}</div>
@@ -235,11 +230,7 @@ export default function SellPage() {
             ))}
           </div>
         )}
-      </>}
-
-      {step === 2 && <>
-        <h2 style={{ fontSize: 22, fontWeight: 900, marginBottom: 6 }}>Location</h2>
-        <p style={{ color: "rgba(240,237,232,0.5)", fontSize: 14, marginBottom: 24 }}>Where is this listing based?</p>
+        <h2 style={{ fontSize: 18, fontWeight: 900, marginBottom: 6, marginTop: 8 }}>Location & Contact</h2>
         <label style={lbl}>Country *</label>
         <select value={form.country} onChange={e => set("country", e.target.value)} style={{ ...inp, marginBottom: 16 }}>
           {COUNTRIES.map(c => <option key={c} value={c}>{c}</option>)}
@@ -286,29 +277,12 @@ export default function SellPage() {
           </div>
         </div>
         {error && <div style={{ background: "rgba(232,83,58,0.1)", border: "1px solid rgba(232,83,58,0.3)", borderRadius: 10, padding: 14, color: "#E8533A", fontSize: 14, marginBottom: 16 }}>{error}</div>}
-      </>}
+      </>
 
-      {step === 2 && false && <>
-        <h2 style={{ fontSize: 22, fontWeight: 900, marginBottom: 6 }}>Review & publish</h2>
-        <p style={{ color: "rgba(240,237,232,0.5)", fontSize: 14, marginBottom: 24 }}>Check your listing before going live.</p>
-        <div style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.09)", borderRadius: 16, overflow: "hidden", marginBottom: 20 }}>
-          {images[0] && <img src={images[0]} alt="" style={{ width: "100%", height: 200, objectFit: "cover" }} />}
-          <div style={{ padding: 20 }}>
-            <div style={{ fontSize: 11, color: "rgba(240,237,232,0.4)", marginBottom: 4 }}>{form.type.toUpperCase()} · {form.category}</div>
-            <div style={{ fontSize: 20, fontWeight: 800, marginBottom: 8 }}>{form.title || "No title"}</div>
-            <div style={{ fontSize: 18, fontWeight: 700, color: "#E8533A", marginBottom: 8 }}>
-              {form.price ? `${form.currency} ${Number(form.price).toLocaleString()}${form.priceLabel}` : "Price on request"}
-              {form.isNegotiable && " · Negotiable"}
-            </div>
-            <div style={{ fontSize: 13, color: "rgba(240,237,232,0.5)", marginBottom: 12 }}>📍 {form.locationText || form.city || form.country}</div>
-            <div style={{ fontSize: 13, color: "rgba(240,237,232,0.6)", lineHeight: 1.6 }}>{form.description?.slice(0, 150)}{form.description?.length > 150 ? "..." : ""}</div>
-          </div>
-        </div>
-        {error && <div style={{ background: "rgba(232,83,58,0.1)", border: "1px solid rgba(232,83,58,0.3)", borderRadius: 10, padding: 14, color: "#E8533A", fontSize: 14, marginBottom: 16 }}>{error}</div>}
-      </>}
-
-      <button onClick={() => step < STEPS.length - 1 ? setStep(s => s + 1) : handleSubmit()} disabled={loading || uploading} style={{ width: "100%", background: loading ? "rgba(232,83,58,0.5)" : "linear-gradient(135deg,#E8533A,#C47F17)", border: "none", color: "#fff", padding: 15, borderRadius: 13, fontSize: 15, fontWeight: 900, cursor: loading ? "not-allowed" : "pointer", fontFamily: "sans-serif", marginTop: 20 }}>
-        {loading ? "Publishing..." : step === STEPS.length - 1 ? "🚀 Publish Listing" : "Continue →"}
+      {error && <div style={{ background: "rgba(232,83,58,0.1)", border: "1px solid rgba(232,83,58,0.3)", borderRadius: 10, padding: 14, color: "#E8533A", fontSize: 14, marginBottom: 16 }}>{error}</div>}
+      </>
+      <button onClick={handleSubmit} disabled={loading || uploading} style={{ width: "100%", background: loading ? "rgba(232,83,58,0.5)" : "linear-gradient(135deg,#E8533A,#C47F17)", border: "none", color: "#fff", padding: 15, borderRadius: 13, fontSize: 15, fontWeight: 900, cursor: loading ? "not-allowed" : "pointer", fontFamily: "sans-serif", marginTop: 20 }}>
+        {loading ? "Publishing..." : "🚀 Publish Listing"}
       </button>
     </div>
   );
