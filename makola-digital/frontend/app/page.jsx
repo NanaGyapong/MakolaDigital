@@ -12,7 +12,6 @@ export default function MakolaDigital() {
   const [categoryCounts, setCategoryCounts] = useState({});
   const [counts, setCounts] = useState({});
   const [showNewsletter, setShowNewsletter] = useState(false);
-  const [showFathersDay, setShowFathersDay] = useState(false);
   const [newsletterEmail, setNewsletterEmail] = useState("");
   const [newsletterSent, setNewsletterSent] = useState(false);
 
@@ -44,18 +43,6 @@ export default function MakolaDigital() {
   ];
   const [menuOpen, setMenuOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
-
-  useEffect(() => {
-    if (typeof window !== 'undefined' && !localStorage.getItem('makola_fathersday_seen')) {
-      const t = setTimeout(() => setShowFathersDay(true), 1200);
-      return () => clearTimeout(t);
-    }
-  }, []);
-
-  const closeFathersDay = () => {
-    setShowFathersDay(false);
-    localStorage.setItem('makola_fathersday_seen', '1');
-  };
 
   useEffect(() => {
     if (typeof window !== 'undefined' && !localStorage.getItem('makola_newsletter_seen')) {
@@ -275,17 +262,6 @@ export default function MakolaDigital() {
           ))}
         </div>
       </div>
-      {showFathersDay && (
-        <div style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.7)", display: "flex", alignItems: "center", justifyContent: "center", zIndex: 1001, padding: 16 }} onClick={closeFathersDay}>
-          <div onClick={e => e.stopPropagation()} style={{ background: "#0D0D0D", border: "1px solid rgba(232,83,58,0.3)", borderRadius: 20, padding: isMobile ? "28px 22px" : "36px 40px", maxWidth: 420, width: "100%", textAlign: "center", position: "relative" }}>
-            <button onClick={closeFathersDay} style={{ position: "absolute", top: 14, right: 14, background: "none", border: "none", color: "rgba(240,237,232,0.4)", fontSize: 20, cursor: "pointer" }}>×</button>
-            <div style={{ width: 70, height: 70, margin: "0 auto 14px", borderRadius: "50%", background: "rgba(196,127,23,0.15)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 32 }}>🎁</div>
-            <div style={{ fontWeight: 900, fontSize: 22, marginBottom: 8, lineHeight: 1.3 }}>Happy Father's Day!</div>
-            <div style={{ fontSize: 14, color: "rgba(240,237,232,0.6)", marginBottom: 22, lineHeight: 1.5 }}>Find the perfect gift for Dad — shoes, watches, phones, wears & more, all in one place.</div>
-            <button onClick={() => { closeFathersDay(); router.push("/search?q=gift"); }} style={{ width: "100%", background: "#E8533A", border: "none", color: "#fff", padding: "13px", borderRadius: 10, fontSize: 14, fontWeight: 700, cursor: "pointer" }}>Shop Father's Day Gifts 🎁</button>
-          </div>
-        </div>
-      )}
       {showNewsletter && (
         <div style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.7)", display: "flex", alignItems: "center", justifyContent: "center", zIndex: 1000, padding: 16 }} onClick={closeNewsletter}>
           <div onClick={e => e.stopPropagation()} style={{ background: "#0D0D0D", border: "1px solid rgba(232,83,58,0.3)", borderRadius: 20, padding: isMobile ? "28px 22px" : "36px 40px", maxWidth: 420, width: "100%", textAlign: "center", position: "relative" }}>
