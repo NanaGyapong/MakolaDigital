@@ -30,15 +30,11 @@ export default function RegisterPage() {
   const pw = pwStrength(form.password);
 
   const handleSubmit = async (e) => {
-    if (form.password !== form.confirmPassword) {
-      setError("Passwords do not match");
-      return;
-    }
-    if (form.password !== form.confirmPassword) {
-      setError("Passwords do not match");
-      return;
-    }
     e.preventDefault();
+    if (form.password !== form.confirmPassword) {
+      setError("Passwords do not match");
+      return;
+    }
     if (!form.terms) { setError("Please accept the terms of service"); return; }
     setError(""); setLoading(true);
     try {
@@ -123,6 +119,12 @@ export default function RegisterPage() {
             )}
           </div>
 
+          <div style={{ marginBottom:14 }}>
+            <label style={lbl}>Confirm Password</label>
+            <input style={inp} type="password" required placeholder="Re-enter your password" value={form.confirmPassword} onChange={set("confirmPassword")} />
+            {form.confirmPassword && form.password !== form.confirmPassword && <div style={{ fontSize:11, color:"#E8533A", marginTop:4 }}>❌ Passwords do not match</div>}
+            {form.confirmPassword && form.password === form.confirmPassword && <div style={{ fontSize:11, color:"#2D9E6B", marginTop:4 }}>✅ Passwords match</div>}
+          </div>
           <div style={{ marginBottom:14 }}>
             <label style={lbl}>Country</label>
             <select style={{ ...inp, cursor:"pointer" }} required value={form.country} onChange={set("country")}>
