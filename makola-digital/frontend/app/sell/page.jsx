@@ -3,7 +3,7 @@ import { useState, useRef, useEffect } from "react";
 import { useRouter } from "next/navigation";
 
 const API = process.env.NEXT_PUBLIC_API_URL || "https://sparkling-charm-production-cb2c.up.railway.app/api/v1";
-const STEPS = ["Type", "Details", "Pricing", "Photos", "Location", "Review"];
+const STEPS = ["What & Details", "Photos & Pricing", "Location & Review"];
 const TYPES = [
   { icon: "🛍️", label: "Product", val: "product", desc: "Physical or digital goods" },
   { icon: "🔧", label: "Service", val: "service", desc: "Skills & professional services" },
@@ -166,7 +166,7 @@ export default function SellPage() {
 
       {step === 0 && <>
         <h2 style={{ fontSize: 22, fontWeight: 900, marginBottom: 6 }}>What are you listing?</h2>
-        <p style={{ color: "rgba(240,237,232,0.5)", fontSize: 14, marginBottom: 24 }}>Choose the type that best describes your listing.</p>
+        <p style={{ color: "rgba(240,237,232,0.5)", fontSize: 14, marginBottom: 24 }}>Choose the type and describe your listing.</p>
         <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12, marginBottom: 24 }}>
           {TYPES.map(t => (
             <div key={t.val} onClick={() => set("type", t.val)} style={{ background: "rgba(255,255,255,0.04)", border: `2px solid ${form.type === t.val ? "#E8533A" : "rgba(255,255,255,0.09)"}`, borderRadius: 14, padding: 20, cursor: "pointer", textAlign: "center" }}>
@@ -176,11 +176,6 @@ export default function SellPage() {
             </div>
           ))}
         </div>
-      </>}
-
-      {step === 1 && <>
-        <h2 style={{ fontSize: 22, fontWeight: 900, marginBottom: 6 }}>Listing details</h2>
-        <p style={{ color: "rgba(240,237,232,0.5)", fontSize: 14, marginBottom: 24 }}>Tell buyers what you're offering.</p>
         <label style={lbl}>Category</label>
         <select value={form.category} onChange={e => set("category", e.target.value)} style={{ ...inp, marginBottom: 16 }}>
           <option value="">Select category</option>
@@ -189,10 +184,10 @@ export default function SellPage() {
         <label style={lbl}>Title *</label>
         <input value={form.title} onChange={e => set("title", e.target.value)} placeholder="e.g. iPhone 14 Pro 256GB" style={{ ...inp, marginBottom: 16 }} />
         <label style={lbl}>Description *</label>
-        <textarea value={form.description} onChange={e => set("description", e.target.value)} placeholder="Describe your listing in detail..." rows={5} style={{ ...inp, resize: "vertical", marginBottom: 16 }} />
+        <textarea value={form.description} onChange={e => set("description", e.target.value)} placeholder="Describe your listing in detail..." rows={4} style={{ ...inp, resize: "vertical", marginBottom: 16 }} />
       </>}
 
-      {step === 2 && <>
+      {step === 1 && <>
         <h2 style={{ fontSize: 22, fontWeight: 900, marginBottom: 6 }}>Pricing</h2>
         <p style={{ color: "rgba(240,237,232,0.5)", fontSize: 14, marginBottom: 24 }}>Set your price or leave blank to negotiate.</p>
         <div style={{ display: "grid", gridTemplateColumns: "1fr 2fr", gap: 12, marginBottom: 16 }}>
@@ -209,14 +204,11 @@ export default function SellPage() {
         </div>
         <label style={lbl}>Price Label (optional)</label>
         <input value={form.priceLabel} onChange={e => set("priceLabel", e.target.value)} placeholder='e.g. "/month", "/hour"' style={{ ...inp, marginBottom: 16 }} />
-        <label style={{ display: "flex", alignItems: "center", gap: 10, cursor: "pointer" }}>
+        <label style={{ display: "flex", alignItems: "center", gap: 10, cursor: "pointer", marginBottom: 20 }}>
           <input type="checkbox" checked={form.isNegotiable} onChange={e => set("isNegotiable", e.target.checked)} style={{ width: 18, height: 18, accentColor: "#E8533A" }} />
           <span style={{ fontSize: 14, color: "rgba(240,237,232,0.7)" }}>Price is negotiable</span>
         </label>
-      </>}
-
-      {step === 3 && <>
-        <h2 style={{ fontSize: 22, fontWeight: 900, marginBottom: 6 }}>Photos</h2>
+        <h2 style={{ fontSize: 18, fontWeight: 900, marginBottom: 6 }}>Photos & Video</h2>
         <p style={{ color: "rgba(240,237,232,0.5)", fontSize: 14, marginBottom: 24 }}>Add up to 8 photos. First photo is the cover image.</p>
         <div onClick={() => fileRef.current?.click()} style={{ border: "2px dashed rgba(232,83,58,0.3)", borderRadius: 14, padding: "32px 20px", textAlign: "center", cursor: "pointer", marginBottom: 16, background: "rgba(232,83,58,0.03)" }}>
           <div style={{ fontSize: 36, marginBottom: 8 }}>📸</div>
@@ -245,7 +237,7 @@ export default function SellPage() {
         )}
       </>}
 
-      {step === 4 && <>
+      {step === 2 && <>
         <h2 style={{ fontSize: 22, fontWeight: 900, marginBottom: 6 }}>Location</h2>
         <p style={{ color: "rgba(240,237,232,0.5)", fontSize: 14, marginBottom: 24 }}>Where is this listing based?</p>
         <label style={lbl}>Country *</label>
@@ -278,14 +270,25 @@ export default function SellPage() {
         </label>
 
         {(form.type === 'service' || form.type === 'job') && (
-          <label style={{ display: "flex", alignItems: "center", gap: 10, cursor: "pointer" }}>
+          <label style={{ display: "flex", alignItems: "center", gap: 10, cursor: "pointer", marginBottom: 16 }}>
             <input type="checkbox" checked={form.isRemote} onChange={e => set("isRemote", e.target.checked)} style={{ width: 18, height: 18, accentColor: "#E8533A" }} />
             <span style={{ fontSize: 14, color: "rgba(240,237,232,0.7)" }}>Available remotely / worldwide</span>
           </label>
         )}
+        <h2 style={{ fontSize: 18, fontWeight: 900, marginBottom: 10, marginTop: 8 }}>Preview</h2>
+        <div style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.09)", borderRadius: 16, overflow: "hidden", marginBottom: 16 }}>
+          {images[0] && <img src={images[0]} alt="" style={{ width: "100%", height: 180, objectFit: "cover" }} />}
+          <div style={{ padding: 16 }}>
+            <div style={{ fontSize: 11, color: "rgba(240,237,232,0.4)", marginBottom: 4 }}>{form.type?.toUpperCase()} · {form.category}</div>
+            <div style={{ fontSize: 18, fontWeight: 800, marginBottom: 6 }}>{form.title || "No title"}</div>
+            <div style={{ fontSize: 16, fontWeight: 700, color: "#E8533A", marginBottom: 6 }}>{form.price ? `${form.currency} ${Number(form.price).toLocaleString()}` : "Price on request"}{form.isNegotiable && " · Negotiable"}</div>
+            <div style={{ fontSize: 13, color: "rgba(240,237,232,0.5)" }}>📍 {form.locationText || form.city || form.country}</div>
+          </div>
+        </div>
+        {error && <div style={{ background: "rgba(232,83,58,0.1)", border: "1px solid rgba(232,83,58,0.3)", borderRadius: 10, padding: 14, color: "#E8533A", fontSize: 14, marginBottom: 16 }}>{error}</div>}
       </>}
 
-      {step === 5 && <>
+      {step === 2 && false && <>
         <h2 style={{ fontSize: 22, fontWeight: 900, marginBottom: 6 }}>Review & publish</h2>
         <p style={{ color: "rgba(240,237,232,0.5)", fontSize: 14, marginBottom: 24 }}>Check your listing before going live.</p>
         <div style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.09)", borderRadius: 16, overflow: "hidden", marginBottom: 20 }}>
