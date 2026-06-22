@@ -278,8 +278,6 @@ export default function SellPage() {
         </div>
         {error && <div style={{ background: "rgba(232,83,58,0.1)", border: "1px solid rgba(232,83,58,0.3)", borderRadius: 10, padding: 14, color: "#E8533A", fontSize: 14, marginBottom: 16 }}>{error}</div>}
       </>
-
-      {error && <div style={{ background: "rgba(232,83,58,0.1)", border: "1px solid rgba(232,83,58,0.3)", borderRadius: 10, padding: 14, color: "#E8533A", fontSize: 14, marginBottom: 16 }}>{error}</div>}
       </>
       <button onClick={handleSubmit} disabled={loading || uploading} style={{ width: "100%", background: loading ? "rgba(232,83,58,0.5)" : "linear-gradient(135deg,#E8533A,#C47F17)", border: "none", color: "#fff", padding: 15, borderRadius: 13, fontSize: 15, fontWeight: 900, cursor: loading ? "not-allowed" : "pointer", fontFamily: "sans-serif", marginTop: 20 }}>
         {loading ? "Publishing..." : "🚀 Publish Listing"}
