@@ -56,7 +56,7 @@ export default function SellPage() {
   useEffect(() => {
     const token = localStorage.getItem('makola_token');
     if (!token) return;
-    fetch('https://sparkling-charm-production-cb2c.up.railway.app/api/v1/listings/my', {
+    fetch('https://sparkling-charm-production-cb2c.up.railway.app/api/v1/listings/mine', {
       headers: { Authorization: 'Bearer ' + token }
     })
     .then(r => r.json())
