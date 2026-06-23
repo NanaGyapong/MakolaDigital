@@ -230,40 +230,6 @@ export default function SellPage() {
             ))}
           </div>
         )}
-        <h2 style={{ fontSize: 18, fontWeight: 900, marginBottom: 6, marginTop: 8 }}>Location & Contact</h2>
-        <label style={lbl}>Country *</label>
-        <select value={form.country} onChange={e => set("country", e.target.value)} style={{ ...inp, marginBottom: 16 }}>
-          {COUNTRIES.map(c => <option key={c} value={c}>{c}</option>)}
-        </select>
-        {form.country === 'Ghana' && (
-          <div style={{ marginBottom: 16 }}>
-            <label style={lbl}>Region</label>
-            <select value={form.region || ''} onChange={e => set('region', e.target.value)} style={{ ...inp }}>
-              <option value=''>Select region</option>
-              {GHANA_REGIONS.map(r => <option key={r} value={r}>{r} Region</option>)}
-            </select>
-          </div>
-        )}
-        <label style={lbl}>City / Town</label>
-        <input value={form.city} onChange={e => set("city", e.target.value)} placeholder="e.g. Accra, Lagos, Nairobi" style={{ ...inp, marginBottom: 16 }} />
-        <label style={lbl}>Location details</label>
-        <input value={form.locationText} onChange={e => set("locationText", e.target.value)} placeholder="e.g. East Legon, Accra" style={{ ...inp, marginBottom: 16 }} />
-        <label style={lbl}>Contact Phone Number</label>
-        <div style={{ display: 'flex', gap: 8, marginBottom: 16 }}>
-          <select value={form.dialCode || '+233'} onChange={e => set('dialCode', e.target.value)} style={{ ...inp, width: 110 }}>
-            {['+233','+234','+254','+27','+44','+1'].map(d => <option key={d} value={d}>{d}</option>)}
-          </select>
-          <input value={form.phone} onChange={e => set('phone', e.target.value)} placeholder='024 000 0000' style={{ ...inp, flex: 1 }} />
-        </div>
-        <label style={{ display: 'flex', alignItems: 'center', gap: 10, cursor: 'pointer', marginBottom: 16 }}>
-          <input type='checkbox' checked={form.showWhatsapp || false} onChange={e => set('showWhatsapp', e.target.checked)} style={{ width: 18, height: 18, accentColor: '#25D366' }} />
-          <span style={{ fontSize: 14, color: 'rgba(240,237,232,0.7)' }}>📱 Also show WhatsApp button</span>
-        </label>
-
-        {(form.type === 'service' || form.type === 'job') && (
-          <label style={{ display: "flex", alignItems: "center", gap: 10, cursor: "pointer", marginBottom: 16 }}>
-            <input type="checkbox" checked={form.isRemote} onChange={e => set("isRemote", e.target.checked)} style={{ width: 18, height: 18, accentColor: "#E8533A" }} />
-            <span style={{ fontSize: 14, color: "rgba(240,237,232,0.7)" }}>Available remotely / worldwide</span>
           </label>
         )}
         <h2 style={{ fontSize: 18, fontWeight: 900, marginBottom: 10, marginTop: 8 }}>Preview</h2>
