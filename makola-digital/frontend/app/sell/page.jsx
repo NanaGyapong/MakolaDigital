@@ -230,8 +230,6 @@ export default function SellPage() {
             ))}
           </div>
         )}
-          </label>
-        )}
         <h2 style={{ fontSize: 18, fontWeight: 900, marginBottom: 10, marginTop: 8 }}>Preview</h2>
         <div style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.09)", borderRadius: 16, overflow: "hidden", marginBottom: 16 }}>
           {images[0] && <img src={images[0]} alt="" style={{ width: "100%", height: 180, objectFit: "cover" }} />}
