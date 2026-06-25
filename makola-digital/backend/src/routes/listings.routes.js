@@ -235,3 +235,23 @@ router.post("/newsletter/subscribe", async (req, res) => {
     res.status(500).json({ message: err.message });
   }
 });
+
+// Trending listings - most viewed and saved
+router.get("/trending", async (req, res) => {
+  try {
+    const { db } = await import('../config/db.js');
+    const result = await db.query(
+      `SELECT l.*, COALESCE(u.display_name, u.full_name) as seller_name, c.name as category_name,
+      (SELECT url FROM listing_images WHERE listing_id = l.id AND is_primary ORDER BY sort_order LIMIT 1) as primary_image,
+      (l.views_count + (l.saves_count * 3)) as trending_score
+      FROM listings l
+      JOIN users u ON u.id = l.seller_id
+      LEFT JOIN categories c ON c.id = l.category_id
+      WHERE l.status = 'active'
+      ORDER BY trending_score DESC`
+    );
+    res.json({ listings: result.rows });
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+});
