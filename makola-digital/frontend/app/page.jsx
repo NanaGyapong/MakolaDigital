@@ -193,8 +193,21 @@ export default function MakolaDigital() {
 
       {/* CATEGORIES */}
       <div style={{ padding: isMobile ? "28px 16px 20px" : "40px 32px 24px" }}>
-        {/* World Cup Banner */}
-        <div style={{ background: "linear-gradient(135deg, rgba(0,100,0,0.12), rgba(232,83,58,0.08))", border: "1px solid rgba(45,158,107,0.3)", borderRadius: 16, padding: "16px 20px", marginBottom: 28, display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: 12 }}><div style={{ display: "flex", alignItems: "center", gap: 12 }}><span style={{ fontSize: 32 }}>🏆</span><div><div style={{ fontWeight: 900, fontSize: 16, color: "#F0EDE8" }}>🇬🇭 Ghana vs England 🏴󠁧󠁢󠁥󠁮󠁧󠁿 — Tuesday 23 June · FIFA World Cup 2026</div><div style={{ fontSize: 13, color: "rgba(240,237,232,0.6)", marginTop: 2 }}>Get your jerseys, TVs & snacks ready for the Black Stars! ⚽🌍</div></div></div><a href="/search?q=jersey" style={{ background: "#2D9E6B", color: "#fff", textDecoration: "none", padding: "8px 18px", borderRadius: 20, fontSize: 13, fontWeight: 700 }}>Shop Now ⚽</a></div>
+        {/* Trending Section - Coming Soon */}
+        <div style={{ marginBottom: 28 }}>
+          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 14 }}>
+            <h2 style={{ fontSize: 18, fontWeight: 800, margin: 0 }}>🔥 Trending Now</h2>
+            <button onClick={() => router.push("/search")} style={{ background: "none", border: "none", color: "#E8533A", fontSize: 13, cursor: "pointer", fontWeight: 700 }}>See all →</button>
+          </div>
+          <div style={{ background: "rgba(255,255,255,0.03)", border: "1px dashed rgba(255,255,255,0.1)", borderRadius: 14, padding: "24px", textAlign: "center", color: "rgba(240,237,232,0.3)", fontSize: 13 }}>
+            Trending listings coming soon
+          </div>
+        </div>
+
+        {/* Ad Banner Space */}
+        <div style={{ marginBottom: 28, background: "rgba(255,255,255,0.02)", border: "1px dashed rgba(255,255,255,0.08)", borderRadius: 14, padding: "20px", textAlign: "center", minHeight: 80, display: "flex", alignItems: "center", justifyContent: "center" }}>
+          <div style={{ color: "rgba(240,237,232,0.2)", fontSize: 12, letterSpacing: "0.1em", textTransform: "uppercase" }}>Advertisement Space</div>
+        </div>
         <h2 style={{ fontSize: isMobile ? 17 : 20, fontWeight: 700, marginBottom: 16, letterSpacing: "-0.02em" }}>Browse by category</h2>
         <div style={{ display: "grid", gridTemplateColumns: isMobile ? "repeat(4, 1fr)" : "repeat(auto-fit, minmax(130px, 1fr))", gap: isMobile ? 8 : 10 }}>
           {categories.map(cat => (
