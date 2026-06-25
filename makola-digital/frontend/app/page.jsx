@@ -11,6 +11,7 @@ export default function MakolaDigital() {
   const [listings, setListings] = useState([]);
   const [categoryCounts, setCategoryCounts] = useState({});
   const [counts, setCounts] = useState({});
+  const [trending, setTrending] = useState([]);
   const [showNewsletter, setShowNewsletter] = useState(false);
   const [newsletterEmail, setNewsletterEmail] = useState("");
   const [newsletterSent, setNewsletterSent] = useState(false);
@@ -88,6 +89,10 @@ export default function MakolaDigital() {
       method: "POST",
       headers: { "x-visitor-id": visitorId }
     }).catch(() => {});
+    fetch("https://sparkling-charm-production-cb2c.up.railway.app/api/v1/listings/trending")
+      .then(r => r.json())
+      .then(d => setTrending((d.listings || []).slice(0, 6)))
+      .catch(() => {});
     fetch("https://sparkling-charm-production-cb2c.up.railway.app/api/v1/stats").then(r => r.json()).then(d => { setTotalSellers(d.sellers || 0); setTotalMembers(d.users || 0); }).catch(() => {});
 
     fetch("https://sparkling-charm-production-cb2c.up.railway.app/api/v1/categories/counts")
@@ -199,9 +204,27 @@ export default function MakolaDigital() {
             <h2 style={{ fontSize: 18, fontWeight: 800, margin: 0 }}>🔥 Trending Now</h2>
             <button onClick={() => router.push("/search")} style={{ background: "none", border: "none", color: "#E8533A", fontSize: 13, cursor: "pointer", fontWeight: 700 }}>See all →</button>
           </div>
-          <div style={{ background: "rgba(255,255,255,0.03)", border: "1px dashed rgba(255,255,255,0.1)", borderRadius: 14, padding: "24px", textAlign: "center", color: "rgba(240,237,232,0.3)", fontSize: 13 }}>
-            Trending listings coming soon
-          </div>
+{trending.length > 0 ? (
+            <div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr 1fr" : "repeat(auto-fill, minmax(200px, 1fr))", gap: 12 }}>
+              {trending.map(l => (
+                <div key={l.id} onClick={() => router.push("/listing/" + l.id)} style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: 14, overflow: "hidden", cursor: "pointer" }}>
+                  {l.primary_image
+                    ? <img src={l.primary_image} alt={l.title} style={{ width: "100%", height: 120, objectFit: "cover" }} />
+                    : <div style={{ height: 120, background: "rgba(255,255,255,0.04)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 32 }}>{l.type === "product" ? "🛍️" : l.type === "service" ? "🔧" : l.type === "job" ? "💼" : "🏠"}</div>
+                  }
+                  <div style={{ padding: "10px 12px" }}>
+                    <div style={{ fontSize: 12, fontWeight: 700, marginBottom: 4, overflow: "hidden", display: "-webkit-box", WebkitLineClamp: 2, WebkitBoxOrient: "vertical" }}>{l.title}</div>
+                    <div style={{ fontSize: 13, fontWeight: 700, color: "#E8533A" }}>{l.price_currency} {Number(l.price).toLocaleString()}</div>
+                    <div style={{ fontSize: 10, color: "rgba(240,237,232,0.4)", marginTop: 2 }}>👁️ {l.views_count || 0} views</div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <div style={{ background: "rgba(255,255,255,0.03)", border: "1px dashed rgba(255,255,255,0.1)", borderRadius: 14, padding: "24px", textAlign: "center", color: "rgba(240,237,232,0.3)", fontSize: 13 }}>
+              Trending listings coming soon
+            </div>
+          )}
         </div>
 
         {/* Ad Banner Space */}
