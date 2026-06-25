@@ -239,7 +239,6 @@ router.post("/newsletter/subscribe", async (req, res) => {
 // Trending listings - most viewed and saved
 router.get("/trending", async (req, res) => {
   try {
-    const { db } = await import('../config/db.js');
     const result = await db.query(
       `SELECT l.*, COALESCE(u.display_name, u.full_name) as seller_name, c.name as category_name,
       (SELECT url FROM listing_images WHERE listing_id = l.id AND is_primary ORDER BY sort_order LIMIT 1) as primary_image,
