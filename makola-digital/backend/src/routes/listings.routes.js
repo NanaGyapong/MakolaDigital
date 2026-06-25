@@ -248,7 +248,7 @@ router.get("/trending", async (req, res) => {
       JOIN users u ON u.id = l.seller_id
       LEFT JOIN categories c ON c.id = l.category_id
       WHERE l.status = 'active'
-      ORDER BY trending_score DESC`
+      ORDER BY trending_score DESC, l.created_at DESC`
     );
     res.json({ listings: result.rows });
   } catch (err) {
