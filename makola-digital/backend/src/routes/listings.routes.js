@@ -240,18 +240,12 @@ router.post("/newsletter/subscribe", async (req, res) => {
 router.get("/trending", async (req, res) => {
   try {
     const result = await db.query(
-      `SELECT l.*, COALESCE(u.display_name, u.full_name) as seller_name, c.name as category_name,
-      img.url as primary_image,
+      `SELECT l.id, l.title, l.price, l.price_currency, l.type, l.status, l.created_at,
+      l.views_count, l.saves_count,
+      COALESCE(u.display_name, u.full_name) as seller_name,
       (l.views_count + (l.saves_count * 3)) as trending_score
       FROM listings l
       JOIN users u ON u.id = l.seller_id
-      LEFT JOIN categories c ON c.id = l.category_id
-      LEFT JOIN (
-        SELECT DISTINCT ON (listing_id) listing_id, url
-        FROM listing_images
-        WHERE is_primary = true
-        ORDER BY listing_id, sort_order
-      ) img ON img.listing_id = l.id
       WHERE l.status = 'active'
       ORDER BY trending_score DESC, l.created_at DESC`
     );
