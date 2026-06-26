@@ -119,6 +119,25 @@ router.get("/mine", authenticate, async (req, res) => {
   }
 });
 
+
+// Trending listings - most viewed and saved
+router.get("/trending", async (req, res) => {
+  try {
+    const result = await db.query(
+      `SELECT l.id, l.title, l.price, l.price_currency, l.type, l.status, l.created_at,
+      l.views_count, l.saves_count,
+      COALESCE(u.display_name, u.full_name) as seller_name,
+      (l.views_count + (l.saves_count * 3)) as trending_score
+      FROM listings l
+      JOIN users u ON u.id = l.seller_id
+      WHERE l.status = 'active'
+      ORDER BY trending_score DESC, l.created_at DESC`
+    );
+    res.json({ listings: result.rows });
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+});
 router.get("/:id", async (req, res) => {
   try {
     const result = await db.query(
@@ -236,20 +255,6 @@ router.post("/newsletter/subscribe", async (req, res) => {
   }
 });
 
-// Trending listings - most viewed and saved
-router.get("/trending", async (req, res) => {
-  try {
-    const result = await db.query(
-      `SELECT l.id, l.title, l.price, l.price_currency, l.type, l.status, l.created_at,
-      l.views_count, l.saves_count,
-      COALESCE(u.display_name, u.full_name) as seller_name,
-      (l.views_count + (l.saves_count * 3)) as trending_score
-      FROM listings l
-      JOIN users u ON u.id = l.seller_id
-      WHERE l.status = 'active'
-      ORDER BY trending_score DESC, l.created_at DESC`
-    );
-    res.json({ listings: result.rows });
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
