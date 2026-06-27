@@ -236,12 +236,12 @@ export default function MakolaDigital() {
           </div>
           <div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr" : "1fr 1fr", gap: 12 }}>
             {[
-              { id: "ad1", title: "Gain Flings Laundry Detergent with Oxi Boost - 3 in 1, Original Scent (81 Pacs)", price: "GHS 600", location: "East Legon, Accra", seller: "Dets on Dirt", img: null, link: "/search?q=gain+flings" },
-              { id: "ad2", title: "Tide Ultra Concentrated Liquid Laundry Detergent, Original Scent (146 Loads)", price: "GHS 800", location: "East Legon, Accra", seller: "Dets on Dirt", img: null, link: "/search?q=tide" }
+              { id: "ad1", title: "Gain Flings Laundry Detergent with Oxi Boost - 3 in 1, Original Scent (81 Pacs)", price: "GHS 600", location: "East Legon, Accra", seller: "Dets on Dirt", img: "https://res.cloudinary.com/dnee8imbi/image/upload/v1782491060/makola-digital/e5dbf0apwoposjwfwafn.jpg", link: "/listing/73717fa2-6acd-40b5-9da9-b5fda7bd3281" },
+              { id: "ad2", title: "Tide Ultra Concentrated Liquid Laundry Detergent, Original Scent (146 Loads)", price: "GHS 800", location: "East Legon, Accra", seller: "Dets on Dirt", img: "https://res.cloudinary.com/dnee8imbi/image/upload/v1782487240/makola-digital/btlsg8mdz9lefsj0cp01.jpg", link: "/listing/07ea6d6c-b594-4499-a9f1-0800ce7659d6" }
             ].map(ad => (
               <div key={ad.id} onClick={() => router.push(ad.link)} style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(196,127,23,0.3)", borderRadius: 14, overflow: "hidden", cursor: "pointer", position: "relative" }}>
                 <div style={{ position: "absolute", top: 8, right: 8, background: "#C47F17", borderRadius: 4, fontSize: 9, fontWeight: 700, color: "#0A0A0A", padding: "2px 6px", letterSpacing: "0.06em", zIndex: 1 }}>SPONSORED</div>
-                <div style={{ height: 120, background: "rgba(196,127,23,0.08)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 36 }}>🧺</div>
+                {ad.img ? <img src={ad.img} alt={ad.title} style={{ width: "100%", height: 120, objectFit: "cover" }} /> : <div style={{ height: 120, background: "rgba(196,127,23,0.08)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 36 }}>🧺</div>}
                 <div style={{ padding: "10px 12px" }}>
                   <div style={{ fontSize: 12, fontWeight: 700, marginBottom: 4, overflow: "hidden", display: "-webkit-box", WebkitLineClamp: 2, WebkitBoxOrient: "vertical" }}>{ad.title}</div>
                   <div style={{ fontSize: 13, fontWeight: 700, color: "#C47F17" }}>{ad.price}</div>
