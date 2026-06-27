@@ -127,9 +127,15 @@ router.get("/trending", async (req, res) => {
       `SELECT l.id, l.title, l.price, l.price_currency, l.type, l.status, l.created_at,
       l.views_count, l.saves_count,
       COALESCE(u.display_name, u.full_name) as seller_name,
-      (l.views_count + (l.saves_count * 3)) as trending_score
+      (l.views_count + (l.saves_count * 3)) as trending_score,
+      img.url as primary_image
       FROM listings l
       JOIN users u ON u.id = l.seller_id
+      LEFT JOIN (
+        SELECT DISTINCT ON (listing_id) listing_id, url
+        FROM listing_images
+        ORDER BY listing_id, sort_order
+      ) img ON img.listing_id = l.id
       WHERE l.status = 'active'
       ORDER BY trending_score DESC, l.created_at DESC`
     );
