@@ -227,8 +227,29 @@ export default function MakolaDigital() {
         </div>
 
         {/* Ad Banner Space */}
-        <div style={{ marginBottom: 28, background: "rgba(255,255,255,0.02)", border: "1px dashed rgba(255,255,255,0.08)", borderRadius: 14, padding: "20px", textAlign: "center", minHeight: 80, display: "flex", alignItems: "center", justifyContent: "center" }}>
-          <div style={{ color: "rgba(240,237,232,0.2)", fontSize: 12, letterSpacing: "0.1em", textTransform: "uppercase" }}>Advertisement Space</div>
+        <div style={{ marginBottom: 28 }}>
+          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 12 }}>
+            <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+              <span style={{ fontSize: 14, fontWeight: 800 }}>📢 Sponsored</span>
+              <span style={{ fontSize: 9, color: "rgba(240,237,232,0.3)", border: "1px solid rgba(255,255,255,0.1)", borderRadius: 4, padding: "2px 6px", letterSpacing: "0.08em" }}>AD</span>
+            </div>
+          </div>
+          <div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr" : "1fr 1fr", gap: 12 }}>
+            {[
+              { id: "ad1", title: "Gain Flings Laundry Detergent with Oxi Boost - 3 in 1, Original Scent (81 Pacs)", price: "GHS 600", location: "East Legon, Accra", seller: "Dets on Dirt", img: null, link: "/search?q=gain+flings" },
+              { id: "ad2", title: "Tide Ultra Concentrated Liquid Laundry Detergent, Original Scent (146 Loads)", price: "GHS 800", location: "East Legon, Accra", seller: "Dets on Dirt", img: null, link: "/search?q=tide" }
+            ].map(ad => (
+              <div key={ad.id} onClick={() => router.push(ad.link)} style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(196,127,23,0.3)", borderRadius: 14, overflow: "hidden", cursor: "pointer", position: "relative" }}>
+                <div style={{ position: "absolute", top: 8, right: 8, background: "#C47F17", borderRadius: 4, fontSize: 9, fontWeight: 700, color: "#0A0A0A", padding: "2px 6px", letterSpacing: "0.06em", zIndex: 1 }}>SPONSORED</div>
+                <div style={{ height: 120, background: "rgba(196,127,23,0.08)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 36 }}>🧺</div>
+                <div style={{ padding: "10px 12px" }}>
+                  <div style={{ fontSize: 12, fontWeight: 700, marginBottom: 4, overflow: "hidden", display: "-webkit-box", WebkitLineClamp: 2, WebkitBoxOrient: "vertical" }}>{ad.title}</div>
+                  <div style={{ fontSize: 13, fontWeight: 700, color: "#C47F17" }}>{ad.price}</div>
+                  <div style={{ fontSize: 10, color: "rgba(240,237,232,0.4)", marginTop: 2 }}>📍 {ad.location} · by {ad.seller}</div>
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
         <h2 style={{ fontSize: isMobile ? 17 : 20, fontWeight: 700, marginBottom: 16, letterSpacing: "-0.02em" }}>Browse by category</h2>
         <div style={{ display: "grid", gridTemplateColumns: isMobile ? "repeat(4, 1fr)" : "repeat(auto-fit, minmax(130px, 1fr))", gap: isMobile ? 8 : 10 }}>
