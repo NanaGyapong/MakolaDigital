@@ -260,4 +260,3 @@ router.post("/newsletter/subscribe", async (req, res) => {
   }
 });
 
-export default router;
