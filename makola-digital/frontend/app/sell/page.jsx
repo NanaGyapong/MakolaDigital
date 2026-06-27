@@ -225,6 +225,7 @@ export default function SellPage() {
               <div key={i} style={{ position: "relative", aspectRatio: "1", borderRadius: 10, overflow: "hidden", border: i === 0 ? "2px solid #E8533A" : "1px solid rgba(255,255,255,0.1)" }}>
                 <img src={url} alt="" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
                 {i === 0 && <div style={{ position: "absolute", bottom: 4, left: 4, background: "#E8533A", borderRadius: 4, fontSize: 9, padding: "2px 6px", fontWeight: 700 }}>COVER</div>}
+                {i !== 0 && <div onClick={() => setImages(prev => { const arr = [...prev]; arr.splice(i, 1); return [url, ...arr]; })} style={{ position: "absolute", bottom: 4, left: 4, background: "rgba(0,0,0,0.7)", borderRadius: 4, fontSize: 9, padding: "2px 6px", fontWeight: 700, cursor: "pointer", color: "#fff" }}>Set cover</div>}
                 <button onClick={() => setImages(prev => prev.filter((_, j) => j !== i))} style={{ position: "absolute", top: 4, right: 4, background: "rgba(0,0,0,0.7)", border: "none", color: "#fff", borderRadius: "50%", width: 20, height: 20, cursor: "pointer", fontSize: 12 }}>×</button>
               </div>
             ))}
