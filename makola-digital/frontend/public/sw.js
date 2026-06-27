@@ -1,9 +1,7 @@
 const CACHE_NAME = 'makola-digital-v3';
-
 self.addEventListener('install', event => {
   self.skipWaiting();
 });
-
 self.addEventListener('activate', event => {
   event.waitUntil(
     caches.keys().then(keys =>
@@ -12,9 +10,10 @@ self.addEventListener('activate', event => {
   );
   self.clients.claim();
 });
-
 self.addEventListener('fetch', event => {
   if (event.request.method !== 'GET') return;
+  if (event.request.url.includes('railway.app')) return;
+  if (event.request.url.includes('cloudinary.com')) return;
   event.respondWith(
     fetch(event.request)
       .then(response => {
