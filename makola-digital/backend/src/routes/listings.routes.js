@@ -255,8 +255,3 @@ router.post("/newsletter/subscribe", async (req, res) => {
   }
 });
 
-  } catch (err) {
-    res.status(500).json({ message: err.message });
-  }
-});
-// Sat Jun 27 08:27:05 GMTST 2026
