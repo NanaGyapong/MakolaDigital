@@ -215,7 +215,6 @@ export default function MakolaDigital() {
                   <div style={{ padding: "10px 12px" }}>
                     <div style={{ fontSize: 12, fontWeight: 700, marginBottom: 4, overflow: "hidden", display: "-webkit-box", WebkitLineClamp: 2, WebkitBoxOrient: "vertical" }}>{l.title}</div>
                     <div style={{ fontSize: 13, fontWeight: 700, color: "#E8533A" }}>{l.price_currency} {Number(l.price).toLocaleString()}</div>
-                    <div style={{ fontSize: 10, color: "rgba(240,237,232,0.4)", marginTop: 2 }}>👁️ {l.views_count || 0} views</div>
                   </div>
                 </div>
               ))}
