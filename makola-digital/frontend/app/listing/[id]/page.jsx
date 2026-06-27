@@ -250,7 +250,7 @@ export default function ListingPage() {
                 ))}
               </div>
               <div style={{ padding: 16 }}>
-                {chatOpen && chatMessages.length > 0 ? (
+                {chatMessages.length > 0 ? (
                   <div>
                     <div style={{ maxHeight: 200, overflowY: "auto", marginBottom: 12, display: "flex", flexDirection: "column", gap: 8 }}>
                       {chatMessages.map((m, i) => (
@@ -287,7 +287,7 @@ export default function ListingPage() {
                         <textarea value={message} onChange={e => setMessage(e.target.value)} placeholder="Add a note (optional)" rows={2} style={{ width: "100%", background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.09)", borderRadius: 10, padding: "10px 12px", color: "#F0EDE8", fontSize: 13, resize: "none", outline: "none", boxSizing: "border-box", fontFamily: "sans-serif" }} />
                       </>
                     )}
-                    <button onClick={handleSend} disabled={tab === "message" ? !message.trim() : !offer} style={{ width: "100%", marginTop: 10, background: tab === "message" ? "#E8533A" : "#2D9E6B", border: "none", color: "#fff", padding: "12px", borderRadius: 10, fontSize: 14, fontWeight: 700, cursor: "pointer", opacity: (tab === "message" ? !message.trim() : !offer) ? 0.5 : 1 }}>
+                    <button onClick={handleSend} disabled={tab === "message" ? !message.trim() : false} style={{ width: "100%", marginTop: 10, background: tab === "message" ? "#E8533A" : "#2D9E6B", border: "none", color: "#fff", padding: "12px", borderRadius: 10, fontSize: 14, fontWeight: 700, cursor: "pointer", opacity: (tab === "message" ? !message.trim() : false) ? 0.5 : 1 }}>
                       {tab === "message" ? "Send Message →" : "Submit Offer →"}
                     </button>
                   </>
