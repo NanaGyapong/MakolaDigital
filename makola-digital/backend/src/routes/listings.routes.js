@@ -183,7 +183,6 @@ router.get("/:id/related", async (req, res) => {
   }
 });
 
-export default router;
 
 router.patch("/:id", authenticate, async (req, res) => {
   try {
@@ -261,3 +260,4 @@ router.post("/newsletter/subscribe", async (req, res) => {
   }
 });
 
+export default router;
