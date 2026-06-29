@@ -293,6 +293,57 @@ export default function MakolaDigital() {
         </div>
       )}
 
+      {/* HOW IT WORKS */}
+      <div style={{ padding: isMobile ? "32px 16px" : "48px 32px" }}>
+        <div style={{ textAlign: "center", marginBottom: 36 }}>
+          <div style={{ display: "inline-block", background: "rgba(232,83,58,0.12)", border: "1px solid rgba(232,83,58,0.3)", borderRadius: 20, padding: "4px 14px", fontSize: 11, color: "#E8533A", marginBottom: 12, fontWeight: 500 }}>HOW IT WORKS</div>
+          <h2 style={{ fontSize: isMobile ? 22 : 28, fontWeight: 900, margin: "0 0 8px" }}>Buy & Sell in 3 Simple Steps</h2>
+          <p style={{ color: "rgba(240,237,232,0.5)", fontSize: 14, margin: 0 }}>Join thousands of Ghanaians already buying and selling on Makola Digital</p>
+        </div>
+
+        <div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr" : "1fr 1fr", gap: 24, marginBottom: 40 }}>
+          
+          {/* FOR SELLERS */}
+          <div style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: 16, padding: 24 }}>
+            <div style={{ fontSize: 13, fontWeight: 700, color: "#E8533A", marginBottom: 20, letterSpacing: "0.05em" }}>🏪 FOR SELLERS</div>
+            {[
+              { n: "1", title: "Create a free account", body: "Sign up in 30 seconds with your email or phone number. No credit card needed." },
+              { n: "2", title: "List your product or service", body: "Upload photos, set your price and publish. Your listing goes live instantly after review." },
+              { n: "3", title: "Get messages from buyers", body: "Buyers contact you directly on WhatsApp or via the platform. Close the deal!" },
+            ].map(step => (
+              <div key={step.n} style={{ display: "flex", gap: 14, marginBottom: 20 }}>
+                <div style={{ width: 32, height: 32, borderRadius: "50%", background: "#E8533A", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 13, fontWeight: 900, flexShrink: 0, color: "#fff" }}>{step.n}</div>
+                <div>
+                  <div style={{ fontWeight: 700, fontSize: 14, marginBottom: 4 }}>{step.title}</div>
+                  <div style={{ fontSize: 13, color: "rgba(240,237,232,0.5)", lineHeight: 1.5 }}>{step.body}</div>
+                </div>
+              </div>
+            ))}
+            <button onClick={() => router.push("/auth/register")} style={{ width: "100%", background: "#E8533A", border: "none", color: "#fff", padding: "12px", borderRadius: 10, fontSize: 14, fontWeight: 700, cursor: "pointer" }}>Start selling free →</button>
+          </div>
+
+          {/* FOR BUYERS */}
+          <div style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: 16, padding: 24 }}>
+            <div style={{ fontSize: 13, fontWeight: 700, color: "#2D9E6B", marginBottom: 20, letterSpacing: "0.05em" }}>🛍️ FOR BUYERS</div>
+            {[
+              { n: "1", title: "Search for what you need", body: "Browse by category or search for specific products, services, jobs or rentals." },
+              { n: "2", title: "Find the perfect listing", body: "View photos, read descriptions, check prices and compare sellers across Ghana & Africa." },
+              { n: "3", title: "Contact the seller directly", body: "Message sellers on WhatsApp or through our platform. No middleman, no hidden fees." },
+            ].map(step => (
+              <div key={step.n} style={{ display: "flex", gap: 14, marginBottom: 20 }}>
+                <div style={{ width: 32, height: 32, borderRadius: "50%", background: "#2D9E6B", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 13, fontWeight: 900, flexShrink: 0, color: "#fff" }}>{step.n}</div>
+                <div>
+                  <div style={{ fontWeight: 700, fontSize: 14, marginBottom: 4 }}>{step.title}</div>
+                  <div style={{ fontSize: 13, color: "rgba(240,237,232,0.5)", lineHeight: 1.5 }}>{step.body}</div>
+                </div>
+              </div>
+            ))}
+            <button onClick={() => router.push("/search")} style={{ width: "100%", background: "#2D9E6B", border: "none", color: "#fff", padding: "12px", borderRadius: 10, fontSize: 14, fontWeight: 700, cursor: "pointer" }}>Browse listings →</button>
+          </div>
+
+        </div>
+      </div>
+
       {/* CTA BANNER */}
       <div style={{ margin: isMobile ? "0 16px 40px" : "0 32px 48px", background: "linear-gradient(135deg, rgba(232,83,58,0.15), rgba(196,127,23,0.15))", border: "1px solid rgba(232,83,58,0.2)", borderRadius: 20, padding: isMobile ? "28px 20px" : "40px 48px", textAlign: isMobile ? "center" : "left" }}>
         <h3 style={{ fontSize: isMobile ? 20 : 22, fontWeight: 700, margin: "0 0 8px", letterSpacing: "-0.02em" }}>Are you a business owner?</h3>
