@@ -59,9 +59,12 @@ export default function SellerProfile() {
 
       {/* Seller Hero */}
       <div style={{ background: "linear-gradient(135deg, rgba(232,83,58,0.15), rgba(196,127,23,0.1))", padding: isMobile ? "32px 20px" : "48px 40px", textAlign: "center", borderBottom: "1px solid rgba(255,255,255,0.08)" }}>
-        <div style={{ width: 80, height: 80, borderRadius: "50%", background: "linear-gradient(135deg, #E8533A, #C47F17)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 36, margin: "0 auto 16px", fontWeight: 900 }}>
-          {(seller.display_name || seller.full_name || "S").charAt(0).toUpperCase()}
-        </div>
+        {seller.avatar_url
+          ? <img src={seller.avatar_url} alt={seller.display_name || seller.full_name} style={{ width:80, height:80, borderRadius:"50%", objectFit:"cover", margin:"0 auto 16px", display:"block", border:"3px solid #E8533A" }} />
+          : <div style={{ width:80, height:80, borderRadius:"50%", background:"linear-gradient(135deg,#E8533A,#C47F17)", display:"flex", alignItems:"center", justifyContent:"center", fontSize:36, margin:"0 auto 16px", fontWeight:900 }}>
+              {(seller.display_name || seller.full_name || "S").charAt(0).toUpperCase()}
+            </div>
+          }
         <div style={{ fontWeight: 900, fontSize: 24, marginBottom: 4 }}>{seller.display_name || seller.full_name}</div>
         <div style={{ fontSize: 13, color: "rgba(240,237,232,0.5)", marginBottom: 12 }}>
           📍 {seller.country || "Ghana"} · Member since {new Date(seller.created_at).toLocaleDateString("en-GB", { month: "long", year: "numeric" })}
