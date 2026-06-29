@@ -97,10 +97,12 @@ setTimeout(async () => {
   } catch(e) { console.log('Table setup:', e.message); }
 }, 2000);
 
-// Run weekly analytics every Monday at 8am
+// Run email campaigns Monday, Wednesday and Saturday at 8am
 setInterval(async () => {
   const now = new Date();
-  if (now.getDay() === 1 && now.getHours() === 8) {
+  const day = now.getDay(); // 0=Sun, 1=Mon, 3=Wed, 6=Sat
+  const hour = now.getHours();
+  if ((day === 1 || day === 3 || day === 6) && hour === 8) {
     await sendWeeklyAnalytics();
     await sendBuyerRecommendations();
   }
