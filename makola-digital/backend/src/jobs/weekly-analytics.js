@@ -6,7 +6,7 @@ export async function sendWeeklyAnalytics() {
     const resend = new Resend(process.env.RESEND_API_KEY);
     
     // Get all sellers
-    const sellers = await db.query("SELECT id, email, full_name FROM users WHERE role = 'seller'");
+    const sellers = await db.query("SELECT id, email, COALESCE(display_name, full_name) as full_name, role FROM users WHERE email IS NOT NULL");
     
     for (const seller of sellers.rows) {
       // Get their listings stats for the week

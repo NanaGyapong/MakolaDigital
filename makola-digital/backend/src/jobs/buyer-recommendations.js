@@ -6,7 +6,7 @@ export async function sendBuyerRecommendations() {
     const resend = new Resend(process.env.RESEND_API_KEY);
 
     // Get all buyers
-    const buyers = await db.query("SELECT id, email, full_name FROM users WHERE role = 'buyer'");
+    const buyers = await db.query("SELECT id, email, COALESCE(display_name, full_name) as full_name FROM users WHERE email IS NOT NULL");
 
     // Get 6 latest active listings
     const listings = await db.query(`
