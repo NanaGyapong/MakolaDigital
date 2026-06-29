@@ -312,10 +312,11 @@ export default function MakolaDigital() {
             <a href="https://www.facebook.com/MakolaDigital" target="_blank" rel="noopener noreferrer" style={{ color: "#3B7DD8", fontSize: 13, textDecoration: "none" }}>👍 Facebook</a>
             <a href="https://www.linkedin.com/company/makoladigital" target="_blank" rel="noopener noreferrer" style={{ color: "#2D9E6B", fontSize: 13, textDecoration: "none" }}>💼 LinkedIn</a>
           </div></div>
-        <div style={{ display: "flex", gap: 20 }}>
-          {["Privacy", "Terms", "Help", "Contact"].map(f => (
-            <span key={f} style={{ cursor: "pointer" }}>{f}</span>
-          ))}
+        <div style={{ display: "flex", gap: 20, flexWrap: "wrap" }}>
+          <span onClick={() => router.push("/privacy")} style={{ cursor: "pointer", color: "rgba(240,237,232,0.5)", fontSize: 13 }}>Privacy</span>
+          <span onClick={() => router.push("/terms")} style={{ cursor: "pointer", color: "rgba(240,237,232,0.5)", fontSize: 13 }}>Terms</span>
+          <span onClick={() => router.push("/delete-account")} style={{ cursor: "pointer", color: "rgba(240,237,232,0.5)", fontSize: 13 }}>Delete Account</span>
+          <a href="mailto:hello@makoladigital.online" style={{ color: "rgba(240,237,232,0.5)", fontSize: 13, textDecoration: "none" }}>Contact</a>
         </div>
       </div>
       {showNewsletter && (
