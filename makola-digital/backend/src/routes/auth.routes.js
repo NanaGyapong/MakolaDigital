@@ -90,4 +90,17 @@ router.post('/verify-login-otp', async (req, res) => {
   } catch(err) { console.error('verify-login-otp:', err); res.status(500).json({ message: 'Verification failed' }); }
 });
 
+// Update avatar
+router.patch("/avatar", authenticate, async (req, res) => {
+  try {
+    const { avatarUrl } = req.body;
+    await db.query("UPDATE users SET avatar_url=$1 WHERE id=$2", [avatarUrl, req.user.id]);
+    res.json({ message: "Avatar updated successfully", avatarUrl });
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+});
+
 export default router;
+
+// Update avatar URL
