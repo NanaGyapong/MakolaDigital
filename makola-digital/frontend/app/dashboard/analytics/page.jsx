@@ -10,6 +10,18 @@ export default function SellerDashboard() {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
 
+  const saveAvatar = async (url) => {
+    const token = localStorage.getItem("makola_token");
+    setSavingAvatar(true);
+    await fetch(`${API}/auth/avatar`, {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
+      body: JSON.stringify({ avatarUrl: url })
+    });
+    setAvatar(url);
+    setShowAvatarPicker(false);
+    setSavingAvatar(false);
+  };
   const toggleSoldOut = async (id, currentState) => {
     const token = localStorage.getItem('makola_token');
     const newState = !currentState;
@@ -34,6 +46,9 @@ export default function SellerDashboard() {
   const [justListed, setJustListed] = useState(false);
   useEffect(() => { if (window.location.search.includes("listed=true")) setJustListed(true); }, []);
   const [activeTab, setActiveTab] = useState("listings");
+  const [avatar, setAvatar] = useState(null);
+  const [showAvatarPicker, setShowAvatarPicker] = useState(false);
+  const [savingAvatar, setSavingAvatar] = useState(false);
   const [stats, setStats] = useState({ total: 0, active: 0, pending: 0, views: 0 });
 
   useEffect(() => {
@@ -41,6 +56,10 @@ export default function SellerDashboard() {
     if (!token) { router.push("/auth/login"); return; }
 
     // Fetch seller's listings
+    fetch(`${API}/users/me`, { headers: { Authorization: `Bearer ${token}` } })
+      .then(r => r.json())
+      .then(data => { if (data.user?.avatar_url) setAvatar(data.user.avatar_url); })
+      .catch(() => {});
     fetch(`${API}/listings/mine`, {
       headers: { Authorization: `Bearer ${token}` }
     })
@@ -99,6 +118,36 @@ export default function SellerDashboard() {
           <p style={{ fontSize: 14, color: "rgba(240,237,232,0.5)", margin: 0 }}>Manage your listings and track performance</p>
         </div>
 
+        {/* Profile Picture */}
+        <div style={{ background:"rgba(255,255,255,0.04)", border:"1px solid rgba(255,255,255,0.08)", borderRadius:14, padding:"16px 20px", marginBottom:20, display:"flex", alignItems:"center", gap:16 }}>
+          <div style={{ position:"relative", cursor:"pointer" }} onClick={() => setShowAvatarPicker(!showAvatarPicker)}>
+            {avatar
+              ? <img src={avatar} alt="Profile" style={{ width:56, height:56, borderRadius:"50%", objectFit:"cover", border:"2px solid #E8533A" }} />
+              : <div style={{ width:56, height:56, borderRadius:"50%", background:"linear-gradient(135deg,#E8533A,#C47F17)", display:"flex", alignItems:"center", justifyContent:"center", fontSize:24, fontWeight:900 }}>👤</div>
+            }
+            <div style={{ position:"absolute", bottom:0, right:0, background:"#E8533A", borderRadius:"50%", width:18, height:18, display:"flex", alignItems:"center", justifyContent:"center", fontSize:10 }}>✏️</div>
+          </div>
+          <div>
+            <div style={{ fontWeight:700, fontSize:15 }}>Your Profile Picture</div>
+            <div style={{ fontSize:12, color:"rgba(240,237,232,0.5)", marginTop:2 }}>Click to choose from your listing photos</div>
+          </div>
+        </div>
+        {showAvatarPicker && (
+          <div style={{ background:"rgba(255,255,255,0.04)", border:"1px solid rgba(255,255,255,0.08)", borderRadius:14, padding:16, marginBottom:20 }}>
+            <div style={{ fontWeight:700, marginBottom:12, fontSize:14 }}>Choose a photo as your profile picture:</div>
+            {listings.filter(l => l.primary_image).length === 0
+              ? <div style={{ color:"rgba(240,237,232,0.4)", fontSize:13 }}>No listing photos available. Add photos to your listings first.</div>
+              : <div style={{ display:"grid", gridTemplateColumns:"repeat(5,1fr)", gap:8 }}>
+                  {listings.filter(l => l.primary_image).map(l => (
+                    <div key={l.id} onClick={() => saveAvatar(l.primary_image)} style={{ position:"relative", aspectRatio:"1", borderRadius:10, overflow:"hidden", cursor:"pointer", border: avatar === l.primary_image ? "2px solid #E8533A" : "1px solid rgba(255,255,255,0.1)" }}>
+                      <img src={l.primary_image} alt={l.title} style={{ width:"100%", height:"100%", objectFit:"cover" }} />
+                      {avatar === l.primary_image && <div style={{ position:"absolute", inset:0, background:"rgba(232,83,58,0.3)", display:"flex", alignItems:"center", justifyContent:"center", fontSize:20 }}>✅</div>}
+                    </div>
+                  ))}
+                </div>
+            }
+          </div>
+        )}
         {/* Stats */}
         <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 12, marginBottom: 28 }}>
           {[
