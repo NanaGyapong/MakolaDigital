@@ -137,7 +137,7 @@ export default function MakolaDigital() {
           <>
             <div style={{ display: "flex", gap: 8 }}>
               {["Explore", "Sell", "Jobs", "Blog"].map(nav => (
-                <button key={nav} onClick={() => router.push(nav === "Sell" ? "/sell" : nav === "Jobs" ? "/search" : "/")} style={{ background: "none", border: "none", color: "rgba(240,237,232,0.6)", fontSize: 14, cursor: "pointer", padding: "6px 12px", borderRadius: 6 }}>{nav}</button>
+                <button key={nav} onClick={() => router.push(nav === "Sell" ? "/sell" : nav === "Jobs" ? "/search?type=job" : nav === "Blog" ? "/blog" : "/")} style={{ background: "none", border: "none", color: "rgba(240,237,232,0.6)", fontSize: 14, cursor: "pointer", padding: "6px 12px", borderRadius: 6 }}>{nav}</button>
               ))}
             </div>
             <div style={{ display: "flex", gap: 10 }}>
@@ -152,7 +152,7 @@ export default function MakolaDigital() {
       {menuOpen && isMobile && (
         <div style={{ background: "#111", borderBottom: "1px solid rgba(255,255,255,0.07)", padding: "12px 16px", display: "flex", flexDirection: "column", gap: 4 }}>
           {["Explore", "Sell", "Jobs", "Blog"].map(nav => (
-            <button key={nav} onClick={() => { router.push(nav === "Sell" ? "/sell" : nav === "Jobs" ? "/search" : "/"); setMenuOpen(false); }} style={{ background: "none", border: "none", color: "#F0EDE8", fontSize: 15, cursor: "pointer", padding: "10px 0", textAlign: "left", borderBottom: "1px solid rgba(255,255,255,0.05)" }}>{nav}</button>
+            <button key={nav} onClick={() => { router.push(nav === "Sell" ? "/sell" : nav === "Jobs" ? "/search?type=job" : nav === "Blog" ? "/blog" : "/"); setMenuOpen(false); }} style={{ background: "none", border: "none", color: "#F0EDE8", fontSize: 15, cursor: "pointer", padding: "10px 0", textAlign: "left", borderBottom: "1px solid rgba(255,255,255,0.05)" }}>{nav}</button>
           ))}
           <button onClick={() => router.push("/auth/register")} style={{ background: "#E8533A", border: "none", color: "#fff", padding: "12px", borderRadius: 10, fontSize: 15, fontWeight: 700, cursor: "pointer", marginTop: 8 }}>List for free →</button>
         </div>
