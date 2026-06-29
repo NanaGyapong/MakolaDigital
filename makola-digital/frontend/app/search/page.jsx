@@ -58,6 +58,7 @@ function SearchContent() {
   const [total, setTotal] = useState(0);
   const [totalCount, setTotalCount] = useState(0);
   const [page, setPage] = useState(1);
+  const [sortBy, setSortBy] = useState("newest");
   const PER_PAGE = 20;
   const [isMobile, setIsMobile] = useState(false);
   const [showFilters, setShowFilters] = useState(false);
@@ -87,6 +88,10 @@ function SearchContent() {
       if (subcategory) results = results.filter(l => l.title?.toLowerCase().includes(subcategory.toLowerCase()) || l.description?.toLowerCase().includes(subcategory.toLowerCase()));
       if (minPrice) results = results.filter(l => Number(l.price) >= Number(minPrice));
       if (maxPrice) results = results.filter(l => Number(l.price) <= Number(maxPrice));
+      if (sortBy === "price_low") results = results.sort((a,b) => Number(a.price||0) - Number(b.price||0));
+      if (sortBy === "price_high") results = results.sort((a,b) => Number(b.price||0) - Number(a.price||0));
+      if (sortBy === "newest") results = results.sort((a,b) => new Date(b.created_at) - new Date(a.created_at));
+      if (sortBy === "popular") results = results.sort((a,b) => (b.views_count||0) - (a.views_count||0));
 
       setTotalCount(results.length);
       setTotal(results.length);
@@ -214,7 +219,15 @@ function SearchContent() {
           {/* Results header */}
           <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 16 }}>
             <div style={{ fontSize: 14, color: "rgba(240,237,232,0.6)" }}>
-              {loading ? "Searching..." : `${total} listing${total !== 1 ? "s" : ""} found${query ? ` for "${query}"` : ""}`}
+              <div style={{ display:"flex", alignItems:"center", justifyContent:"space-between", width:"100%" }}>
+              <span>{loading ? "Searching..." : `${total} listing${total !== 1 ? "s" : ""} found${query ? ` for "${query}"` : ""}`}</span>
+              <select value={sortBy} onChange={e => setSortBy(e.target.value)} style={{ background:"rgba(255,255,255,0.06)", border:"1px solid rgba(255,255,255,0.09)", borderRadius:8, padding:"6px 12px", color:"#F0EDE8", fontSize:13, cursor:"pointer", outline:"none" }}>
+                <option value="newest">Newest first</option>
+                <option value="price_low">Price: Low to High</option>
+                <option value="price_high">Price: High to Low</option>
+                <option value="popular">Most popular</option>
+              </select>
+            </div>
             </div>
           </div>
 
