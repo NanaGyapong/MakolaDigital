@@ -41,6 +41,8 @@ export default function ListingPage() {
   const [sent, setSent] = useState(false);
   const [chatMessages, setChatMessages] = useState([]);
   const [chatOpen, setChatOpen] = useState(false);
+  const [saved, setSaved] = useState(false);
+  const [saveLoading, setSaveLoading] = useState(false);
   const [reviews, setReviews] = useState([]);
   const [avgRating, setAvgRating] = useState(0);
   const [totalReviews, setTotalReviews] = useState(0);
@@ -74,6 +76,22 @@ export default function ListingPage() {
       })
       .catch(() => {});
   }, [id]);
+
+  const handleSave = async () => {
+    const token = localStorage.getItem('makola_token');
+    if (!token) { router.push('/auth/login'); return; }
+    setSaveLoading(true);
+    try {
+      if (saved) {
+        await fetch(`${API}/listings/${id}/save`, { method: 'DELETE', headers: { Authorization: `Bearer ${token}` } });
+        setSaved(false);
+      } else {
+        await fetch(`${API}/listings/${id}/save`, { method: 'POST', headers: { Authorization: `Bearer ${token}` } });
+        setSaved(true);
+      }
+    } catch(e) { console.error(e); }
+    setSaveLoading(false);
+  };
 
   const handleSend = async () => {
     const token = localStorage.getItem('makola_token');
@@ -297,6 +315,11 @@ export default function ListingPage() {
 
             <div style={{ textAlign: "center", marginBottom: 8 }}><button onClick={() => { const reason = prompt("Describe the issue:"); if (reason) { const token = localStorage.getItem("makola_token"); if (!token) { router.push("/auth/login"); return; } fetch("https://sparkling-charm-production-cb2c.up.railway.app/api/v1/disputes", { method: "POST", headers: { "Content-Type": "application/json", Authorization: "Bearer " + token }, body: JSON.stringify({ listingId: id, sellerId: listing.seller_id, reason }) }).then(() => alert("Report submitted. We will review within 24 hours.")); }}} style={{ background: "none", border: "none", color: "rgba(240,237,232,0.3)", fontSize: 11, cursor: "pointer", textDecoration: "underline" }}>🚩 Report a problem</button></div>
             <div style={{ fontSize: 11, color: "rgba(240,237,232,0.3)", textAlign: "center" }}>
+            <div style={{ marginBottom: 16 }}>
+              <button onClick={handleSave} disabled={saveLoading} style={{ width: "100%", background: saved ? "rgba(232,83,58,0.12)" : "rgba(255,255,255,0.05)", border: saved ? "1px solid rgba(232,83,58,0.4)" : "1px solid rgba(255,255,255,0.1)", color: saved ? "#E8533A" : "rgba(240,237,232,0.7)", padding: "11px", borderRadius: 10, cursor: "pointer", fontSize: 13, fontWeight: 700, marginBottom: 8 }}>
+                {saved ? "❤️ Saved" : "🤍 Save Listing"}
+              </button>
+            </div>
             <div style={{ marginBottom: 16 }}><div style={{ fontSize: 12, color: "rgba(240,237,232,0.5)", marginBottom: 8, fontWeight: 600 }}>SHARE THIS LISTING</div><div style={{ display: "flex", gap: 8 }}><button onClick={() => { const url = window.location.href; const text = listing.title + " - " + listing.price_currency + " " + Number(listing.price).toLocaleString() + " | Makola Digital"; window.open("https://wa.me/?text=" + encodeURIComponent(text + " " + url), "_blank"); }} style={{ flex: 1, background: "rgba(37,211,102,0.12)", border: "1px solid rgba(37,211,102,0.3)", color: "#25D366", padding: "10px", borderRadius: 10, cursor: "pointer", fontSize: 13, fontWeight: 700 }}>WhatsApp</button><button onClick={() => { navigator.clipboard.writeText(window.location.href); alert("Link copied!"); }} style={{ flex: 1, background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.12)", color: "#F0EDE8", padding: "10px", borderRadius: 10, cursor: "pointer", fontSize: 13, fontWeight: 700 }}>Copy Link</button></div></div>
               🔒 Messages are sent through Makola Digital's secure platform.
             </div>
