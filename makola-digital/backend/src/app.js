@@ -107,6 +107,7 @@ setInterval(async () => {
     await sendBuyerRecommendations();
   }
 }, 60 * 60 * 1000); // Check every hour
+app.listen(PORT, '0.0.0.0', () => console.log(`🌍 Makola Digital API running on port ${PORT}`));
 export default app;
 // Fri Jul  3 11:35:00 GMTST 2026
 
