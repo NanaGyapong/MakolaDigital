@@ -214,6 +214,56 @@ router.patch("/:id", authenticate, async (req, res) => {
   }
 });
 
+router.post("/:id/save", authenticate, async (req, res) => {
+  try {
+    const { id } = req.params;
+    const userId = req.user.id;
+    await db.query(
+      "INSERT INTO saved_listings (id, user_id, listing_id, created_at) VALUES (gen_random_uuid(), $1, $2, NOW()) ON CONFLICT (user_id, listing_id) DO NOTHING",
+      [userId, id]
+    );
+    await db.query("UPDATE listings SET saves_count = saves_count + 1 WHERE id = $1", [id]);
+    res.json({ message: "Listing saved!" });
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+});
+
+router.delete("/:id/save", authenticate, async (req, res) => {
+  try {
+    const { id } = req.params;
+    const userId = req.user.id;
+    const result = await db.query(
+      "DELETE FROM saved_listings WHERE user_id = $1 AND listing_id = $2",
+      [userId, id]
+    );
+    if (result.rowCount > 0) {
+      await db.query("UPDATE listings SET saves_count = GREATEST(saves_count - 1, 0) WHERE id = $1", [id]);
+    }
+    res.json({ message: "Listing unsaved!" });
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+});
+
+router.get("/saved/mine", authenticate, async (req, res) => {
+  try {
+    const result = await db.query(
+      `SELECT l.*, COALESCE(u.display_name, u.full_name) as seller_name,
+      (SELECT url FROM listing_images WHERE listing_id = l.id AND is_primary ORDER BY sort_order LIMIT 1) as primary_image
+      FROM saved_listings sl
+      JOIN listings l ON l.id = sl.listing_id
+      JOIN users u ON u.id = l.seller_id
+      WHERE sl.user_id = $1 AND l.status = 'active'
+      ORDER BY sl.created_at DESC`,
+      [req.user.id]
+    );
+    res.json({ listings: result.rows });
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+});
+
 router.delete("/:id", authenticate, async (req, res) => {
   try {
     await db.query("DELETE FROM listing_images WHERE listing_id = $1", [req.params.id]);
