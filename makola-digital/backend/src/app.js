@@ -107,5 +107,4 @@ setInterval(async () => {
     await sendBuyerRecommendations();
   }
 }, 60 * 60 * 1000); // Check every hour
-});
 export default app;
