@@ -97,14 +97,14 @@ setTimeout(async () => {
   } catch(e) { console.log('Table setup:', e.message); }
 }, 2000);
 
-// Run email campaigns Monday, Wednesday and Saturday at 8am
+// Run email campaigns daily at 8am
 setInterval(async () => {
   const now = new Date();
-  const day = now.getDay(); // 0=Sun, 1=Mon, 3=Wed, 6=Sat
   const hour = now.getHours();
-  if ((day === 1 || day === 3 || day === 6) && hour === 8) {
-    await sendWeeklyAnalytics();
+  const day = now.getDay();
+  if (hour === 8) {
     await sendBuyerRecommendations();
+    if (day === 1) await sendWeeklyAnalytics(); // Analytics only on Mondays
   }
 }, 60 * 60 * 1000); // Check every hour
 app.listen(PORT, '0.0.0.0', () => console.log(`🌍 Makola Digital API running on port ${PORT}`));
