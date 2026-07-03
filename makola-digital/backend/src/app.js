@@ -107,15 +107,5 @@ setInterval(async () => {
     await sendBuyerRecommendations();
   }
 }, 60 * 60 * 1000); // Check every hour
-
-app.listen(PORT, '0.0.0.0', () => console.log(`🌍 Makola Digital API running on port ${PORT}`));
+});
 export default app;
-
-});
-
-// ONE-TIME: Holiday campaign retry trigger
-import { sendHolidayCampaign } from "./jobs/holiday-campaign.js";
-app.get('/api/v1/trigger-holiday', async (req, res) => {
-  await sendHolidayCampaign();
-  res.json({ message: "Holiday campaign sent!" });
-});
