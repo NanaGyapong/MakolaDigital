@@ -367,7 +367,7 @@ export default function MakolaDigital() {
           <span onClick={() => router.push("/privacy")} style={{ cursor: "pointer", color: "rgba(240,237,232,0.5)", fontSize: 13 }}>Privacy</span>
           <span onClick={() => router.push("/terms")} style={{ cursor: "pointer", color: "rgba(240,237,232,0.5)", fontSize: 13 }}>Terms</span>
           <span onClick={() => router.push("/delete-account")} style={{ cursor: "pointer", color: "rgba(240,237,232,0.5)", fontSize: 13 }}>Delete Account</span>
-          <a href="mailto:hello@makoladigital.online" style={{ color: "rgba(240,237,232,0.5)", fontSize: 13, textDecoration: "none" }}>Contact</a>
+          <span onClick={() => router.push("/contact")} style={{ color: "rgba(240,237,232,0.5)", fontSize: 13, cursor: "pointer" }}>Contact</span>
         </div>
       </div>
       {showNewsletter && (
