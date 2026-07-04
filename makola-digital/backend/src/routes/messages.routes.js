@@ -1,4 +1,5 @@
 import { Router } from "express";
+import { sendPushNotification } from "./push.routes.js";
 import { db } from "../config/db.js";
 import { authenticate } from "../middleware/auth.js";
 
@@ -14,6 +15,13 @@ router.post("/", authenticate, async (req, res) => {
       [listingId, req.user.id, receiverId, body, offerAmount || null, type || "message"]
     );
     res.status(201).json({ message: "Message sent" });
+    // Send push notification to receiver
+    sendPushNotification(
+      receiverId,
+      "New message on Makola Digital 💬",
+      body.length > 60 ? body.slice(0, 60) + "..." : body,
+      "/dashboard/inbox"
+    ).catch(() => {});
   } catch (err) {
     console.error("send message:", err);
     res.status(500).json({ message: "Failed to send message" });

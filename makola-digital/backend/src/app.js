@@ -1,5 +1,6 @@
 import express from "express";
 import { sendWeeklyAnalytics } from "./jobs/weekly-analytics.js";
+import pushRoutes from "./routes/push.routes.js";
 import { sendBuyerRecommendations } from "./jobs/buyer-recommendations.js";
 import cors from "cors";
 import helmet from "helmet";
@@ -77,6 +78,7 @@ app.use("/api/v1/kyc", kycRoutes);
 app.use("/api/v1/reviews", reviewsRoutes);
 app.use("/api/v1/disputes", disputesRoutes);
 app.use("/api/v1/messages", messagesRoutes);
+app.use("/api/v1/push", pushRoutes);
 
 app.get('/api/v1/admin/users', async (req, res) => {
   try {
