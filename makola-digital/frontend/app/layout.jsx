@@ -107,7 +107,37 @@ export default function RootLayout({ children }) {
           }}
         />
       </head>
-      <body>{children}</body>
+      <body>{children}
+        <script dangerouslySetInnerHTML={{ __html: `
+          const VAPID_PUBLIC_KEY = 'BBveH9ySe5tjl-Dh1gf5JD07G9xHgxbG7wL9h5kf2Y9Bz2MWagzZiq0QVghmDPfAJ5ee52z_PuADgltnLl2SOkU';
+          function urlBase64ToUint8Array(base64String) {
+            const padding = '='.repeat((4 - base64String.length % 4) % 4);
+            const base64 = (base64String + padding).replace(/-/g, '+').replace(/_/g, '/');
+            const rawData = window.atob(base64);
+            return new Uint8Array([...rawData].map(c => c.charCodeAt(0)));
+          }
+          async function registerPush() {
+            try {
+              const token = localStorage.getItem('makola_token');
+              if (!token) return;
+              if (!('serviceWorker' in navigator) || !('PushManager' in window)) return;
+              const reg = await navigator.serviceWorker.ready;
+              const permission = await Notification.requestPermission();
+              if (permission !== 'granted') return;
+              const sub = await reg.pushManager.subscribe({
+                userVisibleOnly: true,
+                applicationServerKey: urlBase64ToUint8Array(VAPID_PUBLIC_KEY)
+              });
+              await fetch('https://sparkling-charm-production-cb2c.up.railway.app/api/v1/push/subscribe', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
+                body: JSON.stringify({ subscription: sub })
+              });
+            } catch(e) { console.log('Push setup:', e.message); }
+          }
+          setTimeout(registerPush, 5000);
+        `}} />
+      </body>
     </html>
   );
 }
