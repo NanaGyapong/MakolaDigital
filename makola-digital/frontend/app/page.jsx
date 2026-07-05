@@ -176,43 +176,27 @@ export default function MakolaDigital() {
             </div>
             <div style={{ position: "absolute", right: 10, top: "50%", transform: "translateY(-50%)" }}>
               <svg width="110" height="110" viewBox="0 0 110 110" fill="none" xmlns="http://www.w3.org/2000/svg">
-                {/* Handle */}
                 <path d="M8 18 Q14 14 22 16" stroke="white" strokeWidth="3.5" strokeLinecap="round" fill="none"/>
-                {/* Main basket top rim */}
                 <path d="M22 16 L88 16" stroke="white" strokeWidth="3.5" strokeLinecap="round"/>
-                {/* Basket right wall */}
                 <path d="M88 16 L82 58" stroke="white" strokeWidth="3.5" strokeLinecap="round"/>
-                {/* Basket bottom */}
                 <path d="M82 58 L28 58" stroke="white" strokeWidth="3.5" strokeLinecap="round"/>
-                {/* Basket left wall */}
                 <path d="M28 58 L22 16" stroke="white" strokeWidth="3.5" strokeLinecap="round"/>
-                {/* Wire grid vertical lines inside basket */}
                 <line x1="38" y1="16" x2="35" y2="58" stroke="rgba(255,255,255,0.35)" strokeWidth="1.5"/>
                 <line x1="52" y1="16" x2="50" y2="58" stroke="rgba(255,255,255,0.35)" strokeWidth="1.5"/>
                 <line x1="66" y1="16" x2="65" y2="58" stroke="rgba(255,255,255,0.35)" strokeWidth="1.5"/>
-                <line x1="78" y1="16" x2="78" y2="58" stroke="rgba(255,255,255,0.35)" strokeWidth="1.5"/>
-                {/* Wire grid horizontal lines */}
                 <line x1="23" y1="30" x2="87" y2="30" stroke="rgba(255,255,255,0.35)" strokeWidth="1.5"/>
                 <line x1="24" y1="44" x2="85" y2="44" stroke="rgba(255,255,255,0.35)" strokeWidth="1.5"/>
-                {/* Lower frame/shelf */}
                 <path d="M30 58 L26 72 L82 72 L80 58" stroke="white" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
-                {/* Wheels */}
                 <circle cx="34" cy="80" r="7" stroke="white" strokeWidth="3" fill="none"/>
                 <circle cx="34" cy="80" r="2.5" fill="white"/>
                 <circle cx="74" cy="80" r="7" stroke="white" strokeWidth="3" fill="none"/>
                 <circle cx="74" cy="80" r="2.5" fill="white"/>
-                {/* Green bag */}
-                <rect x="28" y="26" width="18" height="22" rx="3" fill="#2D9E6B" opacity="0.92"/>
-                <path d="M32 26 Q37 20 42 26" stroke="rgba(255,255,255,0.7)" strokeWidth="2" fill="none" strokeLinecap="round"/>
-                <line x1="28" y1="36" x2="46" y2="36" stroke="rgba(255,255,255,0.3)" strokeWidth="1"/>
-                {/* Blue bag */}
-                <rect x="48" y="28" width="16" height="20" rx="3" fill="#3B82F6" opacity="0.88"/>
-                <path d="M51 28 Q56 22 61 28" stroke="rgba(255,255,255,0.7)" strokeWidth="2" fill="none" strokeLinecap="round"/>
-                <line x1="48" y1="37" x2="64" y2="37" stroke="rgba(255,255,255,0.3)" strokeWidth="1"/>
-                {/* Dark bag */}
-                <rect x="64" y="30" width="14" height="18" rx="3" fill="#1e293b" opacity="0.85"/>
-                <path d="M67 30 Q71 25 75 30" stroke="rgba(255,255,255,0.7)" strokeWidth="2" fill="none" strokeLinecap="round"/>
-                <line x1="64" y1="38" x2="78" y2="38" stroke="rgba(255,255,255,0.3)" strokeWidth="1"/>
+                <rect x="28" y="26" width="18" height="22" rx="3" fill="#2D9E6B"/>
+                <path d="M32 26 Q37 20 42 26" stroke="rgba(255,255,255,0.8)" strokeWidth="2" fill="none" strokeLinecap="round"/>
+                <rect x="48" y="28" width="16" height="20" rx="3" fill="#3B82F6"/>
+                <path d="M51 28 Q56 22 61 28" stroke="rgba(255,255,255,0.8)" strokeWidth="2" fill="none" strokeLinecap="round"/>
+                <rect x="64" y="30" width="14" height="18" rx="3" fill="#1e293b"/>
+                <path d="M67 30 Q71 25 75 30" stroke="rgba(255,255,255,0.8)" strokeWidth="2" fill="none" strokeLinecap="round"/>
               </svg>
             </div>
           </div>
