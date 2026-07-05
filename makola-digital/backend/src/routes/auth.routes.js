@@ -104,3 +104,16 @@ router.patch("/avatar", authenticate, async (req, res) => {
 export default router;
 
 // Update avatar URL
+
+// Get login history
+router.get("/login-history", authenticate, async (req, res) => {
+  try {
+    const result = await db.query(
+      "SELECT ip_address, user_agent, created_at FROM login_history WHERE user_id = $1 ORDER BY created_at DESC LIMIT 10",
+      [req.user.id]
+    );
+    res.json({ history: result.rows });
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+});
