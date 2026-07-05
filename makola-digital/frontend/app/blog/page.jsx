@@ -25,6 +25,30 @@ const posts = [
     "date": "June 23, 2026",
     "readTime": "3 min read",
     "category": "Company News"
+  },
+  {
+    "slug": "best-places-buy-second-hand-phones-ghana-2026",
+    "title": "Best Places to Buy Second Hand Phones in Ghana in 2026",
+    "excerpt": "Looking for affordable second hand phones in Ghana? Here are the best places to find great deals on used smartphones in Accra and beyond.",
+    "date": "July 5, 2026",
+    "readTime": "5 min read",
+    "category": "Buyer Guide"
+  },
+  {
+    "slug": "how-to-spot-fake-sellers-online-ghana",
+    "title": "How to Spot Fake Sellers and Avoid Scams When Shopping Online in Ghana",
+    "excerpt": "Online shopping scams are common in Ghana. Learn how to identify fake sellers and protect yourself when buying online.",
+    "date": "July 5, 2026",
+    "readTime": "6 min read",
+    "category": "Safety Tips"
+  },
+  {
+    "slug": "top-ways-make-money-online-ghana-2026",
+    "title": "Top 5 Ways to Make Money Online in Ghana in 2026",
+    "excerpt": "Want to earn money online in Ghana? Here are 5 proven ways Ghanaians are making real income online in 2026.",
+    "date": "July 5, 2026",
+    "readTime": "6 min read",
+    "category": "Make Money"
   }
 ];
 
