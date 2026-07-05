@@ -286,6 +286,25 @@ router.patch("/:id/sold-out", authenticate, async (req, res) => {
 });
 
 // Newsletter signup - creates lightweight user record
+router.post("/:id/report", authenticate, async (req, res) => {
+  try {
+    const { reason } = req.body;
+    const { id } = req.params;
+    await db.query(
+      `INSERT INTO listing_reports (id, listing_id, reporter_id, reason, created_at)
+       VALUES (gen_random_uuid(), $1, $2, $3, NOW())`,
+      [id, req.user.id, reason]
+    );
+    await db.query(
+      "UPDATE listings SET flags_count = COALESCE(flags_count, 0) + 1 WHERE id = $1",
+      [id]
+    );
+    res.json({ message: "Report submitted successfully" });
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+});
+
 router.post("/newsletter/subscribe", async (req, res) => {
   try {
     const { email } = req.body;
