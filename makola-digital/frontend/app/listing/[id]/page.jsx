@@ -42,6 +42,9 @@ export default function ListingPage() {
   const [chatMessages, setChatMessages] = useState([]);
   const [chatOpen, setChatOpen] = useState(false);
   const [saved, setSaved] = useState(false);
+  const [showReport, setShowReport] = useState(false);
+  const [reportReason, setReportReason] = useState("");
+  const [reportSent, setReportSent] = useState(false);
   const [saveLoading, setSaveLoading] = useState(false);
   const [reviews, setReviews] = useState([]);
   const [avgRating, setAvgRating] = useState(0);
@@ -76,6 +79,22 @@ export default function ListingPage() {
       })
       .catch(() => {});
   }, [id]);
+
+  const handleReport = async () => {
+    const token = localStorage.getItem('makola_token');
+    if (!token) { router.push('/auth/login'); return; }
+    if (!reportReason.trim()) return;
+    try {
+      await fetch(`${API}/listings/${id}/report`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+        body: JSON.stringify({ reason: reportReason })
+      });
+      setReportSent(true);
+      setShowReport(false);
+      setReportReason("");
+    } catch(e) { console.error(e); }
+  };
 
   const handleSave = async () => {
     const token = localStorage.getItem('makola_token');
@@ -319,6 +338,31 @@ export default function ListingPage() {
               <button onClick={handleSave} disabled={saveLoading} style={{ width: "100%", background: saved ? "rgba(232,83,58,0.12)" : "rgba(255,255,255,0.05)", border: saved ? "1px solid rgba(232,83,58,0.4)" : "1px solid rgba(255,255,255,0.1)", color: saved ? "#E8533A" : "rgba(240,237,232,0.7)", padding: "11px", borderRadius: 10, cursor: "pointer", fontSize: 13, fontWeight: 700, marginBottom: 8 }}>
                 {saved ? "📋 Added to Catalogue ✓" : "📋 Add to Catalogue"}
               </button>
+            </div>
+            <div style={{ marginBottom: 16 }}>
+              {reportSent ? (
+                <div style={{ background: "rgba(45,158,107,0.1)", border: "1px solid rgba(45,158,107,0.3)", borderRadius: 10, padding: "10px 14px", fontSize: 12, color: "#2D9E6B", textAlign: "center" }}>✅ Report submitted — our team will review this listing</div>
+              ) : showReport ? (
+                <div style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: 10, padding: 14 }}>
+                  <div style={{ fontSize: 12, fontWeight: 700, marginBottom: 10, color: "#E8533A" }}>🚩 Report this listing</div>
+                  <select value={reportReason} onChange={e => setReportReason(e.target.value)} style={{ width: "100%", background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.09)", borderRadius: 8, padding: "8px 12px", color: "#F0EDE8", fontSize: 13, marginBottom: 10, outline: "none" }}>
+                    <option value="">Select a reason...</option>
+                    <option value="Fake or misleading listing">Fake or misleading listing</option>
+                    <option value="Scam or fraud">Scam or fraud</option>
+                    <option value="Wrong category">Wrong category</option>
+                    <option value="Inappropriate content">Inappropriate content</option>
+                    <option value="Already sold">Already sold</option>
+                    <option value="Spam">Spam</option>
+                    <option value="Other">Other</option>
+                  </select>
+                  <div style={{ display: "flex", gap: 8 }}>
+                    <button onClick={handleReport} disabled={!reportReason} style={{ flex: 1, background: "#E8533A", border: "none", color: "#fff", padding: "8px", borderRadius: 8, fontSize: 12, fontWeight: 700, cursor: "pointer", opacity: !reportReason ? 0.5 : 1 }}>Submit Report</button>
+                    <button onClick={() => setShowReport(false)} style={{ background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.1)", color: "#F0EDE8", padding: "8px 14px", borderRadius: 8, fontSize: 12, cursor: "pointer" }}>Cancel</button>
+                  </div>
+                </div>
+              ) : (
+                <button onClick={() => setShowReport(true)} style={{ width: "100%", background: "none", border: "1px solid rgba(255,255,255,0.08)", color: "rgba(240,237,232,0.35)", padding: "8px", borderRadius: 10, cursor: "pointer", fontSize: 11 }}>🚩 Report this listing</button>
+              )}
             </div>
             <div style={{ marginBottom: 16 }}><div style={{ fontSize: 12, color: "rgba(240,237,232,0.5)", marginBottom: 8, fontWeight: 600 }}>SHARE THIS LISTING</div><div style={{ display: "flex", gap: 8 }}><button onClick={() => { const url = window.location.href; const text = listing.title + " - " + listing.price_currency + " " + Number(listing.price).toLocaleString() + " | Makola Digital"; window.open("https://wa.me/?text=" + encodeURIComponent(text + " " + url), "_blank"); }} style={{ flex: 1, background: "rgba(37,211,102,0.12)", border: "1px solid rgba(37,211,102,0.3)", color: "#25D366", padding: "10px", borderRadius: 10, cursor: "pointer", fontSize: 13, fontWeight: 700 }}>WhatsApp</button><button onClick={() => { navigator.clipboard.writeText(window.location.href); alert("Link copied!"); }} style={{ flex: 1, background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.12)", color: "#F0EDE8", padding: "10px", borderRadius: 10, cursor: "pointer", fontSize: 13, fontWeight: 700 }}>Copy Link</button>
                 <button onClick={() => { const url = window.location.href; window.open("https://www.facebook.com/sharer/sharer.php?u=" + encodeURIComponent(url), "_blank", "width=600,height=400"); }} style={{ flex: 1, background: "rgba(24,119,242,0.12)", border: "1px solid rgba(24,119,242,0.3)", color: "#1877F2", padding: "10px", borderRadius: 10, cursor: "pointer", fontSize: 13, fontWeight: 700 }}>Facebook</button>
