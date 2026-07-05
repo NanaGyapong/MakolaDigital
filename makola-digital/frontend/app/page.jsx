@@ -159,32 +159,58 @@ export default function MakolaDigital() {
       )}
 
       {/* HERO */}
-      <div style={{ padding: isMobile ? "48px 16px 40px" : "72px 32px 56px", background: "radial-gradient(ellipse 80% 60% at 50% -10%, rgba(232,83,58,0.18) 0%, transparent 70%)", textAlign: "center" }}>
-        <div style={{ display: "inline-block", background: "rgba(232,83,58,0.12)", border: "1px solid rgba(232,83,58,0.3)", borderRadius: 20, padding: "4px 14px", fontSize: 11, color: "#E8533A", marginBottom: 16, fontWeight: 500 }}>
-          🌍 Africa's Marketplace — Products · Services · Jobs · Rentals
+      {isMobile ? (
+        <div style={{ padding: "20px 16px 24px", background: "radial-gradient(ellipse 100% 80% at 50% 0%, rgba(232,83,58,0.2) 0%, transparent 70%)" }}>
+          {/* Mobile search bar */}
+          <div style={{ display: "flex", background: "rgba(255,255,255,0.08)", border: "1px solid rgba(255,255,255,0.12)", borderRadius: 14, overflow: "hidden", padding: "4px 4px 4px 14px", gap: 8, marginBottom: 20 }}>
+            <span style={{ display: "flex", alignItems: "center", fontSize: 16 }}>🔍</span>
+            <input value={search} onChange={e => setSearch(e.target.value)} onKeyDown={e => e.key === "Enter" && router.push(`/search?q=${search}`)} placeholder="What are you looking for?" style={{ flex: 1, background: "none", border: "none", outline: "none", color: "#F0EDE8", fontSize: 14, minWidth: 0 }} />
+            <button onClick={() => router.push(`/search?q=${search}`)} style={{ background: "#E8533A", border: "none", borderRadius: 10, color: "#fff", padding: "10px 16px", fontSize: 13, fontWeight: 700, cursor: "pointer" }}>Go</button>
+          </div>
+          {/* Mobile banner */}
+          <div style={{ background: "linear-gradient(135deg, #E8533A, #C47F17)", borderRadius: 18, padding: "24px 20px", marginBottom: 20, display: "flex", alignItems: "center", justifyContent: "space-between", overflow: "hidden", position: "relative" }}>
+            <div style={{ flex: 1 }}>
+              <div style={{ fontSize: 22, fontWeight: 900, color: "#fff", lineHeight: 1.2, marginBottom: 6 }}>Buy. Sell.<br/>Connect.</div>
+              <div style={{ fontSize: 12, color: "rgba(255,255,255,0.85)", marginBottom: 14, lineHeight: 1.5 }}>All in one place 🌍</div>
+              <button onClick={() => router.push("/auth/register")} style={{ background: "#fff", border: "none", color: "#E8533A", padding: "9px 18px", borderRadius: 10, fontSize: 13, fontWeight: 800, cursor: "pointer" }}>Start free →</button>
+            </div>
+            <div style={{ fontSize: 72, opacity: 0.25, position: "absolute", right: -10, top: "50%", transform: "translateY(-50%)" }}>🛒</div>
+          </div>
+          {/* Mobile quick tags */}
+          <div style={{ display: "flex", gap: 8, overflowX: "auto", paddingBottom: 4, scrollbarWidth: "none" }}>
+            {["Jerseys", "Wardrobe", "Jeans", "Tide", "Vanish", "Detergent", "Duvet"].map(tag => (
+              <button key={tag} onClick={() => router.push(`/search?q=${tag}`)} style={{ background: "rgba(255,255,255,0.07)", border: "1px solid rgba(255,255,255,0.12)", borderRadius: 20, padding: "5px 14px", fontSize: 11, color: "rgba(240,237,232,0.7)", cursor: "pointer", whiteSpace: "nowrap", flexShrink: 0 }}>{tag}</button>
+            ))}
+          </div>
         </div>
-        <h1 style={{ fontSize: isMobile ? "32px" : "clamp(36px, 5vw, 62px)", fontWeight: 800, letterSpacing: "-0.03em", lineHeight: 1.15, margin: "0 0 14px" }}>
-          Buy, Sell & Connect<br />
-          <span style={{ background: "linear-gradient(90deg, #E8533A, #C47F17)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>Across Africa & Beyond</span>
-        </h1>
-        <p style={{ fontSize: isMobile ? 15 : 17, color: "rgba(240,237,232,0.6)", maxWidth: 480, margin: "0 auto 28px", lineHeight: 1.6 }}>
-          The trusted marketplace connecting African businesses with buyers locally, continentally, and in the diaspora.
-        </p>
-        <div style={{ display: "flex", maxWidth: 560, margin: "0 auto", background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.12)", borderRadius: 14, overflow: "hidden", padding: 6, gap: 6 }}>
-          <span style={{ padding: "0 10px", display: "flex", alignItems: "center", fontSize: 16 }}>🔍</span>
-          <input value={search} onChange={e => setSearch(e.target.value)} onKeyDown={e => e.key === "Enter" && router.push(`/search?q=${search}`)} placeholder="Search products, services, jobs..." style={{ flex: 1, background: "none", border: "none", outline: "none", color: "#F0EDE8", fontSize: 14, minWidth: 0 }} />
-          <button onClick={() => router.push(`/search?q=${search}`)} style={{ background: "#E8533A", border: "none", borderRadius: 10, color: "#fff", padding: isMobile ? "10px 14px" : "10px 22px", fontSize: 13, fontWeight: 600, cursor: "pointer", whiteSpace: "nowrap" }}>Search</button>
+      ) : (
+        <div style={{ padding: "72px 32px 56px", background: "radial-gradient(ellipse 80% 60% at 50% -10%, rgba(232,83,58,0.18) 0%, transparent 70%)", textAlign: "center" }}>
+          <div style={{ display: "inline-block", background: "rgba(232,83,58,0.12)", border: "1px solid rgba(232,83,58,0.3)", borderRadius: 20, padding: "4px 14px", fontSize: 11, color: "#E8533A", marginBottom: 16, fontWeight: 500 }}>
+            🌍 Africa's Marketplace — Products · Services · Jobs · Rentals
+          </div>
+          <h1 style={{ fontSize: "clamp(36px, 5vw, 62px)", fontWeight: 800, letterSpacing: "-0.03em", lineHeight: 1.15, margin: "0 0 14px" }}>
+            Buy, Sell & Connect<br />
+            <span style={{ background: "linear-gradient(90deg, #E8533A, #C47F17)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>Across Africa & Beyond</span>
+          </h1>
+          <p style={{ fontSize: 17, color: "rgba(240,237,232,0.6)", maxWidth: 480, margin: "0 auto 28px", lineHeight: 1.6 }}>
+            The trusted marketplace connecting African businesses with buyers locally, continentally, and in the diaspora.
+          </p>
+          <div style={{ display: "flex", maxWidth: 560, margin: "0 auto", background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.12)", borderRadius: 14, overflow: "hidden", padding: 6, gap: 6 }}>
+            <span style={{ padding: "0 10px", display: "flex", alignItems: "center", fontSize: 16 }}>🔍</span>
+            <input value={search} onChange={e => setSearch(e.target.value)} onKeyDown={e => e.key === "Enter" && router.push(`/search?q=${search}`)} placeholder="Search products, services, jobs..." style={{ flex: 1, background: "none", border: "none", outline: "none", color: "#F0EDE8", fontSize: 14, minWidth: 0 }} />
+            <button onClick={() => router.push(`/search?q=${search}`)} style={{ background: "#E8533A", border: "none", borderRadius: 10, color: "#fff", padding: "10px 22px", fontSize: 13, fontWeight: 600, cursor: "pointer", whiteSpace: "nowrap" }}>Search</button>
+          </div>
+          <div style={{ marginTop: 14, display: "flex", gap: 8, justifyContent: "center", flexWrap: "wrap" }}>
+            {["Jerseys", "Wardrobe", "Jeans", "Tide", "Vanish", "Detergent", "Duvet"].map(tag => (
+              <button key={tag} onClick={() => router.push(`/search?q=${tag}`)} style={{ background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.1)", borderRadius: 20, padding: "4px 12px", fontSize: 11, color: "rgba(240,237,232,0.6)", cursor: "pointer" }}>{tag}</button>
+            ))}
+          </div>
+          <div style={{ marginTop: 28, display: "flex", gap: 12, justifyContent: "center", flexWrap: "wrap" }}>
+            <button onClick={() => router.push("/auth/register")} style={{ background: "#E8533A", border: "none", color: "#fff", padding: "14px 28px", borderRadius: 12, fontSize: 15, fontWeight: 700, cursor: "pointer" }}>Start selling free →</button>
+            <button onClick={() => router.push("/search")} style={{ background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.15)", color: "#F0EDE8", padding: "14px 28px", borderRadius: 12, fontSize: 15, cursor: "pointer" }}>Browse listings</button>
+          </div>
         </div>
-        <div style={{ marginTop: 14, display: "flex", gap: 8, justifyContent: "center", flexWrap: "wrap" }}>
-          {["Jerseys", "Wardrobe", "Jeans", "Tide", "Vanish", "Detergent", "Duvet"].map(tag => (
-            <button key={tag} onClick={() => router.push(`/search?q=${tag}`)} style={{ background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.1)", borderRadius: 20, padding: "4px 12px", fontSize: 11, color: "rgba(240,237,232,0.6)", cursor: "pointer" }}>{tag}</button>
-          ))}
-        </div>
-        <div style={{ marginTop: 28, display: "flex", gap: 12, justifyContent: "center", flexWrap: "wrap" }}>
-          <button onClick={() => router.push("/auth/register")} style={{ background: "#E8533A", border: "none", color: "#fff", padding: "14px 28px", borderRadius: 12, fontSize: 15, fontWeight: 700, cursor: "pointer" }}>Start selling free →</button>
-          <button onClick={() => router.push("/search")} style={{ background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.15)", color: "#F0EDE8", padding: "14px 28px", borderRadius: 12, fontSize: 15, cursor: "pointer" }}>Browse listings</button>
-        </div>
-      </div>
+      )}
 
       {/* STATS */}
       <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", borderTop: "1px solid rgba(255,255,255,0.06)", borderBottom: "1px solid rgba(255,255,255,0.06)", background: "rgba(255,255,255,0.02)" }}>
