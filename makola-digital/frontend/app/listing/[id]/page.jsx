@@ -269,13 +269,6 @@ export default function ListingPage() {
             </div>
 
             {/* WhatsApp Button */}
-            {listing.contact_phone && <a href={"https://wa.me/" + listing.contact_phone.replace(/[^0-9]/g, "") + "?text=" + encodeURIComponent("Hi, I saw your listing on Makola Digital: " + listing.title)} target="_blank" rel="noopener noreferrer" style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 8, width: "100%", background: "rgba(37,211,102,0.12)", border: "1px solid rgba(37,211,102,0.3)", color: "#25D366", padding: "12px", borderRadius: 10, textDecoration: "none", fontWeight: 700, fontSize: 14, marginBottom: 12 }}><span>📱</span> Chat on WhatsApp</a>}
-            {listing.contact_phone && (
-              {false && <a href={"https://wa.me/" + listing.contact_phone.replace(/[^0-9]/g, "") + "?text=" + encodeURIComponent("Hi, I saw your listing on Makola Digital: " + listing.title + " - makoladigital.online/listing/" + listing.id)}
-                target="_blank" rel="noopener noreferrer"
-                style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 8, width: "100%", background: "rgba(37,211,102,0.12)", border: "1px solid rgba(37,211,102,0.3)", color: "#25D366", padding: "13px", borderRadius: 10, textDecoration: "none", fontWeight: 700, fontSize: 14, marginBottom: 12 }}>
-                <span style={{ fontSize: 20 }}>📱</span> Chat on WhatsApp
-              </a>
             )}
             {/* Chat / Offer Box */}
             <div style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.09)", borderRadius: 16, overflow: "hidden", marginBottom: 16 }}>
