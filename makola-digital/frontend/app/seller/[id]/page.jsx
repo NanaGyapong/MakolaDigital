@@ -69,12 +69,24 @@ export default function SellerProfile() {
         <div style={{ fontSize: 13, color: "rgba(240,237,232,0.5)", marginBottom: 12 }}>
           📍 {seller.country || "Ghana"} · Member since {new Date(seller.created_at).toLocaleDateString("en-GB", { month: "long", year: "numeric" })}
         </div>
-        <div style={{ display: "flex", gap: 16, justifyContent: "center", flexWrap: "wrap" }}>
-          <div style={{ background: "rgba(45,158,107,0.15)", border: "1px solid rgba(45,158,107,0.3)", borderRadius: 20, padding: "6px 16px", fontSize: 13, color: "#2D9E6B", fontWeight: 700 }}>
-            ✅ Verified Seller
+        <div style={{ display: "flex", gap: 12, justifyContent: "center", flexWrap: "wrap", marginBottom: 20 }}>
+          <div style={{ background: "rgba(45,158,107,0.15)", border: "1px solid rgba(45,158,107,0.3)", borderRadius: 20, padding: "6px 16px", fontSize: 13, color: "#2D9E6B", fontWeight: 700 }}>✅ Verified Seller</div>
+          <div style={{ background: "rgba(232,83,58,0.1)", border: "1px solid rgba(232,83,58,0.2)", borderRadius: 20, padding: "6px 16px", fontSize: 13, color: "#E8533A", fontWeight: 700 }}>📦 {listings.length} Listing{listings.length !== 1 ? "s" : ""}</div>
+          <div style={{ background: "rgba(196,127,23,0.1)", border: "1px solid rgba(196,127,23,0.2)", borderRadius: 20, padding: "6px 16px", fontSize: 13, color: "#C47F17", fontWeight: 700 }}>👁️ {listings.reduce((sum, l) => sum + (l.views_count || 0), 0).toLocaleString()} Views</div>
+        </div>
+        {/* Stats row */}
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 12, maxWidth: 400, margin: "0 auto 20px" }}>
+          <div style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: 12, padding: "14px 8px", textAlign: "center" }}>
+            <div style={{ fontSize: 22, fontWeight: 900, color: "#E8533A" }}>{listings.length}</div>
+            <div style={{ fontSize: 10, color: "rgba(240,237,232,0.4)", marginTop: 2, textTransform: "uppercase", letterSpacing: "0.05em" }}>Listings</div>
           </div>
-          <div style={{ background: "rgba(232,83,58,0.1)", border: "1px solid rgba(232,83,58,0.2)", borderRadius: 20, padding: "6px 16px", fontSize: 13, color: "#E8533A", fontWeight: 700 }}>
-            📦 {listings.length} Listing{listings.length !== 1 ? "s" : ""}
+          <div style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: 12, padding: "14px 8px", textAlign: "center" }}>
+            <div style={{ fontSize: 22, fontWeight: 900, color: "#2D9E6B" }}>{listings.reduce((sum, l) => sum + (l.views_count || 0), 0).toLocaleString()}</div>
+            <div style={{ fontSize: 10, color: "rgba(240,237,232,0.4)", marginTop: 2, textTransform: "uppercase", letterSpacing: "0.05em" }}>Total Views</div>
+          </div>
+          <div style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: 12, padding: "14px 8px", textAlign: "center" }}>
+            <div style={{ fontSize: 22, fontWeight: 900, color: "#C47F17" }}>{new Date(seller.created_at).toLocaleDateString("en-GB", { month: "short", year: "numeric" })}</div>
+            <div style={{ fontSize: 10, color: "rgba(240,237,232,0.4)", marginTop: 2, textTransform: "uppercase", letterSpacing: "0.05em" }}>Member Since</div>
           </div>
         </div>
       </div>
