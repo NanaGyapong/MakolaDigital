@@ -176,7 +176,7 @@ export default function MakolaDigital() {
           <button onClick={() => router.push(`/search?q=${search}`)} style={{ background: "#E8533A", border: "none", borderRadius: 10, color: "#fff", padding: isMobile ? "10px 14px" : "10px 22px", fontSize: 13, fontWeight: 600, cursor: "pointer", whiteSpace: "nowrap" }}>Search</button>
         </div>
         <div style={{ marginTop: 14, display: "flex", gap: 8, justifyContent: "center", flexWrap: "wrap" }}>
-          {["Phones", "Fashion", "Furniture", "Laundry", "Laptops", "Jobs", "Jerseys"].map(tag => (
+          {["Jerseys", "Laundry", "MacBook", "Wardrobe", "Jeans", "Tide", "Vanish"].map(tag => (
             <button key={tag} onClick={() => router.push(`/search?q=${tag}`)} style={{ background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.1)", borderRadius: 20, padding: "4px 12px", fontSize: 11, color: "rgba(240,237,232,0.6)", cursor: "pointer" }}>{tag}</button>
           ))}
         </div>
