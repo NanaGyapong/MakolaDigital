@@ -293,6 +293,7 @@ export default function MakolaDigital() {
         </div>
       )}
 
+      <div style={{ textAlign: "center", padding: "0 16px 32px" }}><button onClick={() => router.push("/search")} style={{ background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.12)", color: "#F0EDE8", padding: "12px 32px", borderRadius: 12, fontSize: 14, fontWeight: 700, cursor: "pointer" }}>See all listings u2192</button></div>
       {/* HOW IT WORKS */}
       <div style={{ padding: isMobile ? "32px 16px" : "48px 32px" }}>
         <div style={{ textAlign: "center", marginBottom: 36 }}>
