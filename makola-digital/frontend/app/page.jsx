@@ -174,29 +174,27 @@ export default function MakolaDigital() {
               <div style={{ fontSize: 12, color: "rgba(255,255,255,0.85)", marginBottom: 14, lineHeight: 1.5 }}>All in one place 🌍</div>
               <button onClick={() => router.push("/auth/register")} style={{ background: "#fff", border: "none", color: "#E8533A", padding: "9px 18px", borderRadius: 10, fontSize: 13, fontWeight: 800, cursor: "pointer" }}>Start free →</button>
             </div>
-            <div style={{ position: "absolute", right: 10, top: "50%", transform: "translateY(-50%)" }}>
-              <svg width="110" height="110" viewBox="0 0 110 110" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M8 18 Q14 14 22 16" stroke="white" strokeWidth="3.5" strokeLinecap="round" fill="none"/>
-                <path d="M22 16 L88 16" stroke="white" strokeWidth="3.5" strokeLinecap="round"/>
-                <path d="M88 16 L82 58" stroke="white" strokeWidth="3.5" strokeLinecap="round"/>
-                <path d="M82 58 L28 58" stroke="white" strokeWidth="3.5" strokeLinecap="round"/>
-                <path d="M28 58 L22 16" stroke="white" strokeWidth="3.5" strokeLinecap="round"/>
-                <line x1="38" y1="16" x2="35" y2="58" stroke="rgba(255,255,255,0.35)" strokeWidth="1.5"/>
-                <line x1="52" y1="16" x2="50" y2="58" stroke="rgba(255,255,255,0.35)" strokeWidth="1.5"/>
-                <line x1="66" y1="16" x2="65" y2="58" stroke="rgba(255,255,255,0.35)" strokeWidth="1.5"/>
-                <line x1="23" y1="30" x2="87" y2="30" stroke="rgba(255,255,255,0.35)" strokeWidth="1.5"/>
-                <line x1="24" y1="44" x2="85" y2="44" stroke="rgba(255,255,255,0.35)" strokeWidth="1.5"/>
-                <path d="M30 58 L26 72 L82 72 L80 58" stroke="white" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
-                <circle cx="34" cy="80" r="7" stroke="white" strokeWidth="3" fill="none"/>
-                <circle cx="34" cy="80" r="2.5" fill="white"/>
-                <circle cx="74" cy="80" r="7" stroke="white" strokeWidth="3" fill="none"/>
-                <circle cx="74" cy="80" r="2.5" fill="white"/>
-                <rect x="28" y="26" width="18" height="22" rx="3" fill="#2D9E6B"/>
-                <path d="M32 26 Q37 20 42 26" stroke="rgba(255,255,255,0.8)" strokeWidth="2" fill="none" strokeLinecap="round"/>
-                <rect x="48" y="28" width="16" height="20" rx="3" fill="#3B82F6"/>
-                <path d="M51 28 Q56 22 61 28" stroke="rgba(255,255,255,0.8)" strokeWidth="2" fill="none" strokeLinecap="round"/>
-                <rect x="64" y="30" width="14" height="18" rx="3" fill="#1e293b"/>
-                <path d="M67 30 Q71 25 75 30" stroke="rgba(255,255,255,0.8)" strokeWidth="2" fill="none" strokeLinecap="round"/>
+            <div style={{ position: "absolute", right: 0, top: "50%", transform: "translateY(-50%)" }}>
+              <svg width="130" height="140" viewBox="0 0 270 230" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M20 30 Q30 22 48 26" stroke="white" strokeWidth="5" strokeLinecap="round" fill="none"/>
+                <path d="M48 26 L220 26" stroke="white" strokeWidth="5" strokeLinecap="round"/>
+                <rect x="48" y="26" width="172" height="120" rx="4" stroke="white" strokeWidth="5" fill="none"/>
+                <line x1="48" y1="66" x2="220" y2="66" stroke="rgba(255,255,255,0.3)" strokeWidth="2"/>
+                <line x1="48" y1="106" x2="220" y2="106" stroke="rgba(255,255,255,0.3)" strokeWidth="2"/>
+                <line x1="96" y1="26" x2="96" y2="146" stroke="rgba(255,255,255,0.3)" strokeWidth="2"/>
+                <line x1="144" y1="26" x2="144" y2="146" stroke="rgba(255,255,255,0.3)" strokeWidth="2"/>
+                <line x1="192" y1="26" x2="192" y2="146" stroke="rgba(255,255,255,0.3)" strokeWidth="2"/>
+                <rect x="58" y="36" width="46" height="62" rx="5" fill="#2D9E6B"/>
+                <path d="M68 36 Q81 20 92 36" stroke="rgba(255,255,255,0.8)" strokeWidth="3" fill="none" strokeLinecap="round"/>
+                <rect x="110" y="42" width="40" height="56" rx="5" fill="#3B82F6"/>
+                <path d="M118 42 Q130 27 142 42" stroke="rgba(255,255,255,0.8)" strokeWidth="3" fill="none" strokeLinecap="round"/>
+                <rect x="156" y="46" width="36" height="52" rx="5" fill="#1e293b"/>
+                <path d="M163 46 Q174 32 184 46" stroke="rgba(255,255,255,0.8)" strokeWidth="3" fill="none" strokeLinecap="round"/>
+                <path d="M55 146 L48 178 L220 178 L215 146" stroke="white" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
+                <circle cx="82" cy="198" r="16" stroke="white" strokeWidth="4" fill="none"/>
+                <circle cx="82" cy="198" r="6" fill="white"/>
+                <circle cx="185" cy="198" r="16" stroke="white" strokeWidth="4" fill="none"/>
+                <circle cx="185" cy="198" r="6" fill="white"/>
               </svg>
             </div>
           </div>
