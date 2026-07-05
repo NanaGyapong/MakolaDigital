@@ -24,7 +24,7 @@ export default function KycPage() {
     } else if (type === "passport") {
       if (!/^G\d{7,8}$/.test(clean)) return "Passport format: G1234567 or G12345678";
     } else if (type === "drivers_license") {
-      if (clean.length < 6) return "Driver's license must be at least 6 characters";
+      if (!/^[A-Z]{2,3}-\d{8}-\d{5}$/.test(clean)) return "Driver's license format: ABC-12345678-12345";
     }
     return "";
   };
@@ -85,7 +85,7 @@ export default function KycPage() {
                 </button>
               ))}
             </div>
-            <div><label style={lbl}>ID Number</label><input style={inp} placeholder={idType === "national_id" ? "GHA-123456789-0" : idType === "passport" ? "G1234567" : "Enter your ID number"} value={idNumber} onChange={e => { setIdNumber(e.target.value); setIdError(validateId(idType, e.target.value)); }} />
+            <div><label style={lbl}>ID Number</label><input style={inp} placeholder={idType === "national_id" ? "GHA-123456789-0" : idType === "passport" ? "G1234567" : idType === "drivers_license" ? "ABC-12345678-12345" : "Enter your ID number"} value={idNumber} onChange={e => { setIdNumber(e.target.value); setIdError(validateId(idType, e.target.value)); }} />
             {idError && <div style={{ color: "#E8533A", fontSize: 11, marginTop: 4 }}>{idError}</div>}
             {!idError && idNumber && <div style={{ color: "#2D9E6B", fontSize: 11, marginTop: 4 }}>✓ Valid format</div>}
             </div>
