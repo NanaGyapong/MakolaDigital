@@ -174,7 +174,7 @@ export default function MakolaDigital() {
               <div style={{ fontSize: 12, color: "rgba(255,255,255,0.85)", marginBottom: 14, lineHeight: 1.5 }}>All in one place 🌍</div>
               <button onClick={() => router.push("/auth/register")} style={{ background: "#fff", border: "none", color: "#E8533A", padding: "9px 18px", borderRadius: 10, fontSize: 13, fontWeight: 800, cursor: "pointer" }}>Start free →</button>
             </div>
-            <div style={{ fontSize: 72, opacity: 0.25, position: "absolute", right: -10, top: "50%", transform: "translateY(-50%)" }}>🛒</div>
+            <div style={{ fontSize: 72, opacity: 0.5, position: "absolute", right: -10, top: "50%", transform: "translateY(-50%)" }}>🛒</div>
           </div>
           {/* Mobile quick tags */}
           <div style={{ display: "flex", gap: 8, overflowX: "auto", paddingBottom: 4, scrollbarWidth: "none" }}>
