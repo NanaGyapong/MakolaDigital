@@ -271,7 +271,7 @@ export default function ListingPage() {
             {/* WhatsApp Button */}
             {listing.contact_phone && <a href={"https://wa.me/" + listing.contact_phone.replace(/[^0-9]/g, "") + "?text=" + encodeURIComponent("Hi, I saw your listing on Makola Digital: " + listing.title)} target="_blank" rel="noopener noreferrer" style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 8, width: "100%", background: "rgba(37,211,102,0.12)", border: "1px solid rgba(37,211,102,0.3)", color: "#25D366", padding: "12px", borderRadius: 10, textDecoration: "none", fontWeight: 700, fontSize: 14, marginBottom: 12 }}><span>📱</span> Chat on WhatsApp</a>}
             {listing.contact_phone && (
-              <a href={"https://wa.me/" + listing.contact_phone.replace(/[^0-9]/g, "") + "?text=" + encodeURIComponent("Hi, I saw your listing on Makola Digital: " + listing.title + " - makoladigital.online/listing/" + listing.id)}
+              {false && <a href={"https://wa.me/" + listing.contact_phone.replace(/[^0-9]/g, "") + "?text=" + encodeURIComponent("Hi, I saw your listing on Makola Digital: " + listing.title + " - makoladigital.online/listing/" + listing.id)}
                 target="_blank" rel="noopener noreferrer"
                 style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 8, width: "100%", background: "rgba(37,211,102,0.12)", border: "1px solid rgba(37,211,102,0.3)", color: "#25D366", padding: "13px", borderRadius: 10, textDecoration: "none", fontWeight: 700, fontSize: 14, marginBottom: 12 }}>
                 <span style={{ fontSize: 20 }}>📱</span> Chat on WhatsApp
@@ -332,7 +332,7 @@ export default function ListingPage() {
               </div>
             </div>
 
-            <div style={{ textAlign: "center", marginBottom: 8 }}><button onClick={() => { const reason = prompt("Describe the issue:"); if (reason) { const token = localStorage.getItem("makola_token"); if (!token) { router.push("/auth/login"); return; } fetch("https://sparkling-charm-production-cb2c.up.railway.app/api/v1/disputes", { method: "POST", headers: { "Content-Type": "application/json", Authorization: "Bearer " + token }, body: JSON.stringify({ listingId: id, sellerId: listing.seller_id, reason }) }).then(() => alert("Report submitted. We will review within 24 hours.")); }}} style={{ background: "none", border: "none", color: "rgba(240,237,232,0.3)", fontSize: 11, cursor: "pointer", textDecoration: "underline" }}>🚩 Report a problem</button></div>
+            
             <div style={{ fontSize: 11, color: "rgba(240,237,232,0.3)", textAlign: "center" }}>
             <div style={{ marginBottom: 16 }}>
               <button onClick={handleSave} disabled={saveLoading} style={{ width: "100%", background: saved ? "rgba(232,83,58,0.12)" : "rgba(255,255,255,0.05)", border: saved ? "1px solid rgba(232,83,58,0.4)" : "1px solid rgba(255,255,255,0.1)", color: saved ? "#E8533A" : "rgba(240,237,232,0.7)", padding: "11px", borderRadius: 10, cursor: "pointer", fontSize: 13, fontWeight: 700, marginBottom: 8 }}>
