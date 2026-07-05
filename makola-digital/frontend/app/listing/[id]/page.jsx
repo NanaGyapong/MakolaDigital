@@ -268,7 +268,6 @@ export default function ListingPage() {
               </div>
             </div>
 
-            {/* WhatsApp Button */}
             )}
             {/* Chat / Offer Box */}
             <div style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.09)", borderRadius: 16, overflow: "hidden", marginBottom: 16 }}>
