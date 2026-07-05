@@ -107,7 +107,7 @@ export default function RootLayout({ children }) {
           }}
         />
       </head>
-      <body>{children}
+      <body style={{ background: "#0A0A0A", margin: 0 }}>{children}
         <script dangerouslySetInnerHTML={{ __html: `
           const VAPID_PUBLIC_KEY = 'BBveH9ySe5tjl-Dh1gf5JD07G9xHgxbG7wL9h5kf2Y9Bz2MWagzZiq0QVghmDPfAJ5ee52z_PuADgltnLl2SOkU';
           function urlBase64ToUint8Array(base64String) {
