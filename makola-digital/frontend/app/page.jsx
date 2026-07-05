@@ -174,23 +174,16 @@ export default function MakolaDigital() {
               <div style={{ fontSize: 12, color: "rgba(255,255,255,0.85)", marginBottom: 14, lineHeight: 1.5 }}>All in one place 🌍</div>
               <button onClick={() => router.push("/auth/register")} style={{ background: "#fff", border: "none", color: "#E8533A", padding: "9px 18px", borderRadius: 10, fontSize: 13, fontWeight: 800, cursor: "pointer" }}>Start free →</button>
             </div>
-            <div style={{ position: "absolute", right: 12, top: "50%", transform: "translateY(-50%)", opacity: 0.9 }}>
-              <svg width="90" height="90" viewBox="0 0 90 90" fill="none" xmlns="http://www.w3.org/2000/svg">
-                {/* Cart body */}
-                <path d="M18 22h8l10 32h28l6-22H30" stroke="white" strokeWidth="3.5" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
-                {/* Cart base line */}
-                <path d="M36 54h28" stroke="white" strokeWidth="3" strokeLinecap="round"/>
-                {/* Wheels */}
-                <circle cx="40" cy="62" r="4" fill="white"/>
-                <circle cx="58" cy="62" r="4" fill="white"/>
-                {/* Handle */}
-                <path d="M14 22h6" stroke="white" strokeWidth="3.5" strokeLinecap="round"/>
-                {/* Items in cart - box 1 */}
-                <rect x="35" y="30" width="10" height="10" rx="2" fill="white" opacity="0.9"/>
-                {/* Items in cart - box 2 */}
-                <rect x="48" y="32" width="8" height="8" rx="2" fill="white" opacity="0.7"/>
-                {/* Items in cart - small item */}
-                <rect x="37" y="24" width="6" height="7" rx="1.5" fill="white" opacity="0.5"/>
+            <div style={{ position: "absolute", right: 16, top: "50%", transform: "translateY(-50%)", opacity: 0.85 }}>
+              <svg width="100" height="100" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M10 20 L22 20 L30 60 L75 60 L83 35 L30 35" stroke="white" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
+                <rect x="38" y="38" width="12" height="14" rx="2" fill="rgba(255,255,255,0.9)"/>
+                <rect x="53" y="40" width="10" height="12" rx="2" fill="rgba(255,255,255,0.7)"/>
+                <rect x="65" y="41" width="9" height="11" rx="2" fill="rgba(255,255,255,0.5)"/>
+                <circle cx="40" cy="70" r="5.5" fill="white"/>
+                <circle cx="65" cy="70" r="5.5" fill="white"/>
+                <circle cx="40" cy="70" r="2" fill="rgba(232,83,58,0.8)"/>
+                <circle cx="65" cy="70" r="2" fill="rgba(232,83,58,0.8)"/>
               </svg>
             </div>
           </div>
