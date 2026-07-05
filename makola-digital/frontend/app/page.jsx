@@ -78,7 +78,7 @@ export default function MakolaDigital() {
   }, []);
 
   useEffect(() => {
-    fetch("https://sparkling-charm-production-cb2c.up.railway.app/api/v1/listings?limit=6")
+    fetch("https://sparkling-charm-production-cb2c.up.railway.app/api/v1/listings?limit=12")
       .then(r => r.json())
       .then(data => { if (data.listings) setListings(data.listings); })
       .catch(() => {});
