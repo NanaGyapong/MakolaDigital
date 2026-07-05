@@ -81,6 +81,13 @@ export async function login(req, res) {
 
     // Update last seen
     await db.query("UPDATE users SET last_seen_at = NOW() WHERE id = $1", [user.id]);
+    // Track login history
+    const ip = req.headers['x-forwarded-for']?.split(',')[0] || req.socket.remoteAddress || 'Unknown';
+    const userAgent = req.headers['user-agent'] || 'Unknown';
+    await db.query(
+      "INSERT INTO login_history (id, user_id, ip_address, user_agent, created_at) VALUES (gen_random_uuid(), $1, $2, $3, NOW())",
+      [user.id, ip, userAgent.slice(0, 500)]
+    ).catch(() => {});
 
     const accessToken = signAccess(user.id);
     const refreshToken = signRefresh(user.id, remember);
