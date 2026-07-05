@@ -174,8 +174,8 @@ export default function MakolaDigital() {
               <div style={{ fontSize: 12, color: "rgba(255,255,255,0.85)", marginBottom: 14, lineHeight: 1.5 }}>All in one place 🌍</div>
               <button onClick={() => router.push("/auth/register")} style={{ background: "#fff", border: "none", color: "#E8533A", padding: "9px 18px", borderRadius: 10, fontSize: 13, fontWeight: 800, cursor: "pointer" }}>Start free →</button>
             </div>
-            <div style={{ position: "absolute", right: -10, top: "50%", transform: "translateY(-50%)", opacity: 0.92 }}>
-              <img src="https://cdn-icons-png.flaticon.com/512/3144/3144456.png" alt="" style={{ width: 110, height: 110, filter: "brightness(0) invert(1)" }} />
+            <div style={{ position: "absolute", right: -8, top: "50%", transform: "translateY(-50%)", opacity: 0.92 }}>
+              <img src="/shopping-trolley.avif" alt="" style={{ width: 120, height: 120, objectFit: "contain" }} />
             </div>
           </div>
           {/* Mobile quick tags */}
