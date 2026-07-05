@@ -15,6 +15,19 @@ export default function KycPage() {
   const [step, setStep] = useState(1);
   const [idType, setIdType] = useState("national_id");
   const [idNumber, setIdNumber] = useState("");
+  const [idError, setIdError] = useState("");
+
+  const validateId = (type, number) => {
+    const clean = number.trim().toUpperCase();
+    if (type === "national_id") {
+      if (!/^GHA-\d{9}-\d$/.test(clean)) return "Ghana Card format: GHA-123456789-0";
+    } else if (type === "passport") {
+      if (!/^G\d{7,8}$/.test(clean)) return "Passport format: G1234567 or G12345678";
+    } else if (type === "drivers_license") {
+      if (clean.length < 6) return "Driver's license must be at least 6 characters";
+    }
+    return "";
+  };
   const [biz, setBiz] = useState({ name:"", type:"", category:"", address:"", description:"", regNo:"" });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
@@ -72,7 +85,10 @@ export default function KycPage() {
                 </button>
               ))}
             </div>
-            <div><label style={lbl}>ID Number</label><input style={inp} placeholder="Enter your ID number" value={idNumber} onChange={e => setIdNumber(e.target.value)} /></div>
+            <div><label style={lbl}>ID Number</label><input style={inp} placeholder={idType === "national_id" ? "GHA-123456789-0" : idType === "passport" ? "G1234567" : "Enter your ID number"} value={idNumber} onChange={e => { setIdNumber(e.target.value); setIdError(validateId(idType, e.target.value)); }} />
+            {idError && <div style={{ color: "#E8533A", fontSize: 11, marginTop: 4 }}>{idError}</div>}
+            {!idError && idNumber && <div style={{ color: "#2D9E6B", fontSize: 11, marginTop: 4 }}>✓ Valid format</div>}
+            </div>
             <button onClick={() => setStep(2)} style={{ width:"100%", background:"linear-gradient(135deg,#E8533A,#C47F17)", border:"none", color:"#fff", padding:13, borderRadius:11, fontSize:14.5, fontWeight:900, cursor:"pointer" }}>Continue to Business Info →</button>
           </>
         )}
