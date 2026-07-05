@@ -49,6 +49,7 @@ export default function SellerDashboard() {
   const [avatar, setAvatar] = useState(null);
   const [showAvatarPicker, setShowAvatarPicker] = useState(false);
   const [savingAvatar, setSavingAvatar] = useState(false);
+  const [loginHistory, setLoginHistory] = useState([]);
   const [stats, setStats] = useState({ total: 0, active: 0, pending: 0, views: 0 });
 
   useEffect(() => {
@@ -56,6 +57,10 @@ export default function SellerDashboard() {
     if (!token) { router.push("/auth/login"); return; }
 
     // Fetch seller's listings
+    fetch(`${API}/auth/login-history`, { headers: { Authorization: `Bearer ${token}` } })
+      .then(r => r.json())
+      .then(data => { if (data.history) setLoginHistory(data.history); })
+      .catch(() => {});
     fetch(`${API}/users/me`, { headers: { Authorization: `Bearer ${token}` } })
       .then(r => r.json())
       .then(data => { if (data.user?.avatar_url) setAvatar(data.user.avatar_url); })
@@ -147,6 +152,25 @@ export default function SellerDashboard() {
                   ))}
                 </div>
             }
+          </div>
+        )}
+        {/* Login History */}
+        {loginHistory.length > 0 && (
+          <div style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: 14, padding: "16px 20px", marginBottom: 20 }}>
+            <div style={{ fontWeight: 700, fontSize: 14, marginBottom: 12 }}>🔐 Recent Login Activity</div>
+            {loginHistory.slice(0, 3).map((h, i) => (
+              <div key={i} style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "8px 0", borderBottom: i < 2 ? "1px solid rgba(255,255,255,0.05)" : "none" }}>
+                <div>
+                  <div style={{ fontSize: 12, color: "#F0EDE8", fontWeight: 600 }}>
+                    {h.user_agent?.includes("Mobile") || h.user_agent?.includes("Android") ? "📱 Mobile" : "💻 Desktop"} · {h.ip_address}
+                  </div>
+                  <div style={{ fontSize: 11, color: "rgba(240,237,232,0.4)", marginTop: 2 }}>
+                    {new Date(h.created_at).toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric", hour: "2-digit", minute: "2-digit" })}
+                  </div>
+                </div>
+                {i === 0 && <span style={{ background: "rgba(45,158,107,0.15)", border: "1px solid rgba(45,158,107,0.3)", borderRadius: 20, padding: "2px 10px", fontSize: 10, color: "#2D9E6B", fontWeight: 700 }}>Current</span>}
+              </div>
+            ))}
           </div>
         )}
         {/* Stats */}
