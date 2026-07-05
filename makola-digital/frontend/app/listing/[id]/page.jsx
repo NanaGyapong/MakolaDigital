@@ -267,8 +267,6 @@ export default function ListingPage() {
               <button onClick={() => router.push("/seller/" + listing.seller_id)} style={{ background: "none", border: "none", color: "#E8533A", fontSize: 12, cursor: "pointer", padding: 0, marginTop: 4, textDecoration: "underline" }}>View all listings →</button>
               </div>
             </div>
-
-            )}
             {/* Chat / Offer Box */}
             <div style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.09)", borderRadius: 16, overflow: "hidden", marginBottom: 16 }}>
               <div style={{ display: "flex", borderBottom: "1px solid rgba(255,255,255,0.07)" }}>
