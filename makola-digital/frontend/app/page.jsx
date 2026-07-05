@@ -174,28 +174,8 @@ export default function MakolaDigital() {
               <div style={{ fontSize: 12, color: "rgba(255,255,255,0.85)", marginBottom: 14, lineHeight: 1.5 }}>All in one place 🌍</div>
               <button onClick={() => router.push("/auth/register")} style={{ background: "#fff", border: "none", color: "#E8533A", padding: "9px 18px", borderRadius: 10, fontSize: 13, fontWeight: 800, cursor: "pointer" }}>Start free →</button>
             </div>
-            <div style={{ position: "absolute", right: 0, top: "50%", transform: "translateY(-50%)" }}>
-              <svg width="130" height="140" viewBox="0 0 270 230" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M20 30 Q30 22 48 26" stroke="white" strokeWidth="5" strokeLinecap="round" fill="none"/>
-                <path d="M48 26 L220 26" stroke="white" strokeWidth="5" strokeLinecap="round"/>
-                <rect x="48" y="26" width="172" height="120" rx="4" stroke="white" strokeWidth="5" fill="none"/>
-                <line x1="48" y1="66" x2="220" y2="66" stroke="rgba(255,255,255,0.3)" strokeWidth="2"/>
-                <line x1="48" y1="106" x2="220" y2="106" stroke="rgba(255,255,255,0.3)" strokeWidth="2"/>
-                <line x1="96" y1="26" x2="96" y2="146" stroke="rgba(255,255,255,0.3)" strokeWidth="2"/>
-                <line x1="144" y1="26" x2="144" y2="146" stroke="rgba(255,255,255,0.3)" strokeWidth="2"/>
-                <line x1="192" y1="26" x2="192" y2="146" stroke="rgba(255,255,255,0.3)" strokeWidth="2"/>
-                <rect x="58" y="36" width="46" height="62" rx="5" fill="#2D9E6B"/>
-                <path d="M68 36 Q81 20 92 36" stroke="rgba(255,255,255,0.8)" strokeWidth="3" fill="none" strokeLinecap="round"/>
-                <rect x="110" y="42" width="40" height="56" rx="5" fill="#3B82F6"/>
-                <path d="M118 42 Q130 27 142 42" stroke="rgba(255,255,255,0.8)" strokeWidth="3" fill="none" strokeLinecap="round"/>
-                <rect x="156" y="46" width="36" height="52" rx="5" fill="#1e293b"/>
-                <path d="M163 46 Q174 32 184 46" stroke="rgba(255,255,255,0.8)" strokeWidth="3" fill="none" strokeLinecap="round"/>
-                <path d="M55 146 L48 178 L220 178 L215 146" stroke="white" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
-                <circle cx="82" cy="198" r="16" stroke="white" strokeWidth="4" fill="none"/>
-                <circle cx="82" cy="198" r="6" fill="white"/>
-                <circle cx="185" cy="198" r="16" stroke="white" strokeWidth="4" fill="none"/>
-                <circle cx="185" cy="198" r="6" fill="white"/>
-              </svg>
+            <div style={{ position: "absolute", right: -10, top: "50%", transform: "translateY(-50%)", opacity: 0.92 }}>
+              <img src="https://cdn-icons-png.flaticon.com/512/3144/3144456.png" alt="" style={{ width: 110, height: 110, filter: "brightness(0) invert(1)" }} />
             </div>
           </div>
           {/* Mobile quick tags */}
