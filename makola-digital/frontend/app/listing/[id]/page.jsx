@@ -267,6 +267,8 @@ export default function ListingPage() {
               <button onClick={() => router.push("/seller/" + listing.seller_id)} style={{ background: "none", border: "none", color: "#E8533A", fontSize: 12, cursor: "pointer", padding: 0, marginTop: 4, textDecoration: "underline" }}>View all listings →</button>
               </div>
             </div>
+            {/* WhatsApp Button */}
+            {listing.contact_phone && listing.show_whatsapp && <a href={"https://wa.me/" + listing.contact_phone.replace(/[^0-9]/g, "") + "?text=" + encodeURIComponent("Hi, I saw your listing on Makola Digital: " + listing.title)} target="_blank" rel="noopener noreferrer" style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 8, width: "100%", background: "rgba(37,211,102,0.12)", border: "1px solid rgba(37,211,102,0.3)", color: "#25D366", padding: "12px", borderRadius: 10, textDecoration: "none", fontWeight: 700, fontSize: 14, marginBottom: 12 }}><span>📱</span> Chat on WhatsApp</a>}
             {/* Chat / Offer Box */}
             <div style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.09)", borderRadius: 16, overflow: "hidden", marginBottom: 16 }}>
               <div style={{ display: "flex", borderBottom: "1px solid rgba(255,255,255,0.07)" }}>
