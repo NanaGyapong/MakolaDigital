@@ -382,6 +382,23 @@ export default function MakolaDigital() {
         </div>
       </div>
 
+      {/* BOTTOM NAV - MOBILE ONLY */}
+      {isMobile && (
+        <div style={{ position: "fixed", bottom: 0, left: 0, right: 0, background: "rgba(13,13,13,0.97)", borderTop: "1px solid rgba(255,255,255,0.08)", display: "flex", zIndex: 200, paddingBottom: "env(safe-area-inset-bottom)" }}>
+          {[
+            { icon: "🏠", label: "Home", path: "/" },
+            { icon: "🔍", label: "Search", path: "/search" },
+            { icon: "➕", label: "Sell", path: "/sell" },
+            { icon: "💬", label: "Inbox", path: "/dashboard/inbox" },
+            { icon: "👤", label: "Account", path: "/dashboard" },
+          ].map(nav => (
+            <button key={nav.label} onClick={() => router.push(nav.path)} style={{ flex: 1, background: "none", border: "none", color: nav.path === "/" ? "#E8533A" : "rgba(240,237,232,0.5)", padding: "10px 0 8px", cursor: "pointer", display: "flex", flexDirection: "column", alignItems: "center", gap: 3 }}>
+              <span style={{ fontSize: 20 }}>{nav.icon}</span>
+              <span style={{ fontSize: 9, fontWeight: 600, letterSpacing: "0.02em" }}>{nav.label}</span>
+            </button>
+          ))}
+        </div>
+      )}
       {/* FOOTER */}
       <div style={{ borderTop: "1px solid rgba(255,255,255,0.07)", padding: isMobile ? "20px 16px" : "24px 32px", display: "flex", flexDirection: isMobile ? "column" : "row", alignItems: "center", justifyContent: "space-between", gap: 12, color: "rgba(240,237,232,0.35)", fontSize: 12, textAlign: isMobile ? "center" : "left" }}>
         <div>© 2026 Makola Digital Technologies Ltd
