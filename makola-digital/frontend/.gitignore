@@ -1,2 +1,5 @@
 .next/
 node_modules/
+.env.production
+.env
+.env.local
