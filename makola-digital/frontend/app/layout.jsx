@@ -129,7 +129,7 @@ export default function RootLayout({ children }) {
                 userVisibleOnly: true,
                 applicationServerKey: urlBase64ToUint8Array(VAPID_PUBLIC_KEY)
               });
-              await fetch(`${process.env.NEXT_PUBLIC_API_URL}/push/subscribe`, {
+              await fetch("https://sparkling-charm-production-cb2c.up.railway.app/api/v1/push/subscribe", {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
                 body: JSON.stringify({ subscription: sub })
