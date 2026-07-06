@@ -40,6 +40,24 @@ const CATEGORIES = {
   ],
 };
 const GHANA_REGIONS = ["Greater Accra","Ashanti","Western","Central","Eastern","Northern","Upper East","Upper West","Volta","Brong-Ahafo","Oti","Bono East","Ahafo","Savannah","North East","Western North"];
+const GHANA_CITIES = {
+  "Greater Accra": ["Accra", "Tema", "Madina", "Adenta", "Kasoa", "Ashaiman", "Teshie", "Nungua", "Dome", "Achimota", "East Legon", "Cantonments", "Osu", "Labadi", "Spintex", "Lashibi", "Sakumono", "Weija", "Ablekuma", "Dansoman"],
+  "Ashanti": ["Kumasi", "Obuasi", "Ejisu", "Konongo", "Mampong", "Bekwai", "Asante Mampong", "Juaben", "Offinso", "Atwima"],
+  "Western": ["Takoradi", "Sekondi", "Tarkwa", "Axim", "Prestea", "Bogoso", "Half Assini", "Elubo"],
+  "Central": ["Cape Coast", "Kasoa", "Winneba", "Mankessim", "Saltpond", "Anomabo", "Elmina", "Assin Fosu"],
+  "Eastern": ["Koforidua", "Nkawkaw", "Suhum", "Akim Oda", "Kibi", "Nsawam", "Aburi", "Akropong"],
+  "Northern": ["Tamale", "Yendi", "Salaga", "Bimbilla", "Gushegu", "Karaga"],
+  "Upper East": ["Bolgatanga", "Bawku", "Navrongo", "Zebilla", "Paga"],
+  "Upper West": ["Wa", "Tumu", "Nandom", "Jirapa", "Lawra"],
+  "Volta": ["Ho", "Hohoe", "Keta", "Aflao", "Sogakope", "Kpando", "Akatsi"],
+  "Brong-Ahafo": ["Sunyani", "Techiman", "Berekum", "Dormaa Ahenkro", "Kintampo", "Wenchi"],
+  "Oti": ["Dambai", "Nkwanta", "Kadjebi", "Jasikan"],
+  "Bono East": ["Techiman", "Nkoranza", "Atebubu", "Kintampo"],
+  "Ahafo": ["Goaso", "Kukuom", "Acherensua", "Hwidiem"],
+  "Savannah": ["Damongo", "Bole", "Sawla", "Buipe"],
+  "North East": ["Nalerigu", "Gambaga", "Walewale", "Chereponi"],
+  "Western North": ["Sefwi Wiawso", "Bibiani", "Enchi", "Aowin"]
+};
 
 const CURRENCIES = ["GHS", "NGN", "USD", "GBP", "EUR"];
 const COUNTRIES = ["Ghana", "Nigeria", "Kenya", "South Africa", "United Kingdom", "United States"];
@@ -231,6 +249,26 @@ export default function SellPage() {
             ))}
           </div>
         )}
+        <h2 style={{ fontSize: 18, fontWeight: 900, marginBottom: 6, marginTop: 8 }}>📍 Location</h2>
+        <p style={{ color: "rgba(240,237,232,0.5)", fontSize: 14, marginBottom: 16 }}>Where is this listing based?</p>
+        <label style={lbl}>Region *</label>
+        <select value={form.region} onChange={e => { set("region", e.target.value); set("city", ""); }} style={{ ...inp, marginBottom: 16 }}>
+          <option value="">Select region</option>
+          {GHANA_REGIONS.map(r => <option key={r} value={r}>{r}</option>)}
+        </select>
+        {form.region && (<>
+          <label style={lbl}>City / Town *</label>
+          <select value={form.city} onChange={e => set("city", e.target.value)} style={{ ...inp, marginBottom: 16 }}>
+            <option value="">Select city or town</option>
+            {(GHANA_CITIES[form.region] || []).map(city => <option key={city} value={city}>{city}</option>)}
+          </select>
+        </>)}
+        <label style={lbl}>Specific area or address (optional)</label>
+        <input value={form.locationText} onChange={e => set("locationText", e.target.value)} placeholder="e.g. Near Accra Mall, East Legon" style={{ ...inp, marginBottom: 16 }} />
+        <label style={{ display: "flex", alignItems: "center", gap: 10, cursor: "pointer", marginBottom: 20 }}>
+          <input type="checkbox" checked={form.isRemote} onChange={e => set("isRemote", e.target.checked)} style={{ width: 18, height: 18, accentColor: "#E8533A" }} />
+          <span style={{ fontSize: 14, color: "rgba(240,237,232,0.7)" }}>This listing is available remotely / nationwide</span>
+        </label>
         <h2 style={{ fontSize: 18, fontWeight: 900, marginBottom: 10, marginTop: 8 }}>Preview</h2>
         <div style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.09)", borderRadius: 16, overflow: "hidden", marginBottom: 16 }}>
           {images[0] && <img src={images[0]} alt="" style={{ width: "100%", height: 180, objectFit: "cover" }} />}
