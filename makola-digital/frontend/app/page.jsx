@@ -14,6 +14,8 @@ export default function MakolaDigital() {
   const [trending, setTrending] = useState([]);
   const [showNewsletter, setShowNewsletter] = useState(false);
   const [newsletterEmail, setNewsletterEmail] = useState("");
+  const [toast, setToast] = useState(null);
+  const showToast = (msg, color = "#2D9E6B") => { setToast({ msg, color }); setTimeout(() => setToast(null), 2500); };
   const pathname = typeof window !== "undefined" ? window.location.pathname : "/";
   const [newsletterSent, setNewsletterSent] = useState(false);
 
@@ -384,6 +386,10 @@ export default function MakolaDigital() {
         </div>
       </div>
 
+      {/* TOAST */}
+      {toast && (
+        <div style={{ position: "fixed", bottom: isMobile ? 90 : 30, left: "50%", transform: "translateX(-50%)", background: toast.color, color: "#fff", padding: "10px 20px", borderRadius: 30, fontSize: 13, fontWeight: 700, zIndex: 999, whiteSpace: "nowrap", boxShadow: "0 4px 20px rgba(0,0,0,0.4)" }}>{toast.msg}</div>
+      )}
       {/* BOTTOM NAV - MOBILE ONLY */}
       {isMobile && (
         <div style={{ position: "fixed", bottom: 0, left: 0, right: 0, background: "rgba(13,13,13,0.97)", borderTop: "1px solid rgba(255,255,255,0.08)", display: "flex", zIndex: 200, paddingBottom: "env(safe-area-inset-bottom)" }}>
