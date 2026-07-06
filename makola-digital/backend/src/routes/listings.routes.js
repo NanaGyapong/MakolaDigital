@@ -125,7 +125,7 @@ router.get("/trending", async (req, res) => {
   try {
     const result = await db.query(
       `SELECT l.id, l.title, l.price, l.price_currency, l.type, l.status, l.created_at,
-      l.views_count, l.saves_count,
+      l.views_count, l.saves_count, l.location_text, l.city, l.country,
       COALESCE(u.display_name, u.full_name, u.email) as seller_name,
       (l.views_count + (l.saves_count * 3)) as trending_score,
       img.url as primary_image
