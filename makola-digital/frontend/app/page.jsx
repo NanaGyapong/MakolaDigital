@@ -298,23 +298,25 @@ export default function MakolaDigital() {
           <h2 style={{ fontSize: isMobile ? 17 : 20, fontWeight: 700, marginBottom: 16, letterSpacing: "-0.02em" }}>Latest listings</h2>
           <div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr 1fr" : "repeat(auto-fill, minmax(260px, 1fr))", gap: 16 }}>
             {listings.map(l => (
-              <div key={l.id} onClick={() => router.push(`/listing/${l.id}`)} style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: 16, overflow: "hidden", cursor: "pointer" }}>
+              <div key={l.id} onClick={() => router.push(`/listing/${l.id}`)} style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: 16, overflow: "hidden", cursor: "pointer", position: "relative" }}>
                 {l.primary_image
-                  ? <img src={l.primary_image} alt={l.title} style={{ width: "100%", height: 140, objectFit: "cover" }} />
-                  : <div style={{ height: 140, background: "rgba(255,255,255,0.04)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 40 }}>
+                  ? <img src={l.primary_image} alt={l.title} style={{ width: "100%", height: isMobile ? 160 : 180, objectFit: "cover" }} />
+                  : <div style={{ height: isMobile ? 160 : 180, background: "rgba(255,255,255,0.04)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 48 }}>
                       {l.type === "product" ? "🛍️" : l.type === "service" ? "🔧" : l.type === "job" ? "💼" : "🏠"}
                     </div>
                 }
-                <div style={{ padding: "12px 14px" }}>
-                  <div style={{ fontSize: 11, color: "rgba(240,237,232,0.4)", marginBottom: 4, textTransform: "uppercase" }}>{l.type}</div>
-                  <div style={{ fontSize: 14, fontWeight: 700, marginBottom: 6, lineHeight: 1.3 }}>{l.title}</div>
-                  <div style={{ fontSize: 16, fontWeight: 700, color: "#E8533A", marginBottom: 6 }}>
-                    {l.type === "job" && (!l.price || Number(l.price) === 0) ? "Competitive" : l.price_currency + " " + Number(l.price).toLocaleString() + (l.is_negotiable ? " · Negotiable" : "")}
+                <div style={{ position: "absolute", top: 8, left: 8, background: l.type === "product" ? "#E8533A" : l.type === "service" ? "#3B82F6" : l.type === "job" ? "#C47F17" : "#2D9E6B", borderRadius: 6, fontSize: 9, fontWeight: 800, color: "#fff", padding: "3px 7px", textTransform: "uppercase", letterSpacing: "0.05em" }}>{l.type}</div>
+                {new Date() - new Date(l.created_at) < 7 * 24 * 60 * 60 * 1000 && <span style={{ position: "absolute", top: 8, right: 8, background: "#fff", color: "#E8533A", fontSize: 9, fontWeight: 900, padding: "3px 7px", borderRadius: 6 }}>NEW</span>}
+                <div style={{ padding: isMobile ? "10px 12px 12px" : "12px 14px 14px" }}>
+                  <div style={{ fontSize: isMobile ? 12 : 14, fontWeight: 700, marginBottom: 5, lineHeight: 1.3, overflow: "hidden", display: "-webkit-box", WebkitLineClamp: 2, WebkitBoxOrient: "vertical" }}>{l.title}</div>
+                  <div style={{ fontSize: isMobile ? 14 : 16, fontWeight: 800, color: "#E8533A", marginBottom: 6 }}>
+                    {l.type === "job" && (!l.price || Number(l.price) === 0) ? "Competitive" : l.price_currency + " " + Number(l.price).toLocaleString() + (l.is_negotiable ? " · Neg." : "")}
                   </div>
-                  <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 4 }}>
-                  <div style={{ fontSize: 11, color: "rgba(240,237,232,0.5)", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>📍 {l.location_text || l.city || l.country} · by {l.type === "job" && l.title.includes(" — ") ? l.title.split(" — ").pop() : l.seller_name}</div>
-                  {new Date() - new Date(l.created_at) < 7 * 24 * 60 * 60 * 1000 && <span style={{ background: "#E8533A", color: "#fff", fontSize: 9, fontWeight: 900, padding: "2px 6px", borderRadius: 10, flexShrink: 0 }}>NEW</span>}
-                </div>
+                  <div style={{ display: "flex", alignItems: "center", gap: 4 }}>
+                    <div style={{ width: 20, height: 20, borderRadius: "50%", background: "linear-gradient(135deg, #E8533A, #C47F17)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 10, flexShrink: 0 }}>👤</div>
+                    <div style={{ fontSize: 10, color: "rgba(240,237,232,0.5)", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{l.seller_name || "Seller"}</div>
+                  </div>
+                  <div style={{ fontSize: 10, color: "rgba(240,237,232,0.4)", marginTop: 4, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>📍 {l.location_text || l.city || l.country || "Ghana"}</div>
                 </div>
               </div>
             ))}
