@@ -1,7 +1,7 @@
 "use client";
 import React, { useState, useEffect } from "react";
 
-const API = `${process.env.NEXT_PUBLIC_API_URL}";
+const API = process.env.NEXT_PUBLIC_API_URL;
 
 export default function AdminDashboard() {
   const [realStats, setRealStats] = useState({ users: 0, listings: 0, kyc_pending: 0, listings_pending: 0 });

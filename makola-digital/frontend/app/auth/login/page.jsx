@@ -37,7 +37,7 @@ export default function LoginPage() {
   const verifyOtp = async () => {
     setOtpLoading(true); setError('');
     try {
-      const API = `${process.env.NEXT_PUBLIC_API_URL}';
+      const API = process.env.NEXT_PUBLIC_API_URL;
       const res = await fetch(API + '/auth/verify-login-otp', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },

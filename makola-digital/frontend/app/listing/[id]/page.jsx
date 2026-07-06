@@ -2,7 +2,7 @@
 import { useState, useEffect } from "react";
 import { useRouter, useParams } from "next/navigation";
 
-const API = `${process.env.NEXT_PUBLIC_API_URL}";
+const API = process.env.NEXT_PUBLIC_API_URL;
 
 const SAFETY_TIPS = {
   product: "🛡️ Safety tip: Always inspect the product in person before making payment. Meet in a safe public place. Makola Digital is not responsible for transactions made outside the platform.",

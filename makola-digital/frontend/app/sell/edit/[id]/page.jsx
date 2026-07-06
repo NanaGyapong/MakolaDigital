@@ -2,7 +2,7 @@
 import { useState, useEffect, useRef } from "react";
 import { useRouter, useParams } from "next/navigation";
 
-const API = `${process.env.NEXT_PUBLIC_API_URL}";
+const API = process.env.NEXT_PUBLIC_API_URL;
 
 const CURRENCIES = ["GHS", "NGN", "USD", "GBP", "EUR"];
 const COUNTRIES = ["Ghana", "Nigeria", "Kenya", "South Africa", "United Kingdom", "United States"];
