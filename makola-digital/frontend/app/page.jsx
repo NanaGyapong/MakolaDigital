@@ -312,10 +312,6 @@ export default function MakolaDigital() {
                   <div style={{ fontSize: isMobile ? 14 : 16, fontWeight: 800, color: "#E8533A", marginBottom: 6 }}>
                     {l.type === "job" && (!l.price || Number(l.price) === 0) ? "Competitive" : l.price_currency + " " + Number(l.price).toLocaleString() + (l.is_negotiable ? " · Neg." : "")}
                   </div>
-                  <div style={{ display: "flex", alignItems: "center", gap: 4 }}>
-                    <div style={{ width: 20, height: 20, borderRadius: "50%", background: "linear-gradient(135deg, #E8533A, #C47F17)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 10, flexShrink: 0 }}>👤</div>
-                    <div style={{ fontSize: 10, color: "rgba(240,237,232,0.5)", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{l.seller_name || "Seller"}</div>
-                  </div>
                   <div style={{ fontSize: 10, color: "rgba(240,237,232,0.4)", marginTop: 4, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>📍 {l.location_text || l.city || l.country || "Ghana"}</div>
                 </div>
               </div>
