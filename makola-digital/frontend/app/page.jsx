@@ -175,7 +175,7 @@ export default function MakolaDigital() {
               <button onClick={() => router.push("/auth/register")} style={{ background: "#fff", border: "none", color: "#E8533A", padding: "9px 18px", borderRadius: 10, fontSize: 13, fontWeight: 800, cursor: "pointer" }}>Start free →</button>
             </div>
             <div style={{ position: "absolute", right: 0, top: 0, bottom: 0, width: "45%", overflow: "hidden" }}>
-              <img src="/trolley.png" alt="" style={{ width: "100%", height: "100%", objectFit: "cover", objectPosition: "left center" }} />
+              <img src="/trolley.png" alt="" style={{ width: "100%", height: "100%", objectFit: "contain", objectPosition: "center center" }} />
             </div>
           </div>
           {/* Mobile quick tags */}
