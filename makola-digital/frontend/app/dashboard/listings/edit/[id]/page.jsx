@@ -2,7 +2,7 @@
 import { useState, useEffect, useRef } from "react";
 import { useRouter, useParams } from "next/navigation";
 
-const API = "${process.env.NEXT_PUBLIC_API_URL}";
+const API = `${process.env.NEXT_PUBLIC_API_URL}";
 const CATEGORIES = {
   product: ['Vehicles > Cars','Vehicles > Motorbikes & Tricycles','Vehicles > Spare Parts','Phones & Tablets > Smartphones','Phones & Tablets > Accessories','Electronics > TVs & Audio','Electronics > Computers & Laptops','Home & Furniture > Furniture','Home & Furniture > Appliances','Fashion > Men Wear','Fashion > Women Wear','Fashion > Kids & Babies','Fashion > Shoes','Beauty & Care > Skincare','Beauty & Care > Hair','Beauty & Care > Makeup','Food & Agriculture > Fresh Produce','Food & Agriculture > Grains & Cereals','Animals & Pets > Poultry','Animals & Pets > Livestock','Arts & Crafts > Handmade'],
   service: ['Services > Repair & Construction','Services > Cleaning','Services > Events & Catering','Tech & Digital > Web & App Development','Tech & Digital > Graphics & Design','Education & Training > Tutoring','Home Services > Plumbing','Home Services > Electrical'],

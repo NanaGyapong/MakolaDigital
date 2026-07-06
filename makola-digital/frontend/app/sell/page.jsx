@@ -2,7 +2,7 @@
 import { useState, useRef, useEffect } from "react";
 import { useRouter } from "next/navigation";
 
-const API = process.env.NEXT_PUBLIC_API_URL || "${process.env.NEXT_PUBLIC_API_URL}";
+const API = process.env.NEXT_PUBLIC_API_URL || `${process.env.NEXT_PUBLIC_API_URL}";
 
 const TYPES = [
   { icon: "🛍️", label: "Product", val: "product", desc: "Physical or digital goods" },
@@ -74,7 +74,7 @@ export default function SellPage() {
   useEffect(() => {
     const token = localStorage.getItem('makola_token');
     if (!token) return;
-    fetch('${process.env.NEXT_PUBLIC_API_URL}/listings/mine', {
+    fetch(`${process.env.NEXT_PUBLIC_API_URL}/listings/mine`, {
       headers: { Authorization: 'Bearer ' + token }
     })
     .then(r => r.json())

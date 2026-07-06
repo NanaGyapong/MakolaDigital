@@ -2,7 +2,7 @@
 import { useState, useEffect, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 
-const API = "${process.env.NEXT_PUBLIC_API_URL}";
+const API = `${process.env.NEXT_PUBLIC_API_URL}";
 
 const TYPES = ["All", "Products", "Services", "Jobs", "Rentals"];
 const CATEGORIES = {

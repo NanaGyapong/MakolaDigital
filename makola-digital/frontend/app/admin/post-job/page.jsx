@@ -2,7 +2,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 
-const API = "${process.env.NEXT_PUBLIC_API_URL}";
+const API = `${process.env.NEXT_PUBLIC_API_URL}";
 
 const JOB_TYPES = ["Full-time", "Part-time", "Contract", "Remote", "Internship"];
 const WORK_MODES = ["On-site", "Remote", "Hybrid"];

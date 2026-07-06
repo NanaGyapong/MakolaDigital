@@ -64,7 +64,7 @@ export default function MakolaDigital() {
   const submitNewsletter = async () => {
     if (!newsletterEmail || !newsletterEmail.includes('@')) return;
     try {
-      await fetch('${process.env.NEXT_PUBLIC_API_URL}/listings/newsletter/subscribe', {
+      await fetch(`${process.env.NEXT_PUBLIC_API_URL}/listings/newsletter/subscribe`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email: newsletterEmail })
@@ -82,24 +82,24 @@ export default function MakolaDigital() {
   }, []);
 
   useEffect(() => {
-    fetch("${process.env.NEXT_PUBLIC_API_URL}/listings?limit=12")
+    fetch(`${process.env.NEXT_PUBLIC_API_URL}/listings?limit=12`)
       .then(r => r.json())
       .then(data => { if (data.listings) setListings(data.listings); })
       .catch(() => {});
     // Track homepage visit
     const visitorId = localStorage.getItem('visitor_id') || Math.random().toString(36).slice(2);
     localStorage.setItem('visitor_id', visitorId);
-    fetch("${process.env.NEXT_PUBLIC_API_URL}/track-visit", {
+    fetch(`${process.env.NEXT_PUBLIC_API_URL}/track-visit`, {
       method: "POST",
       headers: { "x-visitor-id": visitorId }
     }).catch(() => {});
-    fetch("${process.env.NEXT_PUBLIC_API_URL}/listings/trending")
+    fetch(`${process.env.NEXT_PUBLIC_API_URL}/listings/trending`)
       .then(r => r.json())
       .then(d => setTrending((d.listings || []).slice(0, 6)))
       .catch(() => {});
-    fetch("${process.env.NEXT_PUBLIC_API_URL}/stats").then(r => r.json()).then(d => { setTotalSellers(d.sellers || 0); setTotalMembers(d.users || 0); }).catch(() => {});
+    fetch(`${process.env.NEXT_PUBLIC_API_URL}/stats`).then(r => r.json()).then(d => { setTotalSellers(d.sellers || 0); setTotalMembers(d.users || 0); }).catch(() => {});
 
-    fetch("${process.env.NEXT_PUBLIC_API_URL}/categories/counts")
+    fetch(`${process.env.NEXT_PUBLIC_API_URL}/categories/counts`)
       .then(r => r.json())
       .then(data => {
         if (data.counts) {

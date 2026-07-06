@@ -2,7 +2,7 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 
-const API = "${process.env.NEXT_PUBLIC_API_URL}";
+const API = `${process.env.NEXT_PUBLIC_API_URL}";
 
 export default function SellerDashboard() {
   const router = useRouter();
@@ -25,7 +25,7 @@ export default function SellerDashboard() {
   const toggleSoldOut = async (id, currentState) => {
     const token = localStorage.getItem('makola_token');
     const newState = !currentState;
-    await fetch('${process.env.NEXT_PUBLIC_API_URL}/listings/' + id + '/sold-out', {
+    await fetch(`${process.env.NEXT_PUBLIC_API_URL}/listings/' + id + '/sold-out`, {
       method: 'PATCH',
       headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + token },
       body: JSON.stringify({ isSoldOut: newState })
@@ -36,7 +36,7 @@ export default function SellerDashboard() {
   const deleteListing = async (id, title) => {
     const token = localStorage.getItem('makola_token');
     try {
-      await fetch('${process.env.NEXT_PUBLIC_API_URL}/listings/' + id, {
+      await fetch(`${process.env.NEXT_PUBLIC_API_URL}/listings/` + id, {
         method: 'DELETE',
         headers: { Authorization: 'Bearer ' + token }
       });

@@ -40,7 +40,7 @@ export default function KycPage() {
       fd.append("idNumber", idNumber);
       Object.entries(biz).forEach(([k,v]) => fd.append(k, v));
       const token = localStorage.getItem("makola_token");
-      const res = await fetch("${process.env.NEXT_PUBLIC_API_URL}/kyc/submit", {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/kyc/submit`, {
         method: "POST",
         headers: { Authorization: `Bearer ${token}` },
         body: fd
