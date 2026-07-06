@@ -1,4 +1,4 @@
-const API = "https://sparkling-charm-production-cb2c.up.railway.app/api/v1";
+const API = "${process.env.NEXT_PUBLIC_API_URL}";
 
 export async function generateMetadata({ params }) {
   try {

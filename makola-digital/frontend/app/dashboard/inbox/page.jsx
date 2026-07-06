@@ -2,7 +2,7 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 
-const API = "https://sparkling-charm-production-cb2c.up.railway.app/api/v1";
+const API = "${process.env.NEXT_PUBLIC_API_URL}";
 
 export default function InboxPage() {
   const router = useRouter();
