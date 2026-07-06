@@ -120,6 +120,7 @@ export default function RootLayout({ children }) {
             try {
               const token = localStorage.getItem('makola_token');
               if (!token) return;
+              navigator.serviceWorker.register('/sw.js').then(r => console.log('SW registered', r)).catch(e => console.log('SW error', e));
               if (!('serviceWorker' in navigator) || !('PushManager' in window)) return;
               const reg = await navigator.serviceWorker.ready;
               const permission = await Notification.requestPermission();
