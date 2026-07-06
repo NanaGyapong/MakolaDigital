@@ -281,7 +281,7 @@ export default function MakolaDigital() {
           </div>
         </div>
         <h2 style={{ fontSize: isMobile ? 17 : 20, fontWeight: 700, marginBottom: 16, letterSpacing: "-0.02em" }}>Browse by category</h2>
-        <div style={{ display: "grid", gridTemplateColumns: isMobile ? "repeat(4, 1fr)" : "repeat(auto-fit, minmax(130px, 1fr))", gap: isMobile ? 8 : 10 }}>
+        <div style={{ display: "grid", gridTemplateColumns: isMobile ? "repeat(3, 1fr)" : "repeat(auto-fit, minmax(130px, 1fr))", gap: isMobile ? 8 : 10 }}>
           {categories.map(cat => (
             <button key={cat.label} onClick={() => router.push(cat.type ? '/search?type=' + cat.type : cat.cat ? '/search?category=' + encodeURIComponent(cat.cat) : '/search')} style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: isMobile ? 10 : 12, padding: isMobile ? "12px 6px" : "16px 12px", cursor: "pointer", textAlign: "center", color: "#F0EDE8" }}>
               <div style={{ fontSize: isMobile ? 22 : 26, marginBottom: 4 }}>{cat.icon}</div>
