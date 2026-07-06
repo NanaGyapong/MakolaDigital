@@ -76,7 +76,7 @@ router.get("/", async (req, res) => {
   try {
     const { status, type, limit = 20, offset = 0 } = req.query;
     const statusFilter = status || "active";
-    let query = `SELECT l.*, COALESCE(u.display_name, u.full_name) as seller_name, c.name as category_name, (SELECT url FROM listing_images WHERE listing_id = l.id AND is_primary ORDER BY sort_order LIMIT 1) as primary_image FROM listings l JOIN users u ON u.id = l.seller_id LEFT JOIN categories c ON c.id = l.category_id WHERE l.status = '${statusFilter}'`;
+    let query = `SELECT l.*, COALESCE(u.display_name, u.full_name, u.email) as seller_name, c.name as category_name, (SELECT url FROM listing_images WHERE listing_id = l.id AND is_primary ORDER BY sort_order LIMIT 1) as primary_image FROM listings l JOIN users u ON u.id = l.seller_id LEFT JOIN categories c ON c.id = l.category_id WHERE l.status = '${statusFilter}'`;
     const params = [];
     if (type) { params.push(type); query += ` AND l.type = $${params.length}`; }
     query += ` ORDER BY l.created_at DESC LIMIT $${params.length + 1} OFFSET $${params.length + 2}`;
@@ -126,7 +126,7 @@ router.get("/trending", async (req, res) => {
     const result = await db.query(
       `SELECT l.id, l.title, l.price, l.price_currency, l.type, l.status, l.created_at,
       l.views_count, l.saves_count,
-      COALESCE(u.display_name, u.full_name) as seller_name,
+      COALESCE(u.display_name, u.full_name, u.email) as seller_name,
       (l.views_count + (l.saves_count * 3)) as trending_score,
       img.url as primary_image
       FROM listings l
@@ -249,7 +249,7 @@ router.delete("/:id/save", authenticate, async (req, res) => {
 router.get("/saved/mine", authenticate, async (req, res) => {
   try {
     const result = await db.query(
-      `SELECT l.*, COALESCE(u.display_name, u.full_name) as seller_name,
+      `SELECT l.*, COALESCE(u.display_name, u.full_name, u.email) as seller_name,
       (SELECT url FROM listing_images WHERE listing_id = l.id AND is_primary ORDER BY sort_order LIMIT 1) as primary_image
       FROM saved_listings sl
       JOIN listings l ON l.id = sl.listing_id
