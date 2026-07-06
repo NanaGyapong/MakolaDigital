@@ -7,7 +7,7 @@ const router = Router();
 
 router.post("/", authenticate, async (req, res) => {
   try {
-    const { type, category, title, description, price, currency, priceLabel, isNegotiable, country, city, locationText, isRemote, images, phone, dialCode, showWhatsapp } = req.body;
+    const { type, category, title, description, price, currency, priceLabel, isNegotiable, country, city, region, locationText, isRemote, images, phone, dialCode, showWhatsapp } = req.body;
     const contactPhone = phone ? (dialCode || "+233") + phone.replace(/^0/, "") : null;
     const slug = title.toLowerCase().replace(/[^a-z0-9]+/g, "-") + "-" + uuid().slice(0, 8);
     // Extract main category from subcategory string e.g. 'Beauty & Care > Skincare' -> 'Beauty & Health'
@@ -34,9 +34,9 @@ router.post("/", authenticate, async (req, res) => {
     const catResult = await db.query('SELECT id FROM categories WHERE name = $1 LIMIT 1', [mappedCat]);
     const categoryId = catResult.rows[0]?.id || 1;
     const result = await db.query(
-      `INSERT INTO listings (id, seller_id, category_id, type, status, title, slug, description, price, price_currency, price_label, is_negotiable, country, city, location_text, is_remote, contact_phone, show_whatsapp, video, created_at, updated_at)
+      `INSERT INTO listings (id, seller_id, category_id, type, status, title, slug, description, price, price_currency, price_label, is_negotiable, country, city, region, location_text, is_remote, contact_phone, show_whatsapp, video, created_at, updated_at)
        VALUES ($1,$2,$3,$4,'pending',$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,$18,NOW(),NOW()) RETURNING id`,
-      [uuid(), req.user.id, categoryId, type, title, slug, description, price || null, currency || "GHS", priceLabel || null, isNegotiable || false, country?.slice(0,2).toUpperCase() || "GH", city || null, locationText || null, isRemote || false, contactPhone, showWhatsapp || false, req.body.video || null]
+      [uuid(), req.user.id, categoryId, type, title, slug, description, price || null, currency || "GHS", priceLabel || null, isNegotiable || false, country?.slice(0,2).toUpperCase() || "GH", city || null, region || null, locationText || null, isRemote || false, contactPhone, showWhatsapp || false, req.body.video || null]
     );
     const listingId = result.rows[0].id;
     if (images && images.length > 0) {
