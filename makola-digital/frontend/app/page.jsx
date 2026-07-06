@@ -14,6 +14,7 @@ export default function MakolaDigital() {
   const [trending, setTrending] = useState([]);
   const [showNewsletter, setShowNewsletter] = useState(false);
   const [newsletterEmail, setNewsletterEmail] = useState("");
+  const pathname = typeof window !== "undefined" ? window.location.pathname : "/";
   const [newsletterSent, setNewsletterSent] = useState(false);
 
   const categories = useMemo(() => [
@@ -394,9 +395,10 @@ export default function MakolaDigital() {
             { icon: "💬", label: "Inbox", path: "/dashboard/inbox" },
             { icon: "👤", label: "Account", path: "/dashboard" },
           ].map(nav => (
-            <button key={nav.label} onClick={() => router.push(nav.path)} style={{ flex: 1, background: "none", border: "none", color: nav.path === "/" ? "#E8533A" : "rgba(240,237,232,0.5)", padding: "10px 0 8px", cursor: "pointer", display: "flex", flexDirection: "column", alignItems: "center", gap: 3 }}>
+            <button key={nav.label} onClick={() => router.push(nav.path)} style={{ flex: 1, background: "none", border: "none", color: pathname === nav.path ? "#E8533A" : "rgba(240,237,232,0.5)", padding: "10px 0 8px", cursor: "pointer", display: "flex", flexDirection: "column", alignItems: "center", gap: 3 }}>
               <span style={{ fontSize: 20 }}>{nav.icon}</span>
-              <span style={{ fontSize: 9, fontWeight: 600, letterSpacing: "0.02em" }}>{nav.label}</span>
+              <span style={{ fontSize: 9, fontWeight: 600, letterSpacing: "0.02em", color: pathname === nav.path ? "#E8533A" : "rgba(240,237,232,0.5)" }}>{nav.label}</span>
+              {pathname === nav.path && <div style={{ width: 4, height: 4, borderRadius: "50%", background: "#E8533A", marginTop: 1 }} />}
             </button>
           ))}
         </div>
