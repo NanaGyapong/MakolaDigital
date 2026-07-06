@@ -1,4 +1,5 @@
 import express from "express";
+import rateLimit from "express-rate-limit";
 import { sendWeeklyAnalytics } from "./jobs/weekly-analytics.js";
 import pushRoutes from "./routes/push.routes.js";
 import { sendBuyerRecommendations } from "./jobs/buyer-recommendations.js";
