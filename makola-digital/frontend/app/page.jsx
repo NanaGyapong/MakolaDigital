@@ -236,14 +236,16 @@ export default function MakolaDigital() {
 {trending.length > 0 ? (
             <div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr 1fr" : "repeat(auto-fill, minmax(200px, 1fr))", gap: 12 }}>
               {trending.map(l => (
-                <div key={l.id} onClick={() => router.push("/listing/" + l.id)} style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: 14, overflow: "hidden", cursor: "pointer" }}>
+                <div key={l.id} onClick={() => router.push("/listing/" + l.id)} style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: 14, overflow: "hidden", cursor: "pointer", position: "relative" }}>
                   {l.primary_image
-                    ? <img src={l.primary_image} alt={l.title} style={{ width: "100%", height: 120, objectFit: "cover" }} />
-                    : <div style={{ height: 120, background: "rgba(255,255,255,0.04)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 32 }}>{l.type === "product" ? "🛍️" : l.type === "service" ? "🔧" : l.type === "job" ? "💼" : "🏠"}</div>
+                    ? <img src={l.primary_image} alt={l.title} style={{ width: "100%", height: 150, objectFit: "cover" }} />
+                    : <div style={{ height: 150, background: "rgba(255,255,255,0.04)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 40 }}>{l.type === "product" ? "🛍️" : l.type === "service" ? "🔧" : l.type === "job" ? "💼" : "🏠"}</div>
                   }
+                  <div style={{ position: "absolute", top: 8, left: 8, background: l.type === "product" ? "#E8533A" : l.type === "service" ? "#3B82F6" : l.type === "job" ? "#C47F17" : "#2D9E6B", borderRadius: 6, fontSize: 9, fontWeight: 800, color: "#fff", padding: "3px 7px", textTransform: "uppercase" }}>{l.type}</div>
                   <div style={{ padding: "10px 12px" }}>
                     <div style={{ fontSize: 12, fontWeight: 700, marginBottom: 4, overflow: "hidden", display: "-webkit-box", WebkitLineClamp: 2, WebkitBoxOrient: "vertical" }}>{l.title}</div>
-                    <div style={{ fontSize: 13, fontWeight: 700, color: "#E8533A" }}>{l.price_currency} {Number(l.price).toLocaleString()}</div>
+                    <div style={{ fontSize: 13, fontWeight: 800, color: "#E8533A", marginBottom: 4 }}>{l.price_currency} {Number(l.price).toLocaleString()}</div>
+                    <div style={{ fontSize: 10, color: "rgba(240,237,232,0.4)", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>📍 {l.location_text || l.city || l.country || "Ghana"}</div>
                   </div>
                 </div>
               ))}
