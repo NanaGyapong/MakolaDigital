@@ -296,11 +296,10 @@ export default function MakolaDigital() {
       </div>
 
       {/* REAL LISTINGS */}
-      {listings.length > 0 && (
-        <div style={{ padding: isMobile ? "8px 16px 32px" : "8px 32px 40px" }}>
+      <div style={{ padding: isMobile ? "8px 16px 32px" : "8px 32px 40px" }}>
           <h2 style={{ fontSize: isMobile ? 17 : 20, fontWeight: 700, marginBottom: 16, letterSpacing: "-0.02em" }}>Latest listings</h2>
           <div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr 1fr" : "repeat(auto-fill, minmax(260px, 1fr))", gap: 16 }}>
-            {listings.map(l => (
+            {listings.length === 0 ? [...Array(6)].map((_, i) => <SkeletonCard key={i} />) : listings.map(l => (
               <div key={l.id} onClick={() => router.push(`/listing/${l.id}`)} style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: 16, overflow: "hidden", cursor: "pointer", position: "relative" }}>
                 {l.primary_image
                   ? <img src={l.primary_image} alt={l.title} style={{ width: "100%", height: isMobile ? 160 : 180, objectFit: "cover" }} />
