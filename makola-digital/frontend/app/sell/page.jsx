@@ -11,7 +11,7 @@ async function getValidToken() {
     const payload = JSON.parse(atob(token.split('.')[1]));
     const isExpired = payload.exp * 1000 < Date.now();
     if (isExpired) {
-      const refreshToken = localStorage.getItem("makola_refresh_token");
+      const refreshToken = localStorage.getItem("makola_refresh");
       if (!refreshToken) return null;
       const res = await fetch(API + "/auth/refresh", {
         method: "POST",
@@ -21,7 +21,7 @@ async function getValidToken() {
       if (!res.ok) { localStorage.removeItem("makola_token"); return null; }
       const data = await res.json();
       localStorage.setItem("makola_token", data.accessToken);
-      if (data.refreshToken) localStorage.setItem("makola_refresh_token", data.refreshToken);
+      if (data.refreshToken) localStorage.setItem("makola_refresh", data.refreshToken);
       return data.accessToken;
     }
     return token;
