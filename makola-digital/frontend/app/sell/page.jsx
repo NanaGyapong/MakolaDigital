@@ -4,6 +4,30 @@ import { useRouter } from "next/navigation";
 
 const API = process.env.NEXT_PUBLIC_API_URL;
 
+async function getValidToken() {
+  let token = localStorage.getItem("makola_token");
+  if (!token) return null;
+  try {
+    const payload = JSON.parse(atob(token.split('.')[1]));
+    const isExpired = payload.exp * 1000 < Date.now();
+    if (isExpired) {
+      const refreshToken = localStorage.getItem("makola_refresh_token");
+      if (!refreshToken) return null;
+      const res = await fetch(API + "/auth/refresh", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ refreshToken })
+      });
+      if (!res.ok) { localStorage.removeItem("makola_token"); return null; }
+      const data = await res.json();
+      localStorage.setItem("makola_token", data.accessToken);
+      if (data.refreshToken) localStorage.setItem("makola_refresh_token", data.refreshToken);
+      return data.accessToken;
+    }
+    return token;
+  } catch { return token; }
+}
+
 const TYPES = [
   { icon: "🛍️", label: "Product", val: "product", desc: "Physical or digital goods" },
   { icon: "🔧", label: "Service", val: "service", desc: "Skills & professional services" },
@@ -155,8 +179,7 @@ export default function SellPage() {
     setLoading(true);
     setError("");
     const { authService } = await import("@/lib/auth.service");
-    let token = localStorage.getItem("makola_token");
-    if (!token) { router.push("/auth/login"); return; }
+    let token = await getValidToken();
     if (!token) { router.push("/auth/login"); return; }
     try {
       const res = await fetch(`${API}/listings`, {
