@@ -24,7 +24,7 @@ const CATEGORIES = {
     'Food & Beverages > Water & Soft Drinks', 'Food & Beverages > Alcoholic Drinks', 'Food & Beverages > Juices & Smoothies', 'Food & Beverages > Energy Drinks', 'Food & Beverages > Tea & Coffee', 'Food & Beverages > Local Drinks',
     'Animals & Pets > Poultry', 'Animals & Pets > Livestock', 'Animals & Pets > Pets', 'Animals & Pets > Animal Feed',
     'Arts & Crafts > Handmade', 'Arts & Crafts > Wood & Carvings', 'Arts & Crafts > Paintings', 'Arts & Crafts > Cultural Items',
-  ]],
+  ],
   service: [
     'Services > Repair & Construction', 'Services > Cleaning', 'Services > Events & Catering', 'Services > Transport & Logistics',
     'Business Services > Accounting & Legal', 'Business Services > Marketing & Branding', 'Business Services > Finance & Insurance',
