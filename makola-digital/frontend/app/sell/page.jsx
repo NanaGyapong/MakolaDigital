@@ -178,7 +178,6 @@ export default function SellPage() {
   const handleSubmit = async () => {
     setLoading(true);
     setError("");
-    const { authService } = await import("@/lib/auth.service");
     let token = await getValidToken();
     if (!token) { router.push("/auth/login"); return; }
     try {
