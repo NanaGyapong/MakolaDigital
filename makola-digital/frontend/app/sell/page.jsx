@@ -187,9 +187,10 @@ export default function SellPage() {
         body: JSON.stringify({ ...form, images, video }),
       });
       const data = await res.json();
+      console.log("Submit response:", res.status, data);
       if (res.ok) { router.push("/dashboard/analytics?listed=true"); }
-      else setError(data.message || "Failed to create listing");
-    } catch (e) { setError("Network error. Please try again."); }
+      else setError(data.message || "Failed to create listing. Status: " + res.status);
+    } catch (e) { console.error("Submit error:", e); setError("Network error: " + e.message); }
     setLoading(false);
   };
 
