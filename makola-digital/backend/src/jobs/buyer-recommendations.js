@@ -10,12 +10,12 @@ export async function sendBuyerRecommendations() {
       FROM listings l
       JOIN users u ON u.id = l.seller_id
       WHERE l.status = 'active'
-      ORDER BY (l.views_count + l.saves_count * 3) DESC, l.created_at DESC
+      ORDER BY l.created_at DESC
     `);
-    const top6 = listings.rows.slice(0, 6);
+    const top10 = listings.rows.slice(0, 10);
     for (const buyer of buyers.rows) {
       const firstName = buyer.full_name ? buyer.full_name.split(' ')[0] : 'there';
-      const listingCards = top6.map(l => `
+      const listingCards = top10.map(l => `
         <tr>
           <td style="padding:0 0 16px 0">
             <table width="100%" cellpadding="0" cellspacing="0" style="background:#1A1A1A;border:1px solid rgba(255,255,255,0.08);border-radius:12px;overflow:hidden">
@@ -48,7 +48,7 @@ export async function sendBuyerRecommendations() {
       await resend.emails.send({
         from: "Makola Digital <hello@makoladigital.online>",
         to: buyer.email,
-        subject: `${firstName}, fresh listings picked for you! 🔥`,
+        subject: `${firstName}, 10 fresh listings just for you! 🛍️`,
         html: `<!DOCTYPE html>
 <html>
 <head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"></head>
@@ -63,13 +63,13 @@ export async function sendBuyerRecommendations() {
             <span style="color:#fff;font-size:18px;font-weight:900;letter-spacing:-0.5px">M</span>
           </div>
           <div style="color:#F0EDE8;font-size:20px;font-weight:900;letter-spacing:-0.5px">Makola<span style="color:#E8533A">Digital</span></div>
-          <div style="color:rgba(240,237,232,0.4);font-size:11px;margin-top:4px;letter-spacing:2px;text-transform:uppercase">Fresh Picks For You</div>
+          <div style="color:rgba(240,237,232,0.4);font-size:11px;margin-top:4px;letter-spacing:2px;text-transform:uppercase">10 Latest Listings</div>
         </td></tr>
 
         <!-- GREETING -->
         <tr><td style="background:#111111;padding:24px 32px">
           <p style="color:#F0EDE8;font-size:16px;margin:0 0 8px">Hey ${firstName}! 👋</p>
-          <p style="color:rgba(240,237,232,0.6);font-size:14px;margin:0;line-height:1.6">We handpicked the hottest listings on Makola Digital just for you. Don't miss out!</p>
+          <p style="color:rgba(240,237,232,0.6);font-size:14px;margin:0;line-height:1.6">Here are the 10 most recent listings on Makola Digital — fresh and just posted!</p>
         </td></tr>
 
         <!-- LISTINGS -->
