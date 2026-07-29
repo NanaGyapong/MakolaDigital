@@ -1,15 +1,22 @@
-const CACHE_NAME = 'makola-digital-v3';
+const CACHE_NAME = 'makola-digital-v4';
+const OFFLINE_URL = '/offline.html';
+
 self.addEventListener('install', event => {
   self.skipWaiting();
+  event.waitUntil(
+    caches.open(CACHE_NAME).then(cache => cache.addAll([OFFLINE_URL, '/', '/icon-192.png']))
+  );
 });
+
 self.addEventListener('activate', event => {
   event.waitUntil(
     caches.keys().then(keys =>
-      Promise.all(keys.map(key => caches.delete(key)))
+      Promise.all(keys.filter(key => key !== CACHE_NAME).map(key => caches.delete(key)))
     )
   );
   self.clients.claim();
 });
+
 self.addEventListener('fetch', event => {
   if (event.request.method !== 'GET') return;
   if (event.request.url.includes('railway.app')) return;
@@ -21,7 +28,7 @@ self.addEventListener('fetch', event => {
         caches.open(CACHE_NAME).then(cache => cache.put(event.request, clone));
         return response;
       })
-      .catch(() => caches.match(event.request))
+      .catch(() => caches.match(event.request).then(cached => cached || caches.match(OFFLINE_URL)))
   );
 });
 

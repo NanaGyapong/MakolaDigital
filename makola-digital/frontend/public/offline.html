@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Makola Digital — Offline</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { background: #0A0A0A; color: #F0EDE8; font-family: sans-serif; min-height: 100vh; display: flex; align-items: center; justify-content: center; text-align: center; padding: 24px; }
+  .logo { width: 64px; height: 64px; background: linear-gradient(135deg, #E8533A, #C47F17); border-radius: 16px; display: flex; align-items: center; justify-content: center; font-size: 32px; margin: 0 auto 24px; }
+  h1 { font-size: 24px; font-weight: 900; margin-bottom: 12px; }
+  p { color: rgba(240,237,232,0.5); font-size: 15px; line-height: 1.6; margin-bottom: 28px; }
+  button { background: linear-gradient(135deg, #E8533A, #C47F17); border: none; color: #fff; padding: 14px 32px; border-radius: 12px; font-size: 15px; font-weight: 700; cursor: pointer; }
+</style>
+</head>
+<body>
+  <div>
+    <div class="logo">🌍</div>
+    <h1>You're offline</h1>
+    <p>No internet connection found.<br/>Check your connection and try again.</p>
+    <button onclick="window.location.reload()">Try again</button>
+  </div>
+</body>
+</html>
