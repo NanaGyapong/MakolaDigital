@@ -180,6 +180,7 @@ export default function SellPage() {
     setError("");
     let token = await getValidToken();
     if (!token) { router.push("/auth/login"); return; }
+    if (images.length === 0) { setError("Please add at least one photo before publishing."); setLoading(false); return; }
     try {
       const res = await fetch(`${API}/listings`, {
         method: "POST",
@@ -245,9 +246,9 @@ export default function SellPage() {
           <input type="checkbox" checked={form.isNegotiable} onChange={e => set("isNegotiable", e.target.checked)} style={{ width: 18, height: 18, accentColor: "#E8533A" }} />
           <span style={{ fontSize: 14, color: "rgba(240,237,232,0.7)" }}>Price is negotiable</span>
         </label>
-        <h2 style={{ fontSize: 18, fontWeight: 900, marginBottom: 6, marginTop: 8 }}>Photos & Video</h2>
-        <p style={{ color: "rgba(240,237,232,0.5)", fontSize: 14, marginBottom: 16 }}>Add up to 8 photos. First photo is the cover image.</p>
-        <div onClick={() => fileRef.current?.click()} style={{ border: "2px dashed rgba(232,83,58,0.3)", borderRadius: 14, padding: "32px 20px", textAlign: "center", cursor: "pointer", marginBottom: 16, background: "rgba(232,83,58,0.03)" }}>
+        <h2 style={{ fontSize: 18, fontWeight: 900, marginBottom: 6, marginTop: 8 }}>Photos & Video <span style={{ color: "#E8533A", fontSize: 14 }}>*</span></h2>
+        <p style={{ color: "rgba(240,237,232,0.5)", fontSize: 14, marginBottom: 16 }}>At least 1 photo required. First photo is the cover image.</p>
+        <div onClick={() => fileRef.current?.click()} style={{ border: images.length === 0 ? "2px dashed rgba(232,83,58,0.6)" : "2px dashed rgba(232,83,58,0.3)", borderRadius: 14, padding: "32px 20px", textAlign: "center", cursor: "pointer", marginBottom: 16, background: images.length === 0 ? "rgba(232,83,58,0.06)" : "rgba(232,83,58,0.03)" }}>
           <div style={{ fontSize: 36, marginBottom: 8 }}>📸</div>
           <div style={{ fontWeight: 600, marginBottom: 4 }}>{uploading ? "Uploading..." : "Click to upload photos"}</div>
           <div style={{ fontSize: 12, color: "rgba(240,237,232,0.4)" }}>JPG, PNG, WebP up to 10MB each</div>
