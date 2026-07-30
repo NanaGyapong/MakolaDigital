@@ -19,6 +19,13 @@ export default function MakolaDigital() {
   const [showReviewPrompt, setShowReviewPrompt] = useState(false);
   const [onboardStep, setOnboardStep] = useState(0);
   const showToast = (msg, color = "#2D9E6B") => { setToast({ msg, color }); setTimeout(() => setToast(null), 2500); };
+  const haptic = (type = "light") => {
+    if (!navigator.vibrate) return;
+    if (type === "light") navigator.vibrate(10);
+    else if (type === "medium") navigator.vibrate(20);
+    else if (type === "success") navigator.vibrate([10, 50, 10]);
+    else if (type === "error") navigator.vibrate([30, 20, 30]);
+  };
   const pathname = typeof window !== "undefined" ? window.location.pathname : "/";
   const [newsletterSent, setNewsletterSent] = useState(false);
 
@@ -172,14 +179,14 @@ export default function MakolaDigital() {
           <div style={{ display: "flex", background: "rgba(255,255,255,0.08)", border: "1px solid rgba(255,255,255,0.12)", borderRadius: 14, overflow: "hidden", padding: "4px 4px 4px 14px", gap: 8, marginBottom: 20 }}>
             <span style={{ display: "flex", alignItems: "center", fontSize: 16 }}>🔍</span>
             <input value={search} onChange={e => setSearch(e.target.value)} onKeyDown={e => e.key === "Enter" && router.push(`/search?q=${search}`)} placeholder="What are you looking for?" style={{ flex: 1, background: "none", border: "none", outline: "none", color: "#F0EDE8", fontSize: 14, minWidth: 0 }} />
-            <button onClick={() => router.push(`/search?q=${search}`)} style={{ background: "#E8533A", border: "none", borderRadius: 10, color: "#fff", padding: "10px 16px", fontSize: 13, fontWeight: 700, cursor: "pointer" }}>Go</button>
+            <button onClick={() => { haptic("light"); router.push(`/search?q=${search}`); }} style={{ background: "#E8533A", border: "none", borderRadius: 10, color: "#fff", padding: "10px 16px", fontSize: 13, fontWeight: 700, cursor: "pointer" }}>Go</button>
           </div>
           {/* Mobile banner */}
           <div style={{ background: "linear-gradient(135deg, #E8533A, #C47F17)", borderRadius: 18, padding: "24px 20px", marginBottom: 20, display: "flex", alignItems: "center", justifyContent: "space-between", overflow: "hidden", position: "relative" }}>
             <div style={{ flex: 1 }}>
               <div style={{ fontSize: 22, fontWeight: 900, color: "#fff", lineHeight: 1.2, marginBottom: 6 }}>Buy. Sell.<br/>Connect.</div>
               <div style={{ fontSize: 12, color: "rgba(255,255,255,0.85)", marginBottom: 14, lineHeight: 1.5 }}>All in one place 🌍</div>
-              <button onClick={() => router.push("/auth/register")} style={{ background: "#fff", border: "none", color: "#E8533A", padding: "9px 18px", borderRadius: 10, fontSize: 13, fontWeight: 800, cursor: "pointer" }}>Start free →</button>
+              <button onClick={() => { haptic("medium"); router.push("/auth/register"); }} style={{ background: "#fff", border: "none", color: "#E8533A", padding: "9px 18px", borderRadius: 10, fontSize: 13, fontWeight: 800, cursor: "pointer" }}>Start free →</button>
             </div>
             <div style={{ position: "absolute", right: -70, top: "50%", transform: "translateY(-50%)", overflow: "hidden" }}>
               <img src="/trolley.png" alt="" style={{ width: 250, height: 250, objectFit: "contain" }} />
@@ -446,7 +453,7 @@ export default function MakolaDigital() {
             { icon: "💬", label: "Inbox", path: "/dashboard/inbox" },
             { icon: "👤", label: "Account", path: "/dashboard" },
           ].map(nav => (
-            <button key={nav.label} onClick={() => router.push(nav.path)} style={{ flex: 1, background: "none", border: "none", color: pathname === nav.path ? "#E8533A" : "rgba(240,237,232,0.5)", padding: "10px 0 8px", cursor: "pointer", display: "flex", flexDirection: "column", alignItems: "center", gap: 3 }}>
+            <button key={nav.label} onClick={() => { haptic("light"); router.push(nav.path); }} style={{ flex: 1, background: "none", border: "none", color: pathname === nav.path ? "#E8533A" : "rgba(240,237,232,0.5)", padding: "10px 0 8px", cursor: "pointer", display: "flex", flexDirection: "column", alignItems: "center", gap: 3 }}>
               <span style={{ fontSize: 20 }}>{nav.icon}</span>
               <span style={{ fontSize: 9, fontWeight: 600, letterSpacing: "0.02em", color: pathname === nav.path ? "#E8533A" : "rgba(240,237,232,0.5)" }}>{nav.label}</span>
               {pathname === nav.path && <div style={{ width: 4, height: 4, borderRadius: "50%", background: "#E8533A", marginTop: 1 }} />}
