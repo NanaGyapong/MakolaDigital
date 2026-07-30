@@ -15,6 +15,8 @@ export default function MakolaDigital() {
   const [showNewsletter, setShowNewsletter] = useState(false);
   const [newsletterEmail, setNewsletterEmail] = useState("");
   const [toast, setToast] = useState(null);
+  const [onboarding, setOnboarding] = useState(false);
+  const [onboardStep, setOnboardStep] = useState(0);
   const showToast = (msg, color = "#2D9E6B") => { setToast({ msg, color }); setTimeout(() => setToast(null), 2500); };
   const pathname = typeof window !== "undefined" ? window.location.pathname : "/";
   const [newsletterSent, setNewsletterSent] = useState(false);
@@ -387,6 +389,35 @@ export default function MakolaDigital() {
         </div>
       </div>
 
+      {/* ONBOARDING */}
+      {onboarding && (
+        <div style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.95)", zIndex: 1000, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", padding: 24 }}>
+          {[
+            { icon: "🌍", title: "Welcome to Makola Digital", body: "Africa's marketplace for buying and selling products, services, jobs and rentals — all in one place." },
+            { icon: "🛍️", title: "Buy Anything", body: "Browse thousands of listings from sellers across Ghana and Africa. Find the best deals near you." },
+            { icon: "🚀", title: "Sell for Free", body: "List your products or services in minutes. Reach buyers across Ghana, Africa and the diaspora." },
+          ].map((slide, i) => (
+            onboardStep === i && (
+              <div key={i} style={{ textAlign: "center", maxWidth: 340 }}>
+                <div style={{ fontSize: 80, marginBottom: 28 }}>{slide.icon}</div>
+                <h2 style={{ fontSize: 26, fontWeight: 900, marginBottom: 14, lineHeight: 1.2 }}>{slide.title}</h2>
+                <p style={{ color: "rgba(240,237,232,0.6)", fontSize: 16, lineHeight: 1.7, marginBottom: 40 }}>{slide.body}</p>
+              </div>
+            )
+          ))}
+          <div style={{ display: "flex", gap: 8, marginBottom: 32 }}>
+            {[0,1,2].map(i => (
+              <div key={i} style={{ width: i === onboardStep ? 24 : 8, height: 8, borderRadius: 4, background: i === onboardStep ? "#E8533A" : "rgba(255,255,255,0.2)", transition: "all 0.3s" }} />
+            ))}
+          </div>
+          {onboardStep < 2 ? (
+            <button onClick={() => setOnboardStep(s => s + 1)} style={{ background: "#E8533A", border: "none", color: "#fff", padding: "14px 48px", borderRadius: 12, fontSize: 16, fontWeight: 700, cursor: "pointer", width: "100%", maxWidth: 300 }}>Next →</button>
+          ) : (
+            <button onClick={() => { localStorage.setItem("makola_onboarded", "1"); setOnboarding(false); }} style={{ background: "linear-gradient(135deg,#E8533A,#C47F17)", border: "none", color: "#fff", padding: "14px 48px", borderRadius: 12, fontSize: 16, fontWeight: 700, cursor: "pointer", width: "100%", maxWidth: 300 }}>Get Started 🚀</button>
+          )}
+          <button onClick={() => { localStorage.setItem("makola_onboarded", "1"); setOnboarding(false); }} style={{ background: "none", border: "none", color: "rgba(240,237,232,0.3)", fontSize: 13, cursor: "pointer", marginTop: 16 }}>Skip</button>
+        </div>
+      )}
       {/* TOAST */}
       {toast && (
         <div style={{ position: "fixed", bottom: isMobile ? 90 : 30, left: "50%", transform: "translateX(-50%)", background: toast.color, color: "#fff", padding: "10px 20px", borderRadius: 30, fontSize: 13, fontWeight: 700, zIndex: 999, whiteSpace: "nowrap", boxShadow: "0 4px 20px rgba(0,0,0,0.4)" }}>{toast.msg}</div>
