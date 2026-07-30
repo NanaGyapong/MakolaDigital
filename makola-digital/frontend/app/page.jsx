@@ -16,6 +16,7 @@ export default function MakolaDigital() {
   const [newsletterEmail, setNewsletterEmail] = useState("");
   const [toast, setToast] = useState(null);
   const [onboarding, setOnboarding] = useState(false);
+  const [showReviewPrompt, setShowReviewPrompt] = useState(false);
   const [onboardStep, setOnboardStep] = useState(0);
   const showToast = (msg, color = "#2D9E6B") => { setToast({ msg, color }); setTimeout(() => setToast(null), 2500); };
   const pathname = typeof window !== "undefined" ? window.location.pathname : "/";
@@ -416,6 +417,19 @@ export default function MakolaDigital() {
             <button onClick={() => { localStorage.setItem("makola_onboarded", "1"); setOnboarding(false); }} style={{ background: "linear-gradient(135deg,#E8533A,#C47F17)", border: "none", color: "#fff", padding: "14px 48px", borderRadius: 12, fontSize: 16, fontWeight: 700, cursor: "pointer", width: "100%", maxWidth: 300 }}>Get Started 🚀</button>
           )}
           <button onClick={() => { localStorage.setItem("makola_onboarded", "1"); setOnboarding(false); }} style={{ background: "none", border: "none", color: "rgba(240,237,232,0.3)", fontSize: 13, cursor: "pointer", marginTop: 16 }}>Skip</button>
+        </div>
+      )}
+      {/* REVIEW PROMPT */}
+      {showReviewPrompt && (
+        <div style={{ position: "fixed", bottom: isMobile ? 90 : 30, left: "50%", transform: "translateX(-50%)", background: "#1A1A1A", border: "1px solid rgba(255,255,255,0.12)", borderRadius: 20, padding: "20px 24px", zIndex: 500, width: isMobile ? "90vw" : 360, boxShadow: "0 8px 40px rgba(0,0,0,0.6)" }}>
+          <button onClick={() => { localStorage.setItem("makola_reviewed", "1"); setShowReviewPrompt(false); }} style={{ position: "absolute", top: 10, right: 14, background: "none", border: "none", color: "rgba(240,237,232,0.4)", fontSize: 18, cursor: "pointer" }}>×</button>
+          <div style={{ fontSize: 32, marginBottom: 8 }}>⭐</div>
+          <div style={{ fontSize: 15, fontWeight: 800, marginBottom: 6 }}>Enjoying Makola Digital?</div>
+          <div style={{ fontSize: 13, color: "rgba(240,237,232,0.5)", marginBottom: 16, lineHeight: 1.5 }}>Rate us on Google Play — it helps us grow and serve you better! 🌍</div>
+          <div style={{ display: "flex", gap: 8 }}>
+            <a href="https://play.google.com/store/apps/details?id=online.makoladigital.app" target="_blank" rel="noopener noreferrer" onClick={() => { localStorage.setItem("makola_reviewed", "1"); setShowReviewPrompt(false); }} style={{ flex: 1, background: "linear-gradient(135deg,#E8533A,#C47F17)", color: "#fff", textDecoration: "none", padding: "10px", borderRadius: 10, fontSize: 13, fontWeight: 700, textAlign: "center" }}>Rate us ⭐</a>
+            <button onClick={() => { localStorage.setItem("makola_reviewed", "1"); setShowReviewPrompt(false); }} style={{ flex: 1, background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.1)", color: "#F0EDE8", padding: "10px", borderRadius: 10, fontSize: 13, cursor: "pointer" }}>Maybe later</button>
+          </div>
         </div>
       )}
       {/* TOAST */}
