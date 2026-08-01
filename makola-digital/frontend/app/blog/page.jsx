@@ -3,6 +3,14 @@ import { useRouter } from "next/navigation";
 
 const posts = [
   {
+    "slug": "how-to-buy-chinese-car-ghana-2026",
+    "title": "How to Buy a Chinese Car in Ghana in 2026 — Complete Guide",
+    "excerpt": "Chinese cars are taking over Ghana's roads. Here's everything you need to know before buying a Chinese car in Ghana in 2026.",
+    "date": "July 30, 2026",
+    "readTime": "7 min read",
+    "category": "Buyer Guide"
+  },
+  {
     "slug": "how-to-sell-online-ghana-2026",
     "title": "How to Sell Your Products Online in Ghana in 2026",
     "excerpt": "A step-by-step guide to selling anything online in Ghana — from phones to fashion to services.",
