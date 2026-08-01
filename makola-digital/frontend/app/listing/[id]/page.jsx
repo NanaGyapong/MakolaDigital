@@ -462,23 +462,17 @@ export default function ListingPage() {
             <h2 style={{ fontSize: 20, fontWeight: 800, margin: 0 }}>You might also like</h2>
             <button onClick={() => router.push('/search?type=' + listing.type)} style={{ background: 'none', border: '1px solid rgba(255,255,255,0.1)', color: 'rgba(240,237,232,0.6)', padding: '6px 14px', borderRadius: 8, fontSize: 12, cursor: 'pointer' }}>See all →</button>
           </div>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(220px, 1fr))', gap: 14 }}>
+<div style={{ display: 'flex', gap: 14, overflowX: 'auto', paddingBottom: 8, scrollbarWidth: 'none' }}>
             {related.map(l => (
-              <div key={l.id} style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: 14, overflow: 'hidden' }}>
-                <div onClick={() => router.push('/listing/' + l.id)} style={{ cursor: 'pointer' }}>
-                  {l.primary_image
-                    ? <img src={l.primary_image} alt={l.title} style={{ width: '100%', height: 130, objectFit: 'cover' }} />
-                    : <div style={{ height: 130, background: 'rgba(255,255,255,0.04)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 36 }}>{l.type === 'product' ? '🛍️' : l.type === 'service' ? '🔧' : l.type === 'job' ? '💼' : '🏠'}</div>
-                  }
-                </div>
-                <div style={{ padding: '12px 14px' }}>
-                  <div onClick={() => router.push('/listing/' + l.id)} style={{ fontSize: 13, fontWeight: 700, marginBottom: 4, lineHeight: 1.3, cursor: 'pointer' }}>{l.title}</div>
-                  <div style={{ fontSize: 14, fontWeight: 700, color: '#E8533A', marginBottom: 3 }}>{l.price_currency} {Number(l.price).toLocaleString()}</div>
-                  <div style={{ fontSize: 11, color: 'rgba(240,237,232,0.45)', marginBottom: 8 }}>📍 {l.location_text || l.city} · by {l.seller_name}</div>
-                  <div style={{ display: 'flex', gap: 6 }}>
-                    <button onClick={() => router.push('/listing/' + l.id)} style={{ flex: 1, background: '#E8533A', border: 'none', color: '#fff', padding: '7px', borderRadius: 7, fontSize: 11, fontWeight: 700, cursor: 'pointer' }}>View →</button>
-                    <button onClick={() => { const token = localStorage.getItem('makola_token'); if (!token) { router.push('/auth/login'); return; } fetch(API + '/listings/' + l.id + '/save', { method: 'POST', headers: { Authorization: 'Bearer ' + token } }); }} style={{ background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.1)', color: 'rgba(240,237,232,0.6)', padding: '7px 10px', borderRadius: 7, fontSize: 11, cursor: 'pointer' }}>📋</button>
-                  </div>
+              <div key={l.id} onClick={() => router.push('/listing/' + l.id)} style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: 14, overflow: 'hidden', cursor: 'pointer', flexShrink: 0, width: 180 }}>
+                {l.primary_image
+                  ? <img src={l.primary_image} alt={l.title} style={{ width: '100%', height: 140, objectFit: 'cover' }} />
+                  : <div style={{ height: 140, background: 'rgba(255,255,255,0.04)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 40 }}>{l.type === 'product' ? '🛍️' : l.type === 'service' ? '🔧' : l.type === 'job' ? '💼' : '🏠'}</div>
+                }
+                <div style={{ padding: '10px 12px' }}>
+                  <div style={{ fontSize: 12, fontWeight: 700, marginBottom: 4, lineHeight: 1.3, overflow: 'hidden', display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical' }}>{l.title}</div>
+                  <div style={{ fontSize: 13, fontWeight: 800, color: '#E8533A', marginBottom: 3 }}>{l.price_currency} {Number(l.price).toLocaleString()}</div>
+                  <div style={{ fontSize: 10, color: 'rgba(240,237,232,0.4)' }}>📍 {l.location_text || l.city || 'Ghana'}</div>
                 </div>
               </div>
             ))}
