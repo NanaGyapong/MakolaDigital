@@ -3,6 +3,14 @@ import { useRouter } from "next/navigation";
 
 const posts = [
   {
+    "slug": "best-places-to-rent-in-accra-2026",
+    "title": "Best Places to Rent in Accra in 2026 — Area by Area Guide",
+    "excerpt": "Looking for the best area to rent in Accra? This area-by-area guide covers prices, lifestyle, transport and everything you need to choose the right neighbourhood in 2026.",
+    "date": "July 30, 2026",
+    "readTime": "8 min read",
+    "category": "Rental Guide"
+  },
+  {
     "slug": "side-hustles-for-students-ghana-2026",
     "title": "Top 10 Side Hustles for Students in Ghana 2026 — Make Money While Studying",
     "excerpt": "Need extra money as a student in Ghana? Here are the top 10 side hustles students are using to make money while studying in 2026.",
