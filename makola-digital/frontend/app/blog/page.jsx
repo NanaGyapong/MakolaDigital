@@ -3,6 +3,14 @@ import { useRouter } from "next/navigation";
 
 const posts = [
   {
+    "slug": "best-online-marketplaces-ghana-2026",
+    "title": "Best Online Marketplaces in Ghana in 2026 — Complete Guide",
+    "excerpt": "Looking for the best place to buy and sell online in Ghana in 2026? Here's our complete guide to the top online marketplaces Ghanaians are using right now.",
+    "date": "July 30, 2026",
+    "readTime": "7 min read",
+    "category": "Marketplace"
+  },
+  {
     "slug": "best-online-marketplaces-nigeria-2026",
     "title": "Best Online Marketplaces in Nigeria in 2026 — Buy and Sell Anything",
     "excerpt": "Looking for the best place to buy and sell online in Nigeria in 2026? Here's our complete guide to the top online marketplaces Nigerians are using right now.",
