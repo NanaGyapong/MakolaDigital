@@ -3,6 +3,14 @@ import { useRouter } from "next/navigation";
 
 const posts = [
   {
+    "slug": "graduate-jobs-ghana-2026",
+    "title": "Graduate Jobs in Ghana 2026 — Complete Guide for Fresh Graduates",
+    "excerpt": "Just graduated in Ghana and looking for your first job? Here's your complete guide to finding graduate jobs in Ghana in 2026 — top employers, job sites, CV tips and more.",
+    "date": "July 30, 2026",
+    "readTime": "7 min read",
+    "category": "Jobs Guide"
+  },
+  {
     "slug": "best-online-marketplaces-ghana-2026",
     "title": "Best Online Marketplaces in Ghana in 2026 — Complete Guide",
     "excerpt": "Looking for the best place to buy and sell online in Ghana in 2026? Here's our complete guide to the top online marketplaces Ghanaians are using right now.",
