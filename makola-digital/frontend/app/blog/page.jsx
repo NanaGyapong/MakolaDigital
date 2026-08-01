@@ -3,6 +3,14 @@ import { useRouter } from "next/navigation";
 
 const posts = [
   {
+    "slug": "how-to-rent-apartment-accra-ghana-2026",
+    "title": "How to Rent an Apartment in Accra in 2026 — Complete Guide",
+    "excerpt": "Looking for a rental in Accra? Here's everything you need to know about renting an apartment or house in Accra in 2026 — areas, prices, tips and red flags.",
+    "date": "July 30, 2026",
+    "readTime": "7 min read",
+    "category": "Rental Guide"
+  },
+  {
     "slug": "how-to-buy-hybrid-car-ghana-2026",
     "title": "How to Buy a Hybrid Car in Ghana in 2026 — Complete Guide",
     "excerpt": "Hybrid cars are growing fast in Ghana. Here's everything you need to know before buying a hybrid car in Ghana in 2026 — costs, brands, fuel savings and more.",
