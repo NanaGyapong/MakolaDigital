@@ -3,6 +3,14 @@ import { useRouter } from "next/navigation";
 
 const posts = [
   {
+    "slug": "best-online-marketplaces-nigeria-2026",
+    "title": "Best Online Marketplaces in Nigeria in 2026 — Buy and Sell Anything",
+    "excerpt": "Looking for the best place to buy and sell online in Nigeria in 2026? Here's our complete guide to the top online marketplaces Nigerians are using right now.",
+    "date": "July 30, 2026",
+    "readTime": "7 min read",
+    "category": "Marketplace"
+  },
+  {
     "slug": "best-places-to-rent-in-accra-2026",
     "title": "Best Places to Rent in Accra in 2026 — Area by Area Guide",
     "excerpt": "Looking for the best area to rent in Accra? This area-by-area guide covers prices, lifestyle, transport and everything you need to choose the right neighbourhood in 2026.",
