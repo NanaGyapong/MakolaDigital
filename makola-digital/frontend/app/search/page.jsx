@@ -188,7 +188,7 @@ function SearchContent() {
           <span style={{ fontWeight: 700, fontSize: 16 }}>Makola<span style={{ color: "#E8533A" }}>Digital</span></span>
         </div>
         <div style={{ display: "flex", gap: 8 }}>
-          {isMobile && <button onClick={() => setShowFilters(!showFilters)} style={{ background: "rgba(255,255,255,0.06)", border: "none", color: "#F0EDE8", padding: "8px 14px", borderRadius: 8, cursor: "pointer", fontSize: 13 }}>⚙️ Filters</button>}
+          {isMobile && <button onClick={() => setShowFilters(!showFilters)} style={{ background: showFilters ? "rgba(232,83,58,0.15)" : "rgba(255,255,255,0.06)", border: showFilters ? "1px solid rgba(232,83,58,0.4)" : "none", color: showFilters ? "#E8533A" : "#F0EDE8", padding: "8px 14px", borderRadius: 8, cursor: "pointer", fontSize: 13, fontWeight: showFilters ? 700 : 400 }}>⚙️ Filters {(type !== "All" || category || country !== "All Countries" || minPrice || maxPrice) ? <span style={{ background: "#E8533A", color: "#fff", borderRadius: "50%", padding: "1px 6px", fontSize: 10, marginLeft: 4 }}>{[type !== "All", category, country !== "All Countries", minPrice, maxPrice].filter(Boolean).length}</span> : ""}</button>}
           <button onClick={() => router.push("/auth/login")} style={{ background: "none", border: "1px solid rgba(255,255,255,0.15)", color: "#F0EDE8", padding: "7px 14px", borderRadius: 8, fontSize: 13, cursor: "pointer" }}>Log in</button>
         </div>
       </nav>
@@ -216,6 +216,17 @@ function SearchContent() {
             <button type="submit" style={{ background: "#E8533A", border: "none", color: "#fff", padding: "12px 20px", borderRadius: 12, cursor: "pointer", fontWeight: 700, fontSize: 14 }}>Search</button>
           </form>
 
+          {/* Quick filter chips */}
+          {isMobile && (
+            <div style={{ display: "flex", gap: 8, overflowX: "auto", paddingBottom: 8, marginBottom: 16, scrollbarWidth: "none" }}>
+              {["All", "Products", "Services", "Jobs", "Rentals"].map(t => (
+                <button key={t} onClick={() => { setType(t); setPage(1); }} style={{ background: type === t ? "#E8533A" : "rgba(255,255,255,0.06)", border: type === t ? "none" : "1px solid rgba(255,255,255,0.1)", color: type === t ? "#fff" : "rgba(240,237,232,0.7)", padding: "6px 16px", borderRadius: 20, fontSize: 12, fontWeight: type === t ? 700 : 400, cursor: "pointer", whiteSpace: "nowrap", flexShrink: 0 }}>{t}</button>
+              ))}
+              <button onClick={() => setCountry("Ghana")} style={{ background: country === "Ghana" ? "#E8533A" : "rgba(255,255,255,0.06)", border: country === "Ghana" ? "none" : "1px solid rgba(255,255,255,0.1)", color: country === "Ghana" ? "#fff" : "rgba(240,237,232,0.7)", padding: "6px 16px", borderRadius: 20, fontSize: 12, fontWeight: country === "Ghana" ? 700 : 400, cursor: "pointer", whiteSpace: "nowrap", flexShrink: 0 }}>🇬🇭 Ghana</button>
+              <button onClick={() => setCountry("Nigeria")} style={{ background: country === "Nigeria" ? "#E8533A" : "rgba(255,255,255,0.06)", border: country === "Nigeria" ? "none" : "1px solid rgba(255,255,255,0.1)", color: country === "Nigeria" ? "#fff" : "rgba(240,237,232,0.7)", padding: "6px 16px", borderRadius: 20, fontSize: 12, fontWeight: country === "Nigeria" ? 700 : 400, cursor: "pointer", whiteSpace: "nowrap", flexShrink: 0 }}>🇳🇬 Nigeria</button>
+              <button onClick={() => setCountry("United Kingdom")} style={{ background: country === "United Kingdom" ? "#E8533A" : "rgba(255,255,255,0.06)", border: country === "United Kingdom" ? "none" : "1px solid rgba(255,255,255,0.1)", color: country === "United Kingdom" ? "#fff" : "rgba(240,237,232,0.7)", padding: "6px 16px", borderRadius: 20, fontSize: 12, fontWeight: country === "United Kingdom" ? 700 : 400, cursor: "pointer", whiteSpace: "nowrap", flexShrink: 0 }}>🇬🇧 UK</button>
+            </div>
+          )}
           {/* Results header */}
           <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 16 }}>
             <div style={{ fontSize: 14, color: "rgba(240,237,232,0.6)" }}>
