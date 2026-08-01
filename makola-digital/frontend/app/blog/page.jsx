@@ -3,6 +3,14 @@ import { useRouter } from "next/navigation";
 
 const posts = [
   {
+    "slug": "student-hostels-legon-upsa-wisconsin-accra-2026",
+    "title": "Best Student Hostels Around Legon, UPSA and Wisconsin in Accra 2026",
+    "excerpt": "Looking for a hostel near University of Ghana Legon, UPSA or Wisconsin University? Here's your complete guide to student accommodation in Accra in 2026.",
+    "date": "July 30, 2026",
+    "readTime": "6 min read",
+    "category": "Rental Guide"
+  },
+  {
     "slug": "how-to-rent-apartment-accra-ghana-2026",
     "title": "How to Rent an Apartment in Accra in 2026 — Complete Guide",
     "excerpt": "Looking for a rental in Accra? Here's everything you need to know about renting an apartment or house in Accra in 2026 — areas, prices, tips and red flags.",
