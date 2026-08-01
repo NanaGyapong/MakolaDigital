@@ -3,6 +3,14 @@ import { useRouter } from "next/navigation";
 
 const posts = [
   {
+    "slug": "side-hustles-for-students-ghana-2026",
+    "title": "Top 10 Side Hustles for Students in Ghana 2026 — Make Money While Studying",
+    "excerpt": "Need extra money as a student in Ghana? Here are the top 10 side hustles students are using to make money while studying in 2026.",
+    "date": "July 30, 2026",
+    "readTime": "6 min read",
+    "category": "Student Tips"
+  },
+  {
     "slug": "student-hostels-legon-upsa-wisconsin-accra-2026",
     "title": "Best Student Hostels Around Legon, UPSA and Wisconsin in Accra 2026",
     "excerpt": "Looking for a hostel near University of Ghana Legon, UPSA or Wisconsin University? Here's your complete guide to student accommodation in Accra in 2026.",
