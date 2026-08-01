@@ -3,6 +3,14 @@ import { useRouter } from "next/navigation";
 
 const posts = [
   {
+    "slug": "how-to-buy-hybrid-car-ghana-2026",
+    "title": "How to Buy a Hybrid Car in Ghana in 2026 — Complete Guide",
+    "excerpt": "Hybrid cars are growing fast in Ghana. Here's everything you need to know before buying a hybrid car in Ghana in 2026 — costs, brands, fuel savings and more.",
+    "date": "July 30, 2026",
+    "readTime": "6 min read",
+    "category": "Buyer Guide"
+  },
+  {
     "slug": "how-to-buy-chinese-car-ghana-2026",
     "title": "How to Buy a Chinese Car in Ghana in 2026 — Complete Guide",
     "excerpt": "Chinese cars are taking over Ghana's roads. Here's everything you need to know before buying a Chinese car in Ghana in 2026.",
