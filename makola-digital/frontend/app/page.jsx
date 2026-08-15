@@ -449,8 +449,8 @@ export default function MakolaDigital() {
           {[
             { icon: "🏠", label: "Home", path: "/" },
             { icon: "🔍", label: "Search", path: "/search" },
+            { icon: "🍛", label: "Food", path: "/food" },
             { icon: "➕", label: "Sell", path: "/sell" },
-            { icon: "💬", label: "Inbox", path: "/dashboard/inbox" },
             { icon: "👤", label: "Account", path: "/dashboard" },
           ].map(nav => (
             <button key={nav.label} onClick={() => { haptic("light"); router.push(nav.path); }} style={{ flex: 1, background: "none", border: "none", color: pathname === nav.path ? "#E8533A" : "rgba(240,237,232,0.5)", padding: "10px 0 8px", cursor: "pointer", display: "flex", flexDirection: "column", alignItems: "center", gap: 3 }}>
