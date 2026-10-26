@@ -215,7 +215,7 @@ export async function forgotPassword(req, res) {
 
     const user = result.rows[0];
     const token = uuid();
-    await req.redis.setex(`pw_reset:${token}`, 1800, user.id); // 30 min
+    await req.redis.set(`pw_reset:${token}`, user.id, { EX: 1800 }); // 30 min
 
     await emailQueue.add("forgot-password", { to: email, name: user.full_name, token });
   } catch (err) {
