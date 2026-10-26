@@ -24,6 +24,28 @@ export const emailQueue = {
       });
     }
 
+    if (type === 'forgot-password') {
+      const resetUrl = `https://www.makoladigital.online/auth/reset-password?token=${data.token}`;
+      await resend.emails.send({
+        from: 'Makola Digital <hello@makoladigital.online>',
+        to: data.to,
+        subject: 'Reset your Makola Digital password',
+        html: `
+          <div style="font-family:sans-serif;max-width:480px;margin:0 auto;padding:32px;background:#0A0A0A;color:#F0EDE8;border-radius:16px">
+            <h1 style="color:#E8533A;margin-bottom:8px">🌍 Makola Digital</h1>
+            <p>Hi ${data.name},</p>
+            <p>We received a request to reset your password. Click the button below to create a new password:</p>
+            <div style="text-align:center;margin:24px 0">
+              <a href="${resetUrl}" style="display:inline-block;background:#E8533A;color:#fff;padding:14px 32px;border-radius:10px;text-decoration:none;font-weight:700;font-size:16px">Reset My Password →</a>
+            </div>
+            <p style="color:rgba(240,237,232,0.5);font-size:13px">This link expires in 30 minutes. If you didn't request a password reset, ignore this email — your account is safe.</p>
+            <p style="color:rgba(240,237,232,0.5);font-size:13px">Or copy this link: ${resetUrl}</p>
+            <p style="color:rgba(240,237,232,0.5);font-size:13px">— The Makola Digital Team 🇬🇭</p>
+          </div>
+        `
+      });
+    }
+
     if (type === 'listing-approved') {
       await resend.emails.send({
         from: 'Makola Digital <hello@makoladigital.online>',

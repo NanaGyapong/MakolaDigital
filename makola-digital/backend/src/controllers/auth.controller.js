@@ -227,12 +227,13 @@ export async function forgotPassword(req, res) {
 // ── RESET PASSWORD ───────────────────────────────────────────
 export async function resetPassword(req, res) {
   try {
-    const { token, newPassword } = req.body;
+    const { token, newPassword, password } = req.body;
+    const pwd = newPassword || password;
 
     const userId = await req.redis.get(`pw_reset:${token}`);
     if (!userId) return res.status(400).json({ message: "Invalid or expired reset link" });
 
-    const hash = await bcrypt.hash(newPassword, 12);
+    const hash = await bcrypt.hash(pwd, 12);
     await db.query("UPDATE users SET password_hash=$1, updated_at=NOW() WHERE id=$2", [hash, userId]);
     await req.redis.del(`pw_reset:${token}`);
     await db.query("DELETE FROM refresh_tokens WHERE user_id=$1", [userId]);
