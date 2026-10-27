@@ -1,0 +1,8 @@
+[{
+      "relation": ["delegate_permission/common.handle_all_urls"],
+      "target": {
+        "namespace": "android_app",
+        "package_name": "online.makoladigital.app",
+        "sha256_cert_fingerprints": ["25:E2:D7:EC:63:35:B0:25:13:A9:76:BB:36:1E:62:2B:23:6C:2E:2D:1B:7E:8F:20:A3:22:0B:07:6C:F7:A2:39"]
+      }
+    }]
