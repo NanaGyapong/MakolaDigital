@@ -133,7 +133,7 @@ export default function SellPage() {
   const [form, setForm] = useState({
     type: "product", category: "", title: "", description: "",
     price: "", currency: "GHS", priceLabel: "", isNegotiable: false,
-    country: "Ghana", city: "", region: "", locationText: "", isRemote: false, phone: "", whatsapp: "",
+    country: "Ghana", city: "", region: "", locationText: "", isRemote: false, phone: "", whatsapp: "", carCondition: "",
   });
 
   const set = (k, v) => setForm(f => ({ ...f, [k]: v }));
@@ -222,6 +222,25 @@ export default function SellPage() {
           <option value="">Select category</option>
           {(CATEGORIES[form.type] || []).map(c => <option key={c} value={c}>{c}</option>)}
         </select>
+        {(form.category || '').startsWith('Vehicles > Cars') && (
+          <>
+            <label style={lbl}>Car Condition *</label>
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 10, marginBottom: 16 }}>
+              {[
+                { val: 'Brand New', icon: '✨', desc: 'Never used, 0km' },
+                { val: 'Foreign Used', icon: '🌍', desc: 'Imported, used abroad' },
+                { val: 'Local Used', icon: '🇬🇭', desc: 'Used here in Ghana' },
+              ].map(opt => (
+                <div key={opt.val} onClick={() => set('carCondition', opt.val)}
+                  style={{ background: 'rgba(255,255,255,0.04)', border: `2px solid ${form.carCondition === opt.val ? '#E8533A' : 'rgba(255,255,255,0.09)'}`, borderRadius: 12, padding: '14px 10px', cursor: 'pointer', textAlign: 'center' }}>
+                  <div style={{ fontSize: 24, marginBottom: 4 }}>{opt.icon}</div>
+                  <div style={{ fontWeight: 800, fontSize: 13 }}>{opt.val}</div>
+                  <div style={{ fontSize: 10, color: 'rgba(240,237,232,0.45)', marginTop: 2 }}>{opt.desc}</div>
+                </div>
+              ))}
+            </div>
+          </>
+        )}
         <label style={lbl}>Title *</label>
         <input value={form.title} onChange={e => set("title", e.target.value)} placeholder="e.g. iPhone 14 Pro 256GB" style={{ ...inp, marginBottom: 16 }} />
         <label style={lbl}>Description *</label>

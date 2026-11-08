@@ -231,7 +231,18 @@ export default function ListingPage() {
 
           {/* RIGHT — Details + Chat */}
           <div>
-            <div style={{ fontSize: 11, color: "rgba(240,237,232,0.4)", textTransform: "uppercase", marginBottom: 8, letterSpacing: "0.05em" }}>{listing.type}</div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 8 }}>
+              <div style={{ fontSize: 11, color: "rgba(240,237,232,0.4)", textTransform: "uppercase", letterSpacing: "0.05em" }}>{listing.type}</div>
+              {listing.car_condition && (
+                <span style={{ fontSize: 11, fontWeight: 700, padding: '2px 10px', borderRadius: 20,
+                  background: listing.car_condition === 'Brand New' ? 'rgba(45,158,107,0.15)' : listing.car_condition === 'Foreign Used' ? 'rgba(90,120,220,0.15)' : 'rgba(200,160,40,0.15)',
+                  color: listing.car_condition === 'Brand New' ? '#2D9E6B' : listing.car_condition === 'Foreign Used' ? '#7090E8' : '#C8A028',
+                  border: listing.car_condition === 'Brand New' ? '1px solid rgba(45,158,107,0.3)' : listing.car_condition === 'Foreign Used' ? '1px solid rgba(90,120,220,0.3)' : '1px solid rgba(200,160,40,0.3)',
+                }}>
+                  {listing.car_condition === 'Brand New' ? '✨' : listing.car_condition === 'Foreign Used' ? '🌍' : '🇬🇭'} {listing.car_condition}
+                </span>
+              )}
+            </div>
             <h1 style={{ fontSize: 22, fontWeight: 800, marginBottom: 10, lineHeight: 1.3 }}>{listing.title}</h1>
 
             {/* Rating summary */}
