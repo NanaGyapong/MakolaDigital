@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { db } from "../config/db.js";
-import { authenticate } from "../middleware/auth.js";
+import { authenticate, requireRole } from "../middleware/auth.js";
 import { v4 as uuid } from "uuid";
 
 const router = Router();
@@ -273,6 +273,19 @@ router.delete("/:id", authenticate, async (req, res) => {
     console.error("delete listing:", err);
     res.status(500).json({ message: "Failed to delete listing" });
   }
+
+// Admin: delete any listing
+router.delete("/admin/:id", authenticate, requireRole("admin"), async (req, res) => {
+  try {
+    await db.query("DELETE FROM listing_images WHERE listing_id = $1", [req.params.id]);
+    const result = await db.query("DELETE FROM listings WHERE id = $1 RETURNING id", [req.params.id]);
+    if (result.rowCount === 0) return res.status(404).json({ message: "Listing not found" });
+    res.json({ message: "Listing deleted by admin" });
+  } catch (err) {
+    console.error("admin delete listing:", err);
+    res.status(500).json({ message: "Failed to delete listing" });
+  }
+});
 });
 
 router.patch("/:id/sold-out", authenticate, async (req, res) => {
