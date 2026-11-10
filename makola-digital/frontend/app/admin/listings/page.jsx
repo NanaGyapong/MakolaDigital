@@ -20,6 +20,13 @@ export default function AdminListings() {
     await fetch(API + "/listings/" + id + "/status", { method: "PATCH", headers: { "Content-Type": "application/json", Authorization: "Bearer " + token }, body: JSON.stringify({ status }) });
     fetchListings();
   };
+  const deleteListing = async (id, title) => {
+    if (!window.confirm(`Delete "${title}"? This cannot be undone.`)) return;
+    const token = localStorage.getItem("makola_token");
+    const res = await fetch(API + "/listings/admin/" + id, { method: "DELETE", headers: { Authorization: "Bearer " + token } });
+    if (res.ok) fetchListings();
+    else alert("Failed to delete listing");
+  };
   return (
     <div style={{ background: "#0A0A0A", minHeight: "100vh", color: "#F0EDE8", padding: 28, fontFamily: "sans-serif" }}>
       <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 24 }}>
@@ -41,10 +48,13 @@ export default function AdminListings() {
                <div style={{ fontSize: 12, color: "rgba(240,237,232,0.5)" }}>{l.type} · {l.price_currency} {Number(l.price).toLocaleString()} · by {l.seller_name}</div>
                <div style={{ fontSize: 11, color: "rgba(240,237,232,0.4)" }}>📍 {l.location_text||l.city} · {new Date(l.created_at).toLocaleDateString()}</div>
              </div>
-             {filter==="pending" && <div style={{ display: "flex", gap: 8 }}>
-               <button onClick={() => updateStatus(l.id,"active")} style={{ background: "#2D9E6B", border: "none", color: "#fff", padding: "8px 16px", borderRadius: 8, cursor: "pointer", fontWeight: 700 }}>✅ Approve</button>
-               <button onClick={() => updateStatus(l.id,"rejected")} style={{ background: "#E8533A", border: "none", color: "#fff", padding: "8px 16px", borderRadius: 8, cursor: "pointer", fontWeight: 700 }}>❌ Reject</button>
-             </div>}
+             <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
+               {filter==="pending" && <>
+                 <button onClick={() => updateStatus(l.id,"active")} style={{ background: "#2D9E6B", border: "none", color: "#fff", padding: "8px 16px", borderRadius: 8, cursor: "pointer", fontWeight: 700 }}>✅ Approve</button>
+                 <button onClick={() => updateStatus(l.id,"rejected")} style={{ background: "#E8533A", border: "none", color: "#fff", padding: "8px 16px", borderRadius: 8, cursor: "pointer", fontWeight: 700 }}>❌ Reject</button>
+               </>}
+               <button onClick={() => deleteListing(l.id, l.title)} style={{ background: "rgba(220,38,38,0.15)", border: "1px solid rgba(220,38,38,0.4)", color: "#f87171", padding: "8px 16px", borderRadius: 8, cursor: "pointer", fontWeight: 700 }}>🗑️ Delete</button>
+             </div>
            </div>
          ))}
        </div>}
