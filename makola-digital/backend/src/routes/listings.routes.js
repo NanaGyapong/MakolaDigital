@@ -264,17 +264,8 @@ router.get("/saved/mine", authenticate, async (req, res) => {
   }
 });
 
-router.delete("/:id", authenticate, async (req, res) => {
-  try {
-    await db.query("DELETE FROM listing_images WHERE listing_id = $1", [req.params.id]);
-    await db.query("DELETE FROM listings WHERE id = $1 AND seller_id = $2", [req.params.id, req.user.id]);
-    res.json({ message: "Listing deleted" });
-  } catch (err) {
-    console.error("delete listing:", err);
-    res.status(500).json({ message: "Failed to delete listing" });
-  }
 
-// Admin: delete any listing
+// Admin: delete any listing (must be BEFORE /:id route)
 router.delete("/admin/:id", authenticate, requireRole("admin"), async (req, res) => {
   try {
     await db.query("DELETE FROM listing_images WHERE listing_id = $1", [req.params.id]);
@@ -286,6 +277,16 @@ router.delete("/admin/:id", authenticate, requireRole("admin"), async (req, res)
     res.status(500).json({ message: "Failed to delete listing" });
   }
 });
+
+router.delete("/:id", authenticate, async (req, res) => {
+  try {
+    await db.query("DELETE FROM listing_images WHERE listing_id = $1", [req.params.id]);
+    await db.query("DELETE FROM listings WHERE id = $1 AND seller_id = $2", [req.params.id, req.user.id]);
+    res.json({ message: "Listing deleted" });
+  } catch (err) {
+    console.error("delete listing:", err);
+    res.status(500).json({ message: "Failed to delete listing" });
+  }
 });
 
 router.patch("/:id/sold-out", authenticate, async (req, res) => {
