@@ -320,14 +320,29 @@ export default function MakolaDigital() {
                       {l.type === "product" ? "🛍️" : l.type === "service" ? "🔧" : l.type === "job" ? "💼" : "🏠"}
                     </div>
                 }
-                <div style={{ position: "absolute", top: 8, left: 8, background: l.type === "product" ? "#E8533A" : l.type === "service" ? "#3B82F6" : l.type === "job" ? "#C47F17" : "#2D9E6B", borderRadius: 6, fontSize: 9, fontWeight: 800, color: "#fff", padding: "3px 7px", textTransform: "uppercase", letterSpacing: "0.05em" }}>{l.type}</div>
+                {/* Car condition badge */}
+                {l.car_condition ? (
+                  <div style={{ position: "absolute", top: 8, left: 8, background: l.car_condition === "Brand New" ? "#2D9E6B" : l.car_condition === "Foreign Used" ? "#3B7DD8" : "rgba(0,0,0,0.6)", color: "#fff", fontSize: 9, fontWeight: 800, padding: "3px 8px", borderRadius: 6, letterSpacing: "0.04em" }}>{l.car_condition}</div>
+                ) : (
+                  <div style={{ position: "absolute", top: 8, left: 8, background: l.type === "product" ? "#E8533A" : l.type === "service" ? "#3B82F6" : l.type === "job" ? "#C47F17" : "#2D9E6B", borderRadius: 6, fontSize: 9, fontWeight: 800, color: "#fff", padding: "3px 7px", textTransform: "uppercase", letterSpacing: "0.05em" }}>{l.type}</div>
+                )}
                 {new Date() - new Date(l.created_at) < 7 * 24 * 60 * 60 * 1000 && <span style={{ position: "absolute", top: 8, right: 8, background: "#fff", color: "#E8533A", fontSize: 9, fontWeight: 900, padding: "3px 7px", borderRadius: 6 }}>NEW</span>}
                 <div style={{ padding: isMobile ? "10px 12px 12px" : "12px 14px 14px" }}>
                   <div style={{ fontSize: isMobile ? 12 : 14, fontWeight: 700, marginBottom: 5, lineHeight: 1.3, overflow: "hidden", display: "-webkit-box", WebkitLineClamp: 2, WebkitBoxOrient: "vertical" }}>{l.title}</div>
                   <div style={{ fontSize: isMobile ? 14 : 16, fontWeight: 800, color: "#E8533A", marginBottom: 6 }}>
                     {l.type === "job" && (!l.price || Number(l.price) === 0) ? "Competitive" : l.price_currency + " " + Number(l.price).toLocaleString() + (l.is_negotiable ? " · Neg." : "")}
                   </div>
-                  <div style={{ fontSize: 10, color: "rgba(240,237,232,0.4)", marginTop: 4, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>📍 {l.location_text || l.city || l.country || "Ghana"}</div>
+                  <div style={{ fontSize: 10, color: "rgba(240,237,232,0.4)", marginTop: 2, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>📍 {l.location_text || l.city || l.country || "Ghana"}</div>
+                  {/* Seller trust badges */}
+                  <div style={{ display: "flex", gap: 5, flexWrap: "wrap", marginTop: 5 }}>
+                    {l.seller_kyc_status === "approved" && (
+                      <span style={{ background: "rgba(45,158,107,0.15)", border: "1px solid rgba(45,158,107,0.35)", color: "#2D9E6B", fontSize: 9, fontWeight: 700, padding: "2px 7px", borderRadius: 10 }}>✓ Verified</span>
+                    )}
+                    {l.seller_joined_at && (() => {
+                      const yrs = Math.floor((new Date() - new Date(l.seller_joined_at)) / (365.25 * 24 * 60 * 60 * 1000));
+                      return yrs >= 1 ? <span style={{ background: "rgba(59,125,216,0.12)", border: "1px solid rgba(59,125,216,0.3)", color: "#3B7DD8", fontSize: 9, fontWeight: 600, padding: "2px 7px", borderRadius: 10 }}>{yrs}yr{yrs > 1 ? "s" : ""} on Makola</span> : null;
+                    })()}
+                  </div>
                 </div>
               </div>
             ))}

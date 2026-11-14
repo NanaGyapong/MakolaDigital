@@ -62,6 +62,15 @@ function SearchContent() {
   const PER_PAGE = 20;
   const [isMobile, setIsMobile] = useState(false);
   const [showFilters, setShowFilters] = useState(false);
+  const [carMake, setCarMake] = useState("");
+
+  const CAR_MAKES = ["Toyota", "Honda", "Hyundai", "Mercedes", "Kia", "Nissan", "Ford", "BMW", "Lexus", "Suzuki", "Mitsubishi", "VW"];
+  const CAR_PRICE_RANGES = [
+    { label: "< GH₵ 50K", min: "", max: "50000" },
+    { label: "50K – 200K", min: "50000", max: "200000" },
+    { label: "200K – 500K", min: "200000", max: "500000" },
+    { label: "500K+", min: "500000", max: "" },
+  ];
 
   useEffect(() => {
     const check = () => setIsMobile(window.innerWidth < 768);
@@ -88,6 +97,7 @@ function SearchContent() {
       if (subcategory) results = results.filter(l => l.title?.toLowerCase().includes(subcategory.toLowerCase()) || l.description?.toLowerCase().includes(subcategory.toLowerCase()));
       if (minPrice) results = results.filter(l => Number(l.price) >= Number(minPrice));
       if (maxPrice) results = results.filter(l => Number(l.price) <= Number(maxPrice));
+      if (carMake) results = results.filter(l => l.title?.toLowerCase().includes(carMake.toLowerCase()) || l.description?.toLowerCase().includes(carMake.toLowerCase()));
       if (sortBy === "price_low") results = results.sort((a,b) => Number(a.price||0) - Number(b.price||0));
       if (sortBy === "price_high") results = results.sort((a,b) => Number(b.price||0) - Number(a.price||0));
       if (sortBy === "newest") results = results.sort((a,b) => new Date(b.created_at) - new Date(a.created_at));
@@ -101,7 +111,7 @@ function SearchContent() {
     setLoading(false);
   };
 
-  useEffect(() => { search(); }, [type, country, page, category, subcategory]);
+  useEffect(() => { search(); }, [type, country, page, category, subcategory, carMake]);
   useEffect(() => { search(); }, []);
 
   const handleSearch = (e) => {
@@ -227,6 +237,33 @@ function SearchContent() {
               <button onClick={() => setCountry("United Kingdom")} style={{ background: country === "United Kingdom" ? "#E8533A" : "rgba(255,255,255,0.06)", border: country === "United Kingdom" ? "none" : "1px solid rgba(255,255,255,0.1)", color: country === "United Kingdom" ? "#fff" : "rgba(240,237,232,0.7)", padding: "6px 16px", borderRadius: 20, fontSize: 12, fontWeight: country === "United Kingdom" ? 700 : 400, cursor: "pointer", whiteSpace: "nowrap", flexShrink: 0 }}>🇬🇧 UK</button>
             </div>
           )}
+          {/* Car make chips — shown when Vehicles category is selected */}
+          {category === "Vehicles & Spare Parts" && (
+            <div style={{ marginBottom: 12 }}>
+              <div style={{ fontSize: 11, color: "rgba(240,237,232,0.4)", marginBottom: 6, fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.06em" }}>Filter by Make</div>
+              <div style={{ display: "flex", gap: 6, flexWrap: "wrap" }}>
+                {CAR_MAKES.map(make => (
+                  <button key={make} onClick={() => { setCarMake(carMake === make ? "" : make); setPage(1); }} style={{ background: carMake === make ? "#E8533A" : "rgba(255,255,255,0.06)", border: carMake === make ? "none" : "1px solid rgba(255,255,255,0.1)", color: carMake === make ? "#fff" : "rgba(240,237,232,0.75)", padding: "5px 12px", borderRadius: 20, fontSize: 12, fontWeight: carMake === make ? 700 : 400, cursor: "pointer", whiteSpace: "nowrap" }}>{make}</button>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* Price range chips — shown when Vehicles category is selected */}
+          {category === "Vehicles & Spare Parts" && (
+            <div style={{ marginBottom: 16 }}>
+              <div style={{ fontSize: 11, color: "rgba(240,237,232,0.4)", marginBottom: 6, fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.06em" }}>Price Range</div>
+              <div style={{ display: "flex", gap: 6, flexWrap: "wrap" }}>
+                {CAR_PRICE_RANGES.map(r => {
+                  const active = minPrice === r.min && maxPrice === r.max;
+                  return (
+                    <button key={r.label} onClick={() => { if (active) { setMinPrice(""); setMaxPrice(""); } else { setMinPrice(r.min); setMaxPrice(r.max); } setPage(1); search(); }} style={{ background: active ? "#E8533A" : "rgba(255,255,255,0.06)", border: active ? "none" : "1px solid rgba(255,255,255,0.1)", color: active ? "#fff" : "rgba(240,237,232,0.75)", padding: "5px 14px", borderRadius: 20, fontSize: 12, fontWeight: active ? 700 : 400, cursor: "pointer", whiteSpace: "nowrap" }}>{r.label}</button>
+                  );
+                })}
+              </div>
+            </div>
+          )}
+
           {/* Results header */}
           <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 16 }}>
             <div style={{ fontSize: 14, color: "rgba(240,237,232,0.6)" }}>
@@ -258,13 +295,18 @@ function SearchContent() {
           ) : (
             <div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr 1fr" : "repeat(auto-fill, minmax(240px, 1fr))", gap: 14 }}>
               {listings.map(l => (
-                <div key={l.id} onClick={() => router.push(`/listing/${l.id}`)} style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: 14, overflow: "hidden", cursor: "pointer", transition: "all 0.2s" }}>
+                <div key={l.id} onClick={() => router.push(`/listing/${l.id}`)} style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: 14, overflow: "hidden", cursor: "pointer", transition: "all 0.2s", position: "relative" }}>
                   {l.primary_image
                     ? <img src={l.primary_image} alt={l.title} style={{ width: "100%", height: 140, objectFit: "cover" }} />
                     : <div style={{ height: 140, background: "rgba(255,255,255,0.04)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 40 }}>
                         {l.type === "product" ? "🛍️" : l.type === "service" ? "🔧" : l.type === "job" ? "💼" : "🏠"}
                       </div>
                   }
+                  {/* Car condition badge on image */}
+                  {l.car_condition && (
+                    <div style={{ position: "absolute", top: 8, left: 8, background: l.car_condition === "Brand New" ? "#2D9E6B" : l.car_condition === "Foreign Used" ? "#3B7DD8" : "rgba(0,0,0,0.6)", color: "#fff", fontSize: 9, fontWeight: 800, padding: "3px 8px", borderRadius: 6, letterSpacing: "0.04em" }}>{l.car_condition}</div>
+                  )}
+                  {new Date() - new Date(l.created_at) < 7 * 24 * 60 * 60 * 1000 && <span style={{ position: "absolute", top: 8, right: 8, background: "linear-gradient(135deg,#E8533A,#C47F17)", color: "#fff", fontSize: 9, fontWeight: 900, padding: "2px 7px", borderRadius: 6 }}>NEW</span>}
                   <div style={{ padding: "12px 14px" }}>
                     <div style={{ fontSize: 10, color: "rgba(240,237,232,0.4)", textTransform: "uppercase", marginBottom: 4, letterSpacing: "0.05em" }}>{l.type}</div>
                     <div style={{ fontSize: 13, fontWeight: 700, marginBottom: 6, lineHeight: 1.3, overflow: "hidden", display: "-webkit-box", WebkitLineClamp: 2, WebkitBoxOrient: "vertical" }}>{l.title}</div>
@@ -272,11 +314,17 @@ function SearchContent() {
                       {l.price_currency} {Number(l.price).toLocaleString()}
                       {l.is_negotiable && <span style={{ fontSize: 10, color: "#2D9E6B", fontWeight: 400, marginLeft: 6 }}>· Neg.</span>}
                     </div>
-                    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                      <div style={{ fontSize: 11, color: "rgba(240,237,232,0.45)" }}>📍 {l.location_text || l.city || l.country}</div>
-                      {new Date() - new Date(l.created_at) < 7 * 24 * 60 * 60 * 1000 && <span style={{ background: "linear-gradient(135deg,#E8533A,#C47F17)", color: "#fff", fontSize: 9, fontWeight: 900, padding: "2px 7px", borderRadius: 20 }}>NEW</span>}
+                    <div style={{ fontSize: 11, color: "rgba(240,237,232,0.45)", marginBottom: 4 }}>📍 {l.location_text || l.city || l.country}</div>
+                    {/* Seller trust badges */}
+                    <div style={{ display: "flex", gap: 5, flexWrap: "wrap", marginTop: 4 }}>
+                      {l.seller_kyc_status === "approved" && (
+                        <span style={{ background: "rgba(45,158,107,0.15)", border: "1px solid rgba(45,158,107,0.35)", color: "#2D9E6B", fontSize: 9, fontWeight: 700, padding: "2px 7px", borderRadius: 10 }}>✓ Verified</span>
+                      )}
+                      {l.seller_joined_at && (() => {
+                        const yrs = Math.floor((new Date() - new Date(l.seller_joined_at)) / (365.25 * 24 * 60 * 60 * 1000));
+                        return yrs >= 1 ? <span style={{ background: "rgba(59,125,216,0.12)", border: "1px solid rgba(59,125,216,0.3)", color: "#3B7DD8", fontSize: 9, fontWeight: 600, padding: "2px 7px", borderRadius: 10 }}>{yrs}yr{yrs > 1 ? "s" : ""} on Makola</span> : null;
+                      })()}
                     </div>
-                    <div style={{ fontSize: 11, color: "rgba(240,237,232,0.35)", marginTop: 2 }}>by {l.seller_name}</div>
                   </div>
                 </div>
               ))}
