@@ -19,6 +19,9 @@ const posts = [
   { slug: "buy-and-sell-online-ghana-2026", title: "Buy and Sell Online in Ghana in 2026 — The Complete Guide", excerpt: "Want to buy or sell anything online in Ghana? Here's your complete guide to buying and selling online in Ghana in 2026 — the best platforms, tips and how to stay safe." },
   { slug: "cheap-laptops-accra-ghana-2026", title: "Where to Buy Cheap Laptops in Accra Ghana in 2026 — Complete Guide", excerpt: "Looking for affordable laptops in Accra? Here's your complete guide to finding cheap laptops in Ghana in 2026 — the best places, prices and what to look for." },
   { slug: "how-to-sell-on-tiktok-ghana-2026", title: "How to Sell on TikTok in Ghana in 2026 — Complete Guide", excerpt: "TikTok is Ghana's fastest-growing platform for selling products. Here's your complete guide to making money selling on TikTok in Ghana in 2026." },
+  { slug: "best-christmas-gifts-ghana-2026", title: "Best Christmas Gifts to Buy in Ghana 2026 — Gift Ideas for Everyone", excerpt: "Looking for the perfect Christmas gift in Ghana? Here are the best Christmas gift ideas for 2026 — for family, friends, partners and colleagues, at every budget." },
+  { slug: "christmas-clothes-accra-ghana-2026", title: "Where to Buy Christmas Clothes in Accra Ghana 2026 — Best Places", excerpt: "Looking for the best place to buy Christmas clothes in Accra in 2026? Here's your guide to finding the perfect Christmas outfit in Ghana — Kantamanto, Makola, online and more." },
+  { slug: "best-online-deals-ghana-christmas-2026", title: "Best Online Deals in Ghana Christmas 2026 — Where to Find Discounts", excerpt: "Looking for the best Christmas deals online in Ghana in 2026? Here's where to find the biggest discounts and best prices on electronics, fashion, phones and more." },
 ];
 
 export async function generateMetadata({ params }) {
