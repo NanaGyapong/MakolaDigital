@@ -16,6 +16,9 @@ const posts = [
   { slug: "best-places-buy-second-hand-phones-ghana-2026", title: "Best Places to Buy Second Hand Phones in Ghana in 2026", excerpt: "Looking for affordable second hand phones in Ghana? Here are the best places to find great deals on used smartphones in Accra and beyond." },
   { slug: "how-to-spot-fake-sellers-online-ghana", title: "How to Spot Fake Sellers and Avoid Scams When Shopping Online in Ghana", excerpt: "Online shopping scams are common in Ghana. Learn how to identify fake sellers and protect yourself when buying online." },
   { slug: "top-ways-make-money-online-ghana-2026", title: "Top 5 Ways to Make Money Online in Ghana in 2026", excerpt: "Want to earn money online in Ghana? Here are 5 proven ways Ghanaians are making real income online in 2026." },
+  { slug: "buy-and-sell-online-ghana-2026", title: "Buy and Sell Online in Ghana in 2026 — The Complete Guide", excerpt: "Want to buy or sell anything online in Ghana? Here's your complete guide to buying and selling online in Ghana in 2026 — the best platforms, tips and how to stay safe." },
+  { slug: "cheap-laptops-accra-ghana-2026", title: "Where to Buy Cheap Laptops in Accra Ghana in 2026 — Complete Guide", excerpt: "Looking for affordable laptops in Accra? Here's your complete guide to finding cheap laptops in Ghana in 2026 — the best places, prices and what to look for." },
+  { slug: "how-to-sell-on-tiktok-ghana-2026", title: "How to Sell on TikTok in Ghana in 2026 — Complete Guide", excerpt: "TikTok is Ghana's fastest-growing platform for selling products. Here's your complete guide to making money selling on TikTok in Ghana in 2026." },
 ];
 
 export async function generateMetadata({ params }) {
