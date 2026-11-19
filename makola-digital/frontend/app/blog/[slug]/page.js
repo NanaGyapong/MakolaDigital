@@ -1,1 +1,52 @@
-export { default } from './page.jsx';
+import PageClient from './PageClient';
+
+const posts = [
+  { slug: "graduate-jobs-ghana-2026", title: "Graduate Jobs in Ghana 2026 — Complete Guide for Fresh Graduates", excerpt: "Just graduated in Ghana and looking for your first job? Here's your complete guide to finding graduate jobs in Ghana in 2026 — top employers, job sites, CV tips and more." },
+  { slug: "best-online-marketplaces-ghana-2026", title: "Best Online Marketplaces in Ghana in 2026 — Complete Guide", excerpt: "Looking for the best place to buy and sell online in Ghana in 2026? Here's our complete guide to the top online marketplaces Ghanaians are using right now." },
+  { slug: "best-online-marketplaces-nigeria-2026", title: "Best Online Marketplaces in Nigeria in 2026 — Buy and Sell Anything", excerpt: "Looking for the best place to buy and sell online in Nigeria in 2026? Here's our complete guide to the top online marketplaces Nigerians are using right now." },
+  { slug: "best-places-to-rent-in-accra-2026", title: "Best Places to Rent in Accra in 2026 — Area by Area Guide", excerpt: "Looking for the best area to rent in Accra? This area-by-area guide covers prices, lifestyle, transport and everything you need to choose the right neighbourhood in 2026." },
+  { slug: "side-hustles-for-students-ghana-2026", title: "Top 10 Side Hustles for Students in Ghana 2026 — Make Money While Studying", excerpt: "Need extra money as a student in Ghana? Here are the top 10 side hustles students are using to make money while studying in 2026." },
+  { slug: "student-hostels-legon-upsa-wisconsin-accra-2026", title: "Best Student Hostels Around Legon, UPSA and Wisconsin in Accra 2026", excerpt: "Looking for a hostel near University of Ghana Legon, UPSA or Wisconsin University? Here's your complete guide to student accommodation in Accra in 2026." },
+  { slug: "how-to-rent-apartment-accra-ghana-2026", title: "How to Rent an Apartment in Accra in 2026 — Complete Guide", excerpt: "Looking for a rental in Accra? Here's everything you need to know about renting an apartment or house in Accra in 2026 — areas, prices, tips and red flags." },
+  { slug: "how-to-buy-hybrid-car-ghana-2026", title: "How to Buy a Hybrid Car in Ghana in 2026 — Complete Guide", excerpt: "Hybrid cars are growing fast in Ghana. Here's everything you need to know before buying a hybrid car in Ghana in 2026 — costs, brands, fuel savings and more." },
+  { slug: "how-to-buy-chinese-car-ghana-2026", title: "How to Buy a Chinese Car in Ghana in 2026 — Complete Guide", excerpt: "Chinese cars are taking over Ghana's roads. Here's everything you need to know before buying a Chinese car in Ghana in 2026." },
+  { slug: "how-to-sell-online-ghana-2026", title: "How to Sell Your Products Online in Ghana in 2026", excerpt: "A step-by-step guide to selling anything online in Ghana — from phones to fashion to services." },
+  { slug: "top-things-to-buy-sell-makola-digital", title: "Top 10 Things to Buy and Sell on Makola Digital", excerpt: "From smartphones to fashion, these are the most popular categories on Ghana's newest marketplace." },
+  { slug: "makola-digital-registered-ghanaian-company", title: "Makola Digital is Now an Officially Registered Ghanaian Company", excerpt: "Makola Digital Technologies Ltd is now officially registered in Ghana — a major milestone for Africa's marketplace." },
+  { slug: "best-places-buy-second-hand-phones-ghana-2026", title: "Best Places to Buy Second Hand Phones in Ghana in 2026", excerpt: "Looking for affordable second hand phones in Ghana? Here are the best places to find great deals on used smartphones in Accra and beyond." },
+  { slug: "how-to-spot-fake-sellers-online-ghana", title: "How to Spot Fake Sellers and Avoid Scams When Shopping Online in Ghana", excerpt: "Online shopping scams are common in Ghana. Learn how to identify fake sellers and protect yourself when buying online." },
+  { slug: "top-ways-make-money-online-ghana-2026", title: "Top 5 Ways to Make Money Online in Ghana in 2026", excerpt: "Want to earn money online in Ghana? Here are 5 proven ways Ghanaians are making real income online in 2026." },
+];
+
+export async function generateMetadata({ params }) {
+  const { slug } = await params;
+  const post = posts.find(p => p.slug === slug);
+  if (!post) {
+    return {
+      title: "Post Not Found | Makola Digital Blog",
+      robots: { index: false },
+    };
+  }
+  const canonical = `https://www.makoladigital.online/blog/${slug}`;
+  return {
+    title: `${post.title} | Makola Digital`,
+    description: post.excerpt,
+    alternates: { canonical },
+    openGraph: {
+      title: post.title,
+      description: post.excerpt,
+      url: canonical,
+      siteName: "Makola Digital",
+      type: "article",
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: post.title,
+      description: post.excerpt,
+    },
+  };
+}
+
+export default function Page() {
+  return <PageClient />;
+}
