@@ -1,0 +1,63 @@
+import PageClient from './PageClient';
+
+const posts = [
+  { slug: "graduate-jobs-ghana-2026", title: "Graduate Jobs in Ghana 2026 — Complete Guide for Fresh Graduates", excerpt: "Just graduated in Ghana and looking for your first job? Here's your complete guide to finding graduate jobs in Ghana in 2026 — top employers, job sites, CV tips and more." },
+  { slug: "best-online-marketplaces-ghana-2026", title: "Best Online Marketplaces in Ghana in 2026 — Complete Guide", excerpt: "Looking for the best place to buy and sell online in Ghana in 2026? Here's our complete guide to the top online marketplaces Ghanaians are using right now." },
+  { slug: "best-online-marketplaces-nigeria-2026", title: "Best Online Marketplaces in Nigeria in 2026 — Buy and Sell Anything", excerpt: "Looking for the best place to buy and sell online in Nigeria in 2026? Here's our complete guide to the top online marketplaces Nigerians are using right now." },
+  { slug: "best-places-to-rent-in-accra-2026", title: "Best Places to Rent in Accra in 2026 — Area by Area Guide", excerpt: "Looking for the best area to rent in Accra? This area-by-area guide covers prices, lifestyle, transport and everything you need to choose the right neighbourhood in 2026." },
+  { slug: "side-hustles-for-students-ghana-2026", title: "Top 10 Side Hustles for Students in Ghana 2026 — Make Money While Studying", excerpt: "Need extra money as a student in Ghana? Here are the top 10 side hustles students are using to make money while studying in 2026." },
+  { slug: "student-hostels-legon-upsa-wisconsin-accra-2026", title: "Best Student Hostels Around Legon, UPSA and Wisconsin in Accra 2026", excerpt: "Looking for a hostel near University of Ghana Legon, UPSA or Wisconsin University? Here's your complete guide to student accommodation in Accra in 2026." },
+  { slug: "how-to-rent-apartment-accra-ghana-2026", title: "How to Rent an Apartment in Accra in 2026 — Complete Guide", excerpt: "Looking for a rental in Accra? Here's everything you need to know about renting an apartment or house in Accra in 2026 — areas, prices, tips and red flags." },
+  { slug: "how-to-buy-hybrid-car-ghana-2026", title: "How to Buy a Hybrid Car in Ghana in 2026 — Complete Guide", excerpt: "Hybrid cars are growing fast in Ghana. Here's everything you need to know before buying a hybrid car in Ghana in 2026 — costs, brands, fuel savings and more." },
+  { slug: "how-to-buy-chinese-car-ghana-2026", title: "How to Buy a Chinese Car in Ghana in 2026 — Complete Guide", excerpt: "Chinese cars are taking over Ghana's roads. Here's everything you need to know before buying a Chinese car in Ghana in 2026." },
+  { slug: "how-to-sell-online-ghana-2026", title: "How to Sell Your Products Online in Ghana in 2026", excerpt: "A step-by-step guide to selling anything online in Ghana — from phones to fashion to services." },
+  { slug: "top-things-to-buy-sell-makola-digital", title: "Top 10 Things to Buy and Sell on Makola Digital", excerpt: "From smartphones to fashion, these are the most popular categories on Ghana's newest marketplace." },
+  { slug: "makola-digital-registered-ghanaian-company", title: "Makola Digital is Now an Officially Registered Ghanaian Company", excerpt: "Makola Digital Technologies Ltd is now officially registered in Ghana — a major milestone for Africa's marketplace." },
+  { slug: "best-places-buy-second-hand-phones-ghana-2026", title: "Best Places to Buy Second Hand Phones in Ghana in 2026", excerpt: "Looking for affordable second hand phones in Ghana? Here are the best places to find great deals on used smartphones in Accra and beyond." },
+  { slug: "how-to-spot-fake-sellers-online-ghana", title: "How to Spot Fake Sellers and Avoid Scams When Shopping Online in Ghana", excerpt: "Online shopping scams are common in Ghana. Learn how to identify fake sellers and protect yourself when buying online." },
+  { slug: "top-ways-make-money-online-ghana-2026", title: "Top 5 Ways to Make Money Online in Ghana in 2026", excerpt: "Want to earn money online in Ghana? Here are 5 proven ways Ghanaians are making real income online in 2026." },
+  { slug: "buy-and-sell-online-ghana-2026", title: "Buy and Sell Online in Ghana in 2026 — The Complete Guide", excerpt: "Want to buy or sell anything online in Ghana? Here's your complete guide to buying and selling online in Ghana in 2026 — the best platforms, tips and how to stay safe." },
+  { slug: "cheap-laptops-accra-ghana-2026", title: "Where to Buy Cheap Laptops in Accra Ghana in 2026 — Complete Guide", excerpt: "Looking for affordable laptops in Accra? Here's your complete guide to finding cheap laptops in Ghana in 2026 — the best places, prices and what to look for." },
+  { slug: "how-to-sell-on-tiktok-ghana-2026", title: "How to Sell on TikTok in Ghana in 2026 — Complete Guide", excerpt: "TikTok is Ghana's fastest-growing platform for selling products. Here's your complete guide to making money selling on TikTok in Ghana in 2026." },
+  { slug: "best-christmas-gifts-ghana-2026", title: "Best Christmas Gifts to Buy in Ghana 2026 — Gift Ideas for Everyone", excerpt: "Looking for the perfect Christmas gift in Ghana? Here are the best Christmas gift ideas for 2026 — for family, friends, partners and colleagues, at every budget." },
+  { slug: "christmas-clothes-accra-ghana-2026", title: "Where to Buy Christmas Clothes in Accra Ghana 2026 — Best Places", excerpt: "Looking for the best place to buy Christmas clothes in Accra in 2026? Here's your guide to finding the perfect Christmas outfit in Ghana — Kantamanto, Makola, online and more." },
+  { slug: "best-online-deals-ghana-christmas-2026", title: "Best Online Deals in Ghana Christmas 2026 — Where to Find Discounts", excerpt: "Looking for the best Christmas deals online in Ghana in 2026? Here's where to find the biggest discounts and best prices on electronics, fashion, phones and more." },
+  { slug: "christmas-food-ghana-2026", title: "Best Christmas Food Ideas in Ghana 2026 — What to Cook and Where to Buy", excerpt: "Planning Christmas lunch or dinner in Ghana? Here are the best Christmas food ideas for 2026 — traditional Ghanaian dishes, ingredients to buy, and where to find everything in Accra." },
+  { slug: "christmas-party-venues-accra-2026", title: "Best Christmas Party Venues in Accra Ghana 2026 — Where to Celebrate", excerpt: "Planning a Christmas party in Accra in 2026? Here are the best venues, event spaces and outdoor spots for Christmas celebrations — for families, companies and groups of all sizes." },
+  { slug: "christmas-decoration-ideas-ghana-2026", title: "Christmas Decoration Ideas in Ghana 2026 — How to Decorate Your Home", excerpt: "Looking for Christmas decoration ideas in Ghana for 2026? Here's how to decorate your home beautifully for Christmas — with ideas that work for Ghanaian homes, budgets and styles." },
+  { slug: "new-year-party-accra-2026", title: "New Year Party in Accra 2026 — Best Places to Celebrate New Year's Eve in Ghana", excerpt: "Looking for the best New Year's Eve party in Accra in 2026? Here's your guide to the top venues, events and places to celebrate New Year in Ghana — from beach parties to clubs and family events." },
+  { slug: "new-year-deals-ghana-2026", title: "New Year Deals in Ghana 2026 — Best Sales and Discounts to Look Out For", excerpt: "Looking for the best New Year deals in Ghana in 2026? Here's where to find the biggest sales and discounts on fashion, electronics, phones and more as we head into 2027." },
+];
+
+export async function generateMetadata({ params }) {
+  const { slug } = await params;
+  const post = posts.find(p => p.slug === slug);
+  if (!post) {
+    return {
+      title: "Post Not Found | Makola Digital Blog",
+      robots: { index: false },
+    };
+  }
+  const canonical = `https://www.makoladigital.online/blog/${slug}`;
+  return {
+    title: `${post.title} | Makola Digital`,
+    description: post.excerpt,
+    alternates: { canonical },
+    openGraph: {
+      title: post.title,
+      description: post.excerpt,
+      url: canonical,
+      siteName: "Makola Digital",
+      type: "article",
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: post.title,
+      description: post.excerpt,
+    },
+  };
+}
+
+export default function Page() {
+  return <PageClient />;
+}
