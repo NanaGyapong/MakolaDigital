@@ -1,125 +1,37 @@
 "use client";
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 
+const categories = [
+  { icon: "🛍️", label: "Products", count: "0", color: "#E8533A" },
+  { icon: "🔧", label: "Services", count: "0", color: "#2D9E6B" },
+  { icon: "💼", label: "Jobs", count: "0", color: "#C47F17" },
+  { icon: "🏠", label: "Rentals", count: "0", color: "#3B7DD8" },
+  { icon: "🚗", label: "Vehicles", count: "0", color: "#8B5CF6" },
+  { icon: "📱", label: "Electronics", count: "0", color: "#E8533A" },
+  { icon: "👗", label: "Fashion", count: "0", color: "#DB2777" },
+  { icon: "🌿", label: "Food & Agric", count: "0", color: "#2D9E6B" },
+];
 
-
+const stats = [
+  { value: "0", label: "Listings" },
+  { value: "54", label: "Countries" },
+  { value: "0", label: "Sellers" },
+  { value: "0", label: "Members" },
+];
 
 export default function MakolaDigital() {
   const router = useRouter();
   const [search, setSearch] = useState("");
   const [listings, setListings] = useState([]);
-  const [categoryCounts, setCategoryCounts] = useState({});
-  const [counts, setCounts] = useState({});
-  const [trending, setTrending] = useState([]);
-  const [showNewsletter, setShowNewsletter] = useState(false);
-  const [newsletterEmail, setNewsletterEmail] = useState("");
-  const [toast, setToast] = useState(null);
-  const [onboarding, setOnboarding] = useState(false);
-  const [showReviewPrompt, setShowReviewPrompt] = useState(false);
-  const [onboardStep, setOnboardStep] = useState(0);
-  const showToast = (msg, color = "#2D9E6B") => { setToast({ msg, color }); setTimeout(() => setToast(null), 2500); };
-  const haptic = (type = "light") => {
-    if (!navigator.vibrate) return;
-    if (type === "light") navigator.vibrate(10);
-    else if (type === "medium") navigator.vibrate(20);
-    else if (type === "success") navigator.vibrate([10, 50, 10]);
-    else if (type === "error") navigator.vibrate([30, 20, 30]);
-  };
-  const pathname = typeof window !== "undefined" ? window.location.pathname : "/";
-  const [newsletterSent, setNewsletterSent] = useState(false);
-
-  const categories = useMemo(() => [
-    { icon: "🚗", label: "Vehicles", count: (counts["Vehicles & Spare Parts"] || 0).toString(), color: "#E8533A", cat: "Vehicles & Spare Parts" },
-    { icon: "🏘️", label: "Property", count: (counts["Property & Land"] || 0).toString(), color: "#3B7DD8", cat: "Property & Land" },
-    { icon: "📱", label: "Phones & Tablets", count: (counts["Electronics"] || 0).toString(), color: "#8B5CF6", cat: "Electronics" },
-    { icon: "💻", label: "Electronics", count: (counts["Tech & Digital"] || 0).toString(), color: "#2D9E6B", cat: "Tech & Digital" },
-    { icon: "🏠", label: "Home & Furniture", count: (counts["Home & Garden"] || 0).toString(), color: "#C47F17", cat: "Home & Garden" },
-    { icon: "👗", label: "Fashion", count: (counts["Fashion & Clothing"] || 0).toString(), color: "#DB2777", cat: "Fashion & Clothing" },
-    { icon: "💄", label: "Beauty & Care", count: (counts["Beauty & Health"] || 0).toString(), color: "#EC4899", cat: "Beauty & Health" },
-    { icon: "🔧", label: "Services", count: (categoryCounts["service"] || 0).toString(), color: "#2D9E6B", type: "service" },
-    { icon: "🌾", label: "Food & Agriculture", count: (counts["Agriculture & Farm Produce"] || 0).toString(), color: "#16A34A", cat: "Agriculture & Farm Produce" },
-    { icon: "🥤", label: "Drinks & Beverages", count: (counts["Food & Beverages"] || 0).toString(), color: "#3B82F6", cat: "Food & Beverages" },
-    { icon: "🐓", label: "Animals & Pets", count: (counts["Farm Animals & Pets"] || 0).toString(), color: "#F59E0B", cat: "Farm Animals & Pets" },
-    { icon: "💼", label: "Jobs", count: (categoryCounts["job"] || 0).toString(), color: "#C47F17", type: "job" },
-    { icon: "📚", label: "Education", count: (counts["Education & Training"] || 0).toString(), color: "#6366F1", cat: "Education & Training" },
-    { icon: "🎨", label: "Arts & Crafts", count: (counts["Arts & Crafts"] || 0).toString(), color: "#F59E0B", cat: "Arts & Crafts" },
-    { icon: "🏢", label: "Business Services", count: (counts["Business Services"] || 0).toString(), color: "#3B7DD8", cat: "Business Services" },
-    { icon: "🔨", label: "Home Services", count: (counts["Home Services"] || 0).toString(), color: "#8B5CF6", cat: "Home Services" },
-  ], [counts, categoryCounts]);
-  const [totalListings, setTotalListings] = useState(0);
-  const [totalSellers, setTotalSellers] = useState(0);
-  const [totalMembers, setTotalMembers] = useState(0);
-  const stats = [
-    { value: totalListings.toString(), label: "Listings" },
-    { value: "54", label: "Countries" },
-    { value: totalSellers > 0 ? totalSellers.toString() : "...", label: "Sellers" },
-    { value: totalMembers > 0 ? totalMembers.toString() : "...", label: "Members" },
-  ];
   const [menuOpen, setMenuOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
-    if (typeof window !== 'undefined' && !localStorage.getItem('makola_newsletter_seen')) {
-      const t = setTimeout(() => setShowNewsletter(true), 4000);
-      return () => clearTimeout(t);
-    }
-  }, []);
-
-  const closeNewsletter = () => {
-    setShowNewsletter(false);
-    localStorage.setItem('makola_newsletter_seen', '1');
-  };
-
-  const submitNewsletter = async () => {
-    if (!newsletterEmail || !newsletterEmail.includes('@')) return;
-    try {
-      await fetch(`${process.env.NEXT_PUBLIC_API_URL}/listings/newsletter/subscribe`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email: newsletterEmail })
-      });
-    } catch (e) {}
-    setNewsletterSent(true);
-    localStorage.setItem('makola_newsletter_seen', '1');
-    setTimeout(() => setShowNewsletter(false), 2000);
-  };
-
-  useEffect(() => {
-    if (typeof window !== 'undefined' && 'serviceWorker' in navigator) {
-      navigator.serviceWorker.register('/sw.js').catch(() => {});
-    }
-  }, []);
-
-  useEffect(() => {
-    fetch(`${process.env.NEXT_PUBLIC_API_URL}/listings?limit=12`)
+    fetch("https://sparkling-charm-production-cb2c.up.railway.app/api/v1/listings?limit=6")
       .then(r => r.json())
       .then(data => { if (data.listings) setListings(data.listings); })
       .catch(() => {});
-    // Track homepage visit
-    const visitorId = localStorage.getItem('visitor_id') || Math.random().toString(36).slice(2);
-    localStorage.setItem('visitor_id', visitorId);
-    fetch(`${process.env.NEXT_PUBLIC_API_URL}/track-visit`, {
-      method: "POST",
-      headers: { "x-visitor-id": visitorId }
-    }).catch(() => {});
-    fetch(`${process.env.NEXT_PUBLIC_API_URL}/listings/trending`)
-      .then(r => r.json())
-      .then(d => setTrending((d.listings || []).slice(0, 6)))
-      .catch(() => {});
-    fetch(`${process.env.NEXT_PUBLIC_API_URL}/stats`).then(r => r.json()).then(d => { setTotalSellers(d.sellers || 0); setTotalMembers(d.users || 0); }).catch(() => {});
-
-    fetch(`${process.env.NEXT_PUBLIC_API_URL}/categories/counts`)
-      .then(r => r.json())
-      .then(data => {
-        if (data.counts) {
-          setCategoryCounts(data.typeCounts || {});
-          setCounts(data.counts || {});
-          setTotalListings(data.total || 0);
-          
-        }
-      })
-      .catch(e => console.error("stats error:", e));
   }, []);
 
   useEffect(() => {
@@ -137,9 +49,7 @@ export default function MakolaDigital() {
       {/* NAV */}
       <nav style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: `0 ${px}`, height: 56, borderBottom: "1px solid rgba(255,255,255,0.07)", background: "rgba(13,13,13,0.97)", position: "sticky", top: 0, zIndex: 100 }}>
         <div style={{ display: "flex", alignItems: "center", gap: 8, cursor: "pointer" }} onClick={() => router.push("/")}>
-          <div style={{ width: 34, height: 34, borderRadius: 8, background: "#E8533A", display: "flex", alignItems: "center", justifyContent: "center", overflow: "hidden" }}>
-            <img src="/icon-192.png" style={{ width: 34, height: 34, objectFit: "cover" }} alt="Makola Digital" />
-          </div>
+          <div style={{ width: 30, height: 30, borderRadius: 8, background: "linear-gradient(135deg, #E8533A, #C47F17)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 15 }}>🌍</div>
           <span style={{ fontWeight: 700, fontSize: 17, letterSpacing: "-0.02em" }}>Makola<span style={{ color: "#E8533A" }}>Digital</span></span>
         </div>
         {isMobile ? (
@@ -151,7 +61,7 @@ export default function MakolaDigital() {
           <>
             <div style={{ display: "flex", gap: 8 }}>
               {["Explore", "Sell", "Jobs", "Blog"].map(nav => (
-                <button key={nav} onClick={() => router.push(nav === "Sell" ? "/sell" : nav === "Jobs" ? "/search?type=job" : nav === "Blog" ? "/blog" : "/")} style={{ background: "none", border: "none", color: "rgba(240,237,232,0.6)", fontSize: 14, cursor: "pointer", padding: "6px 12px", borderRadius: 6 }}>{nav}</button>
+                <button key={nav} onClick={() => router.push(nav === "Sell" ? "/sell" : nav === "Jobs" ? "/search" : "/")} style={{ background: "none", border: "none", color: "rgba(240,237,232,0.6)", fontSize: 14, cursor: "pointer", padding: "6px 12px", borderRadius: 6 }}>{nav}</button>
               ))}
             </div>
             <div style={{ display: "flex", gap: 10 }}>
@@ -166,142 +76,59 @@ export default function MakolaDigital() {
       {menuOpen && isMobile && (
         <div style={{ background: "#111", borderBottom: "1px solid rgba(255,255,255,0.07)", padding: "12px 16px", display: "flex", flexDirection: "column", gap: 4 }}>
           {["Explore", "Sell", "Jobs", "Blog"].map(nav => (
-            <button key={nav} onClick={() => { router.push(nav === "Sell" ? "/sell" : nav === "Jobs" ? "/search?type=job" : nav === "Blog" ? "/blog" : "/"); setMenuOpen(false); }} style={{ background: "none", border: "none", color: "#F0EDE8", fontSize: 15, cursor: "pointer", padding: "10px 0", textAlign: "left", borderBottom: "1px solid rgba(255,255,255,0.05)" }}>{nav}</button>
+            <button key={nav} onClick={() => { router.push(nav === "Sell" ? "/sell" : nav === "Jobs" ? "/search" : "/"); setMenuOpen(false); }} style={{ background: "none", border: "none", color: "#F0EDE8", fontSize: 15, cursor: "pointer", padding: "10px 0", textAlign: "left", borderBottom: "1px solid rgba(255,255,255,0.05)" }}>{nav}</button>
           ))}
           <button onClick={() => router.push("/auth/register")} style={{ background: "#E8533A", border: "none", color: "#fff", padding: "12px", borderRadius: 10, fontSize: 15, fontWeight: 700, cursor: "pointer", marginTop: 8 }}>List for free →</button>
         </div>
       )}
 
       {/* HERO */}
-      {isMobile ? (
-        <div style={{ padding: "20px 16px 24px", background: "radial-gradient(ellipse 100% 80% at 50% 0%, rgba(232,83,58,0.2) 0%, transparent 70%)" }}>
-          {/* Mobile search bar */}
-          <div style={{ display: "flex", background: "rgba(255,255,255,0.08)", border: "1px solid rgba(255,255,255,0.12)", borderRadius: 14, overflow: "hidden", padding: "4px 4px 4px 14px", gap: 8, marginBottom: 20 }}>
-            <span style={{ display: "flex", alignItems: "center", fontSize: 16 }}>🔍</span>
-            <input value={search} onChange={e => setSearch(e.target.value)} onKeyDown={e => e.key === "Enter" && router.push(`/search?q=${search}`)} placeholder="What are you looking for?" style={{ flex: 1, background: "none", border: "none", outline: "none", color: "#F0EDE8", fontSize: 14, minWidth: 0 }} />
-            <button onClick={() => { haptic("light"); router.push(`/search?q=${search}`); }} style={{ background: "#E8533A", border: "none", borderRadius: 10, color: "#fff", padding: "10px 16px", fontSize: 13, fontWeight: 700, cursor: "pointer" }}>Go</button>
-          </div>
-          {/* Mobile banner */}
-          <div style={{ background: "linear-gradient(135deg, #E8533A, #C47F17)", borderRadius: 18, padding: "24px 20px", marginBottom: 20, display: "flex", alignItems: "center", justifyContent: "space-between", overflow: "hidden", position: "relative" }}>
-            <div style={{ flex: 1 }}>
-              <div style={{ fontSize: 22, fontWeight: 900, color: "#fff", lineHeight: 1.2, marginBottom: 6 }}>Buy. Sell.<br/>Connect.</div>
-              <div style={{ fontSize: 12, color: "rgba(255,255,255,0.85)", marginBottom: 14, lineHeight: 1.5 }}>All in one place 🌍</div>
-              <button onClick={() => { haptic("medium"); router.push("/auth/register"); }} style={{ background: "#fff", border: "none", color: "#E8533A", padding: "9px 18px", borderRadius: 10, fontSize: 13, fontWeight: 800, cursor: "pointer" }}>Start free →</button>
-            </div>
-            <div style={{ position: "absolute", right: -70, top: "50%", transform: "translateY(-50%)", overflow: "hidden" }}>
-              <img src="/trolley.png" alt="" style={{ width: 250, height: 250, objectFit: "contain" }} />
-            </div>
-          </div>
-          {/* Mobile quick tags */}
-          <div style={{ display: "flex", gap: 8, overflowX: "auto", paddingBottom: 4, scrollbarWidth: "none" }}>
-            {["Jerseys", "Wardrobe", "Jeans", "Tide", "Vanish", "Detergent", "Duvet"].map(tag => (
-              <button key={tag} onClick={() => router.push(`/search?q=${tag}`)} style={{ background: "rgba(255,255,255,0.07)", border: "1px solid rgba(255,255,255,0.12)", borderRadius: 20, padding: "5px 14px", fontSize: 11, color: "rgba(240,237,232,0.7)", cursor: "pointer", whiteSpace: "nowrap", flexShrink: 0 }}>{tag}</button>
-            ))}
-          </div>
+      <div style={{ padding: isMobile ? "48px 16px 40px" : "72px 32px 56px", background: "radial-gradient(ellipse 80% 60% at 50% -10%, rgba(232,83,58,0.18) 0%, transparent 70%)", textAlign: "center" }}>
+        <div style={{ display: "inline-block", background: "rgba(232,83,58,0.12)", border: "1px solid rgba(232,83,58,0.3)", borderRadius: 20, padding: "4px 14px", fontSize: 11, color: "#E8533A", marginBottom: 16, fontWeight: 500 }}>
+          🌍 Africa's Marketplace — Products · Services · Jobs · Rentals
         </div>
-      ) : (
-        <div style={{ padding: "72px 32px 56px", background: "radial-gradient(ellipse 80% 60% at 50% -10%, rgba(232,83,58,0.18) 0%, transparent 70%)", textAlign: "center" }}>
-          <div style={{ display: "inline-block", background: "rgba(232,83,58,0.12)", border: "1px solid rgba(232,83,58,0.3)", borderRadius: 20, padding: "4px 14px", fontSize: 11, color: "#E8533A", marginBottom: 16, fontWeight: 500 }}>
-            🌍 Africa's Marketplace — Products · Services · Jobs · Rentals
-          </div>
-          <h1 style={{ fontSize: "clamp(36px, 5vw, 62px)", fontWeight: 800, letterSpacing: "-0.03em", lineHeight: 1.15, margin: "0 0 14px" }}>
-            Buy, Sell & Connect<br />
-            <span style={{ background: "linear-gradient(90deg, #E8533A, #C47F17)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>Across Africa & Beyond</span>
-          </h1>
-          <p style={{ fontSize: 17, color: "rgba(240,237,232,0.6)", maxWidth: 480, margin: "0 auto 28px", lineHeight: 1.6 }}>
-            The trusted marketplace connecting African businesses with buyers locally, continentally, and in the diaspora.
-          </p>
-          <div style={{ display: "flex", maxWidth: 560, margin: "0 auto", background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.12)", borderRadius: 14, overflow: "hidden", padding: 6, gap: 6 }}>
-            <span style={{ padding: "0 10px", display: "flex", alignItems: "center", fontSize: 16 }}>🔍</span>
-            <input value={search} onChange={e => setSearch(e.target.value)} onKeyDown={e => e.key === "Enter" && router.push(`/search?q=${search}`)} placeholder="Search products, services, jobs..." style={{ flex: 1, background: "none", border: "none", outline: "none", color: "#F0EDE8", fontSize: 14, minWidth: 0 }} />
-            <button onClick={() => router.push(`/search?q=${search}`)} style={{ background: "#E8533A", border: "none", borderRadius: 10, color: "#fff", padding: "10px 22px", fontSize: 13, fontWeight: 600, cursor: "pointer", whiteSpace: "nowrap" }}>Search</button>
-          </div>
-          <div style={{ marginTop: 14, display: "flex", gap: 8, justifyContent: "center", flexWrap: "wrap" }}>
-            {["Jerseys", "Wardrobe", "Jeans", "Tide", "Vanish", "Detergent", "Duvet"].map(tag => (
-              <button key={tag} onClick={() => router.push(`/search?q=${tag}`)} style={{ background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.1)", borderRadius: 20, padding: "4px 12px", fontSize: 11, color: "rgba(240,237,232,0.6)", cursor: "pointer" }}>{tag}</button>
-            ))}
-          </div>
-          <div style={{ marginTop: 28, display: "flex", gap: 12, justifyContent: "center", flexWrap: "wrap" }}>
-            <button onClick={() => router.push("/auth/register")} style={{ background: "#E8533A", border: "none", color: "#fff", padding: "14px 28px", borderRadius: 12, fontSize: 15, fontWeight: 700, cursor: "pointer" }}>Start selling free →</button>
-            <button onClick={() => router.push("/search")} style={{ background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.15)", color: "#F0EDE8", padding: "14px 28px", borderRadius: 12, fontSize: 15, cursor: "pointer" }}>Browse listings</button>
-          </div>
+        <h1 style={{ fontSize: isMobile ? "32px" : "clamp(36px, 5vw, 62px)", fontWeight: 800, letterSpacing: "-0.03em", lineHeight: 1.15, margin: "0 0 14px" }}>
+          Buy, Sell & Connect<br />
+          <span style={{ background: "linear-gradient(90deg, #E8533A, #C47F17)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>Across Africa & Beyond</span>
+        </h1>
+        <p style={{ fontSize: isMobile ? 15 : 17, color: "rgba(240,237,232,0.6)", maxWidth: 480, margin: "0 auto 28px", lineHeight: 1.6 }}>
+          The trusted marketplace connecting African businesses with buyers locally, continentally, and in the diaspora.
+        </p>
+        <div style={{ display: "flex", maxWidth: 560, margin: "0 auto", background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.12)", borderRadius: 14, overflow: "hidden", padding: 6, gap: 6 }}>
+          <span style={{ padding: "0 10px", display: "flex", alignItems: "center", fontSize: 16 }}>🔍</span>
+          <input value={search} onChange={e => setSearch(e.target.value)} onKeyDown={e => e.key === "Enter" && router.push(`/search?q=${search}`)} placeholder="Search products, services, jobs..." style={{ flex: 1, background: "none", border: "none", outline: "none", color: "#F0EDE8", fontSize: 14, minWidth: 0 }} />
+          <button onClick={() => router.push(`/search?q=${search}`)} style={{ background: "#E8533A", border: "none", borderRadius: 10, color: "#fff", padding: isMobile ? "10px 14px" : "10px 22px", fontSize: 13, fontWeight: 600, cursor: "pointer", whiteSpace: "nowrap" }}>Search</button>
         </div>
-      )}
+        <div style={{ marginTop: 14, display: "flex", gap: 8, justifyContent: "center", flexWrap: "wrap" }}>
+          {["iPhone", "Accra Apartments", "Remote Jobs", "Web Design", "Toyota"].map(tag => (
+            <button key={tag} onClick={() => router.push(`/search?q=${tag}`)} style={{ background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.1)", borderRadius: 20, padding: "4px 12px", fontSize: 11, color: "rgba(240,237,232,0.6)", cursor: "pointer" }}>{tag}</button>
+          ))}
+        </div>
+        <div style={{ marginTop: 28, display: "flex", gap: 12, justifyContent: "center", flexWrap: "wrap" }}>
+          <button onClick={() => router.push("/auth/register")} style={{ background: "#E8533A", border: "none", color: "#fff", padding: "14px 28px", borderRadius: 12, fontSize: 15, fontWeight: 700, cursor: "pointer" }}>Start selling free →</button>
+          <button onClick={() => router.push("/search")} style={{ background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.15)", color: "#F0EDE8", padding: "14px 28px", borderRadius: 12, fontSize: 15, cursor: "pointer" }}>Browse listings</button>
+        </div>
+      </div>
 
       {/* STATS */}
       <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", borderTop: "1px solid rgba(255,255,255,0.06)", borderBottom: "1px solid rgba(255,255,255,0.06)", background: "rgba(255,255,255,0.02)" }}>
-        {[{v:totalListings.toString(),l:"Listings"},{v:"54",l:"Countries"},{v:totalSellers.toString(),l:"Sellers"},{v:totalMembers.toString(),l:"Members"}].map((s, i) => (
-          <div key={i} style={{ padding: isMobile ? "16px 8px" : "20px 40px", textAlign: "center", borderRight: i < 3 ? "1px solid rgba(255,255,255,0.06)" : "none" }}>
-            <div style={{ fontSize: isMobile ? 18 : 22, fontWeight: 700, color: "#E8533A" }}>{s.v}</div>
-            <div style={{ fontSize: isMobile ? 10 : 12, color: "rgba(240,237,232,0.5)", marginTop: 2 }}>{s.l}</div>
+        {stats.map((s, i) => (
+          <div key={i} style={{ padding: isMobile ? "16px 8px" : "20px 40px", textAlign: "center", borderRight: i < stats.length - 1 ? "1px solid rgba(255,255,255,0.06)" : "none" }}>
+            <div style={{ fontSize: isMobile ? 18 : 22, fontWeight: 700, color: "#E8533A" }}>{s.value}</div>
+            <div style={{ fontSize: isMobile ? 10 : 12, color: "rgba(240,237,232,0.5)", marginTop: 2 }}>{s.label}</div>
           </div>
         ))}
       </div>
 
       {/* CATEGORIES */}
       <div style={{ padding: isMobile ? "28px 16px 20px" : "40px 32px 24px" }}>
-        {/* Trending Section - Coming Soon */}
-        <div style={{ marginBottom: 28 }}>
-          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 14 }}>
-            <h2 style={{ fontSize: 18, fontWeight: 800, margin: 0 }}>🔥 Trending Now</h2>
-            <button onClick={() => router.push("/search")} style={{ background: "none", border: "none", color: "#E8533A", fontSize: 13, cursor: "pointer", fontWeight: 700 }}>See all →</button>
-          </div>
-{trending.length > 0 ? (
-            <div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr 1fr" : "repeat(auto-fill, minmax(200px, 1fr))", gap: 12 }}>
-              {trending.map(l => (
-                <div key={l.id} onClick={() => router.push("/listing/" + l.id)} style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: 14, overflow: "hidden", cursor: "pointer", position: "relative" }}>
-                  {l.primary_image
-                    ? <img src={l.primary_image} alt={l.title} style={{ width: "100%", height: 150, objectFit: "cover" }} />
-                    : <div style={{ height: 150, background: "rgba(255,255,255,0.04)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 40 }}>{l.type === "product" ? "🛍️" : l.type === "service" ? "🔧" : l.type === "job" ? "💼" : "🏠"}</div>
-                  }
-                  <div style={{ position: "absolute", top: 8, left: 8, background: l.type === "product" ? "#E8533A" : l.type === "service" ? "#3B82F6" : l.type === "job" ? "#C47F17" : "#2D9E6B", borderRadius: 6, fontSize: 9, fontWeight: 800, color: "#fff", padding: "3px 7px", textTransform: "uppercase" }}>{l.type}</div>
-                  <div style={{ padding: "10px 12px" }}>
-                    <div style={{ fontSize: 12, fontWeight: 700, marginBottom: 4, overflow: "hidden", display: "-webkit-box", WebkitLineClamp: 2, WebkitBoxOrient: "vertical" }}>{l.title}</div>
-                    <div style={{ fontSize: 13, fontWeight: 800, color: "#E8533A", marginBottom: 4 }}>{l.price_currency} {Number(l.price).toLocaleString()}</div>
-                    <div style={{ fontSize: 10, color: "rgba(240,237,232,0.4)", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>📍 {l.location_text || l.city || l.country || "Ghana"}</div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          ) : (
-            <div style={{ background: "rgba(255,255,255,0.03)", border: "1px dashed rgba(255,255,255,0.1)", borderRadius: 14, padding: "24px", textAlign: "center", color: "rgba(240,237,232,0.3)", fontSize: 13 }}>
-              Trending listings coming soon
-            </div>
-          )}
-        </div>
-
-        {/* Ad Banner Space */}
-        <div style={{ marginBottom: 28 }}>
-          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 12 }}>
-            <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-              <span style={{ fontSize: 14, fontWeight: 800 }}>📢 Sponsored</span>
-              <span style={{ fontSize: 9, color: "rgba(240,237,232,0.3)", border: "1px solid rgba(255,255,255,0.1)", borderRadius: 4, padding: "2px 6px", letterSpacing: "0.08em" }}>AD</span>
-            </div>
-          </div>
-          <div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr" : "1fr 1fr", gap: 12 }}>
-            {[
-              { id: "ad1", title: "Gain Flings Laundry Detergent with Oxi Boost - 3 in 1, Original Scent (81 Pacs)", price: "GHS 600", location: "East Legon, Accra", seller: "Dets on Dirt", img: "https://res.cloudinary.com/dnee8imbi/image/upload/v1782491060/makola-digital/e5dbf0apwoposjwfwafn.jpg", link: "/listing/73717fa2-6acd-40b5-9da9-b5fda7bd3281" },
-              { id: "ad2", title: "Tide Ultra Concentrated Liquid Laundry Detergent, Original Scent (146 Loads)", price: "GHS 800", location: "East Legon, Accra", seller: "Dets on Dirt", img: "https://res.cloudinary.com/dnee8imbi/image/upload/v1782487240/makola-digital/btlsg8mdz9lefsj0cp01.jpg", link: "/listing/07ea6d6c-b594-4499-a9f1-0800ce7659d6" }
-            ].map(ad => (
-              <div key={ad.id} onClick={() => router.push(ad.link)} style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(196,127,23,0.3)", borderRadius: 14, overflow: "hidden", cursor: "pointer", position: "relative" }}>
-                <div style={{ position: "absolute", top: 8, right: 8, background: "#C47F17", borderRadius: 4, fontSize: 9, fontWeight: 700, color: "#0A0A0A", padding: "2px 6px", letterSpacing: "0.06em", zIndex: 1 }}>SPONSORED</div>
-                {ad.img ? <img src={ad.img} alt={ad.title} style={{ width: "100%", height: 120, objectFit: "cover" }} /> : <div style={{ height: 120, background: "rgba(196,127,23,0.08)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 36 }}>🧺</div>}
-                <div style={{ padding: "10px 12px" }}>
-                  <div style={{ fontSize: 12, fontWeight: 700, marginBottom: 4, overflow: "hidden", display: "-webkit-box", WebkitLineClamp: 2, WebkitBoxOrient: "vertical" }}>{ad.title}</div>
-                  <div style={{ fontSize: 13, fontWeight: 700, color: "#C47F17" }}>{ad.price}</div>
-                  <div style={{ fontSize: 10, color: "rgba(240,237,232,0.4)", marginTop: 2 }}>📍 {ad.location} · by {ad.seller}</div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
         <h2 style={{ fontSize: isMobile ? 17 : 20, fontWeight: 700, marginBottom: 16, letterSpacing: "-0.02em" }}>Browse by category</h2>
-        <div style={{ display: "grid", gridTemplateColumns: isMobile ? "repeat(3, 1fr)" : "repeat(auto-fit, minmax(130px, 1fr))", gap: isMobile ? 8 : 10 }}>
+        <div style={{ display: "grid", gridTemplateColumns: isMobile ? "repeat(4, 1fr)" : "repeat(auto-fit, minmax(130px, 1fr))", gap: isMobile ? 8 : 10 }}>
           {categories.map(cat => (
-            <button key={cat.label} onClick={() => router.push(cat.type ? '/search?type=' + cat.type : cat.cat ? '/search?category=' + encodeURIComponent(cat.cat) : '/search')} style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: isMobile ? 10 : 12, padding: isMobile ? "12px 6px" : "16px 12px", cursor: "pointer", textAlign: "center", color: "#F0EDE8" }}>
+            <button key={cat.label} onClick={() => router.push(`/search?category=${cat.label}`)} style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: isMobile ? 10 : 12, padding: isMobile ? "12px 6px" : "16px 12px", cursor: "pointer", textAlign: "center", color: "#F0EDE8" }}>
               <div style={{ fontSize: isMobile ? 22 : 26, marginBottom: 4 }}>{cat.icon}</div>
               <div style={{ fontSize: isMobile ? 10 : 13, fontWeight: 600 }}>{cat.label}</div>
-              <div style={{ fontSize: 10, color: cat.color, marginTop: 2 }}>{cat.count && cat.count !== "0" ? cat.count : ""}</div>
+              <div style={{ fontSize: 10, color: cat.color, marginTop: 2 }}>{cat.count}</div>
             </button>
           ))}
         </div>
@@ -313,94 +140,26 @@ export default function MakolaDigital() {
           <h2 style={{ fontSize: isMobile ? 17 : 20, fontWeight: 700, marginBottom: 16, letterSpacing: "-0.02em" }}>Latest listings</h2>
           <div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr 1fr" : "repeat(auto-fill, minmax(260px, 1fr))", gap: 16 }}>
             {listings.map(l => (
-              <div key={l.id} onClick={() => router.push(`/listing/${l.id}`)} style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: 16, overflow: "hidden", cursor: "pointer", position: "relative" }}>
+              <div key={l.id} style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: 16, overflow: "hidden", cursor: "pointer" }}>
                 {l.primary_image
-                  ? <img src={l.primary_image} alt={l.title} style={{ width: "100%", height: isMobile ? 160 : 180, objectFit: "cover" }} />
-                  : <div style={{ height: isMobile ? 160 : 180, background: "rgba(255,255,255,0.04)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 48 }}>
+                  ? <img src={l.primary_image} alt={l.title} style={{ width: "100%", height: 140, objectFit: "cover" }} />
+                  : <div style={{ height: 140, background: "rgba(255,255,255,0.04)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 40 }}>
                       {l.type === "product" ? "🛍️" : l.type === "service" ? "🔧" : l.type === "job" ? "💼" : "🏠"}
                     </div>
                 }
-                {/* Car condition badge */}
-                {l.car_condition ? (
-                  <div style={{ position: "absolute", top: 8, left: 8, background: l.car_condition === "Brand New" ? "#2D9E6B" : l.car_condition === "Foreign Used" ? "#3B7DD8" : "rgba(0,0,0,0.6)", color: "#fff", fontSize: 9, fontWeight: 800, padding: "3px 8px", borderRadius: 6, letterSpacing: "0.04em" }}>{l.car_condition}</div>
-                ) : (
-                  <div style={{ position: "absolute", top: 8, left: 8, background: l.type === "product" ? "#E8533A" : l.type === "service" ? "#3B82F6" : l.type === "job" ? "#C47F17" : "#2D9E6B", borderRadius: 6, fontSize: 9, fontWeight: 800, color: "#fff", padding: "3px 7px", textTransform: "uppercase", letterSpacing: "0.05em" }}>{l.type}</div>
-                )}
-                {new Date() - new Date(l.created_at) < 7 * 24 * 60 * 60 * 1000 && <span style={{ position: "absolute", top: 8, right: 8, background: "#fff", color: "#E8533A", fontSize: 9, fontWeight: 900, padding: "3px 7px", borderRadius: 6 }}>NEW</span>}
-                <div style={{ padding: isMobile ? "10px 12px 12px" : "12px 14px 14px" }}>
-                  <div style={{ fontSize: isMobile ? 12 : 14, fontWeight: 700, marginBottom: 5, lineHeight: 1.3, overflow: "hidden", display: "-webkit-box", WebkitLineClamp: 2, WebkitBoxOrient: "vertical" }}>{l.title}</div>
-                  <div style={{ fontSize: isMobile ? 14 : 16, fontWeight: 800, color: "#E8533A", marginBottom: 6 }}>
-                    {l.type === "job" && (!l.price || Number(l.price) === 0) ? "Competitive" : l.price_currency + " " + Number(l.price).toLocaleString() + (l.is_negotiable ? " · Neg." : "")}
+                <div style={{ padding: "12px 14px" }}>
+                  <div style={{ fontSize: 11, color: "rgba(240,237,232,0.4)", marginBottom: 4, textTransform: "uppercase" }}>{l.type}</div>
+                  <div style={{ fontSize: 14, fontWeight: 700, marginBottom: 6, lineHeight: 1.3 }}>{l.title}</div>
+                  <div style={{ fontSize: 16, fontWeight: 700, color: "#E8533A", marginBottom: 6 }}>
+                    {l.price_currency} {Number(l.price).toLocaleString()}{l.is_negotiable ? " · Negotiable" : ""}
                   </div>
-                  <div style={{ fontSize: 10, color: "rgba(240,237,232,0.4)", marginTop: 2, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>📍 {l.location_text || l.city || l.country || "Ghana"}</div>
-                  {/* Seller trust badges */}
-                  <div style={{ display: "flex", gap: 5, flexWrap: "wrap", marginTop: 5 }}>
-                    {l.seller_kyc_status === "approved" && (
-                      <span style={{ background: "rgba(45,158,107,0.15)", border: "1px solid rgba(45,158,107,0.35)", color: "#2D9E6B", fontSize: 9, fontWeight: 700, padding: "2px 7px", borderRadius: 10 }}>✓ Verified</span>
-                    )}
-                    {l.seller_joined_at && (() => {
-                      const yrs = Math.floor((new Date() - new Date(l.seller_joined_at)) / (365.25 * 24 * 60 * 60 * 1000));
-                      return yrs >= 1 ? <span style={{ background: "rgba(59,125,216,0.12)", border: "1px solid rgba(59,125,216,0.3)", color: "#3B7DD8", fontSize: 9, fontWeight: 600, padding: "2px 7px", borderRadius: 10 }}>{yrs}yr{yrs > 1 ? "s" : ""} on Makola</span> : null;
-                    })()}
-                  </div>
+                  <div style={{ fontSize: 11, color: "rgba(240,237,232,0.5)" }}>📍 {l.location_text || l.city || l.country} · by {l.seller_name}</div>
                 </div>
               </div>
             ))}
           </div>
         </div>
       )}
-
-      <div style={{ textAlign: "center", padding: "0 16px 32px" }}><button onClick={() => router.push("/search")} style={{ background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.12)", color: "#F0EDE8", padding: "12px 32px", borderRadius: 12, fontSize: 14, fontWeight: 700, cursor: "pointer" }}>See all listings →</button></div>
-      {/* HOW IT WORKS */}
-      <div style={{ padding: isMobile ? "32px 16px" : "48px 32px" }}>
-        <div style={{ textAlign: "center", marginBottom: 36 }}>
-          <div style={{ display: "inline-block", background: "rgba(232,83,58,0.12)", border: "1px solid rgba(232,83,58,0.3)", borderRadius: 20, padding: "4px 14px", fontSize: 11, color: "#E8533A", marginBottom: 12, fontWeight: 500 }}>HOW IT WORKS</div>
-          <h2 style={{ fontSize: isMobile ? 22 : 28, fontWeight: 900, margin: "0 0 8px" }}>Buy & Sell in 3 Simple Steps</h2>
-          <p style={{ color: "rgba(240,237,232,0.5)", fontSize: 14, margin: 0 }}>Join thousands of Ghanaians already buying and selling on Makola Digital</p>
-        </div>
-
-        <div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr" : "1fr 1fr", gap: 24, marginBottom: 40 }}>
-          
-          {/* FOR SELLERS */}
-          <div style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: 16, padding: 24 }}>
-            <div style={{ fontSize: 13, fontWeight: 700, color: "#E8533A", marginBottom: 20, letterSpacing: "0.05em" }}>🏪 FOR SELLERS</div>
-            {[
-              { n: "1", title: "Create a free account", body: "Sign up in 30 seconds with your email or phone number. No credit card needed." },
-              { n: "2", title: "List your product or service", body: "Upload photos, set your price and publish. Your listing goes live instantly after review." },
-              { n: "3", title: "Get messages from buyers", body: "Buyers contact you directly on WhatsApp or via the platform. Close the deal!" },
-            ].map(step => (
-              <div key={step.n} style={{ display: "flex", gap: 14, marginBottom: 20 }}>
-                <div style={{ width: 32, height: 32, borderRadius: "50%", background: "#E8533A", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 13, fontWeight: 900, flexShrink: 0, color: "#fff" }}>{step.n}</div>
-                <div>
-                  <div style={{ fontWeight: 700, fontSize: 14, marginBottom: 4 }}>{step.title}</div>
-                  <div style={{ fontSize: 13, color: "rgba(240,237,232,0.5)", lineHeight: 1.5 }}>{step.body}</div>
-                </div>
-              </div>
-            ))}
-            <button onClick={() => router.push("/auth/register")} style={{ width: "100%", background: "#E8533A", border: "none", color: "#fff", padding: "12px", borderRadius: 10, fontSize: 14, fontWeight: 700, cursor: "pointer" }}>Start selling free →</button>
-          </div>
-
-          {/* FOR BUYERS */}
-          <div style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: 16, padding: 24 }}>
-            <div style={{ fontSize: 13, fontWeight: 700, color: "#2D9E6B", marginBottom: 20, letterSpacing: "0.05em" }}>🛍️ FOR BUYERS</div>
-            {[
-              { n: "1", title: "Search for what you need", body: "Browse by category or search for specific products, services, jobs or rentals." },
-              { n: "2", title: "Find the perfect listing", body: "View photos, read descriptions, check prices and compare sellers across Ghana & Africa." },
-              { n: "3", title: "Contact the seller directly", body: "Message sellers on WhatsApp or through our platform. No middleman, no hidden fees." },
-            ].map(step => (
-              <div key={step.n} style={{ display: "flex", gap: 14, marginBottom: 20 }}>
-                <div style={{ width: 32, height: 32, borderRadius: "50%", background: "#2D9E6B", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 13, fontWeight: 900, flexShrink: 0, color: "#fff" }}>{step.n}</div>
-                <div>
-                  <div style={{ fontWeight: 700, fontSize: 14, marginBottom: 4 }}>{step.title}</div>
-                  <div style={{ fontSize: 13, color: "rgba(240,237,232,0.5)", lineHeight: 1.5 }}>{step.body}</div>
-                </div>
-              </div>
-            ))}
-            <button onClick={() => router.push("/search")} style={{ width: "100%", background: "#2D9E6B", border: "none", color: "#fff", padding: "12px", borderRadius: 10, fontSize: 14, fontWeight: 700, cursor: "pointer" }}>Browse listings →</button>
-          </div>
-
-        </div>
-      </div>
 
       {/* CTA BANNER */}
       <div style={{ margin: isMobile ? "0 16px 40px" : "0 32px 48px", background: "linear-gradient(135deg, rgba(232,83,58,0.15), rgba(196,127,23,0.15))", border: "1px solid rgba(232,83,58,0.2)", borderRadius: 20, padding: isMobile ? "28px 20px" : "40px 48px", textAlign: isMobile ? "center" : "left" }}>
@@ -412,110 +171,15 @@ export default function MakolaDigital() {
         </div>
       </div>
 
-      {/* ONBOARDING */}
-      {onboarding && (
-        <div style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.95)", zIndex: 1000, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", padding: 24 }}>
-          {[
-            { icon: "🌍", title: "Welcome to Makola Digital", body: "Africa's marketplace for buying and selling products, services, jobs and rentals — all in one place." },
-            { icon: "🛍️", title: "Buy Anything", body: "Browse thousands of listings from sellers across Ghana and Africa. Find the best deals near you." },
-            { icon: "🚀", title: "Sell for Free", body: "List your products or services in minutes. Reach buyers across Ghana, Africa and the diaspora." },
-          ].map((slide, i) => (
-            onboardStep === i && (
-              <div key={i} style={{ textAlign: "center", maxWidth: 340 }}>
-                <div style={{ fontSize: 80, marginBottom: 28 }}>{slide.icon}</div>
-                <h2 style={{ fontSize: 26, fontWeight: 900, marginBottom: 14, lineHeight: 1.2 }}>{slide.title}</h2>
-                <p style={{ color: "rgba(240,237,232,0.6)", fontSize: 16, lineHeight: 1.7, marginBottom: 40 }}>{slide.body}</p>
-              </div>
-            )
-          ))}
-          <div style={{ display: "flex", gap: 8, marginBottom: 32 }}>
-            {[0,1,2].map(i => (
-              <div key={i} style={{ width: i === onboardStep ? 24 : 8, height: 8, borderRadius: 4, background: i === onboardStep ? "#E8533A" : "rgba(255,255,255,0.2)", transition: "all 0.3s" }} />
-            ))}
-          </div>
-          {onboardStep < 2 ? (
-            <button onClick={() => setOnboardStep(s => s + 1)} style={{ background: "#E8533A", border: "none", color: "#fff", padding: "14px 48px", borderRadius: 12, fontSize: 16, fontWeight: 700, cursor: "pointer", width: "100%", maxWidth: 300 }}>Next →</button>
-          ) : (
-            <button onClick={() => { localStorage.setItem("makola_onboarded", "1"); setOnboarding(false); }} style={{ background: "linear-gradient(135deg,#E8533A,#C47F17)", border: "none", color: "#fff", padding: "14px 48px", borderRadius: 12, fontSize: 16, fontWeight: 700, cursor: "pointer", width: "100%", maxWidth: 300 }}>Get Started 🚀</button>
-          )}
-          <button onClick={() => { localStorage.setItem("makola_onboarded", "1"); setOnboarding(false); }} style={{ background: "none", border: "none", color: "rgba(240,237,232,0.3)", fontSize: 13, cursor: "pointer", marginTop: 16 }}>Skip</button>
-        </div>
-      )}
-      {/* REVIEW PROMPT */}
-      {showReviewPrompt && (
-        <div style={{ position: "fixed", bottom: isMobile ? 90 : 30, left: "50%", transform: "translateX(-50%)", background: "#1A1A1A", border: "1px solid rgba(255,255,255,0.12)", borderRadius: 20, padding: "20px 24px", zIndex: 500, width: isMobile ? "90vw" : 360, boxShadow: "0 8px 40px rgba(0,0,0,0.6)" }}>
-          <button onClick={() => { localStorage.setItem("makola_reviewed", "1"); setShowReviewPrompt(false); }} style={{ position: "absolute", top: 10, right: 14, background: "none", border: "none", color: "rgba(240,237,232,0.4)", fontSize: 18, cursor: "pointer" }}>×</button>
-          <div style={{ fontSize: 32, marginBottom: 8 }}>⭐</div>
-          <div style={{ fontSize: 15, fontWeight: 800, marginBottom: 6 }}>Enjoying Makola Digital?</div>
-          <div style={{ fontSize: 13, color: "rgba(240,237,232,0.5)", marginBottom: 16, lineHeight: 1.5 }}>Rate us on Google Play — it helps us grow and serve you better! 🌍</div>
-          <div style={{ display: "flex", gap: 8 }}>
-            <a href="https://play.google.com/store/apps/details?id=online.makoladigital.app" target="_blank" rel="noopener noreferrer" onClick={() => { localStorage.setItem("makola_reviewed", "1"); setShowReviewPrompt(false); }} style={{ flex: 1, background: "linear-gradient(135deg,#E8533A,#C47F17)", color: "#fff", textDecoration: "none", padding: "10px", borderRadius: 10, fontSize: 13, fontWeight: 700, textAlign: "center" }}>Rate us ⭐</a>
-            <button onClick={() => { localStorage.setItem("makola_reviewed", "1"); setShowReviewPrompt(false); }} style={{ flex: 1, background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.1)", color: "#F0EDE8", padding: "10px", borderRadius: 10, fontSize: 13, cursor: "pointer" }}>Maybe later</button>
-          </div>
-        </div>
-      )}
-      {/* TOAST */}
-      {toast && (
-        <div style={{ position: "fixed", bottom: isMobile ? 90 : 30, left: "50%", transform: "translateX(-50%)", background: toast.color, color: "#fff", padding: "10px 20px", borderRadius: 30, fontSize: 13, fontWeight: 700, zIndex: 999, whiteSpace: "nowrap", boxShadow: "0 4px 20px rgba(0,0,0,0.4)" }}>{toast.msg}</div>
-      )}
-      {/* BOTTOM NAV - MOBILE ONLY */}
-      {isMobile && (
-        <div style={{ position: "fixed", bottom: 0, left: 0, right: 0, background: "rgba(13,13,13,0.97)", borderTop: "1px solid rgba(255,255,255,0.08)", display: "flex", zIndex: 200, paddingBottom: "env(safe-area-inset-bottom)" }}>
-          {[
-            { icon: "🏠", label: "Home", path: "/" },
-            { icon: "🔍", label: "Search", path: "/search" },
-            { icon: "🍛", label: "Food", path: "/food" },
-            { icon: "➕", label: "Sell", path: "/sell" },
-            { icon: "👤", label: "Account", path: "/dashboard" },
-          ].map(nav => (
-            <button key={nav.label} onClick={() => { haptic("light"); router.push(nav.path); }} style={{ flex: 1, background: "none", border: "none", color: pathname === nav.path ? "#E8533A" : "rgba(240,237,232,0.5)", padding: "10px 0 8px", cursor: "pointer", display: "flex", flexDirection: "column", alignItems: "center", gap: 3 }}>
-              <span style={{ fontSize: 20 }}>{nav.icon}</span>
-              <span style={{ fontSize: 9, fontWeight: 600, letterSpacing: "0.02em", color: pathname === nav.path ? "#E8533A" : "rgba(240,237,232,0.5)" }}>{nav.label}</span>
-              {pathname === nav.path && <div style={{ width: 4, height: 4, borderRadius: "50%", background: "#E8533A", marginTop: 1 }} />}
-            </button>
-          ))}
-        </div>
-      )}
       {/* FOOTER */}
       <div style={{ borderTop: "1px solid rgba(255,255,255,0.07)", padding: isMobile ? "20px 16px" : "24px 32px", display: "flex", flexDirection: isMobile ? "column" : "row", alignItems: "center", justifyContent: "space-between", gap: 12, color: "rgba(240,237,232,0.35)", fontSize: 12, textAlign: isMobile ? "center" : "left" }}>
-        <div>© 2026 Makola Digital Technologies Ltd
-          <div style={{ display: "flex", gap: 16, justifyContent: "center", marginTop: 10, flexWrap: "wrap" }}>
-            <a href="https://www.instagram.com/makoladigital" target="_blank" rel="noopener noreferrer" style={{ color: "#E8533A", fontSize: 13, textDecoration: "none" }}>📸 Instagram</a>
-            <a href="https://x.com/makoladigitalon" target="_blank" rel="noopener noreferrer" style={{ color: "#F0EDE8", fontSize: 13, textDecoration: "none" }}>🐦 X (Twitter)</a>
-            <a href="https://www.facebook.com/MakolaDigital" target="_blank" rel="noopener noreferrer" style={{ color: "#3B7DD8", fontSize: 13, textDecoration: "none" }}>👍 Facebook</a>
-            <a href="https://www.linkedin.com/company/makoladigital" target="_blank" rel="noopener noreferrer" style={{ color: "#2D9E6B", fontSize: 13, textDecoration: "none" }}>💼 LinkedIn</a>
-          </div></div>
-        <div style={{ display: "flex", gap: 20, flexWrap: "wrap" }}>
-          <span onClick={() => router.push("/privacy")} style={{ cursor: "pointer", color: "rgba(240,237,232,0.5)", fontSize: 13 }}>Privacy</span>
-          <span onClick={() => router.push("/terms")} style={{ cursor: "pointer", color: "rgba(240,237,232,0.5)", fontSize: 13 }}>Terms</span>
-          <span onClick={() => router.push("/delete-account")} style={{ cursor: "pointer", color: "rgba(240,237,232,0.5)", fontSize: 13 }}>Delete Account</span>
-          <span onClick={() => router.push("/contact")} style={{ color: "rgba(240,237,232,0.5)", fontSize: 13, cursor: "pointer" }}>Contact</span>
+        <div>🌍 MakolaDigital — Africa's Marketplace © 2025</div>
+        <div style={{ display: "flex", gap: 20 }}>
+          {["Privacy", "Terms", "Help", "Contact"].map(f => (
+            <span key={f} style={{ cursor: "pointer" }}>{f}</span>
+          ))}
         </div>
       </div>
-      {showNewsletter && (
-        <div style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.7)", display: "flex", alignItems: "center", justifyContent: "center", zIndex: 1000, padding: 16 }} onClick={closeNewsletter}>
-          <div onClick={e => e.stopPropagation()} style={{ background: "#0D0D0D", border: "1px solid rgba(232,83,58,0.3)", borderRadius: 20, padding: isMobile ? "28px 22px" : "36px 40px", maxWidth: 420, width: "100%", textAlign: "center", position: "relative" }}>
-            <button onClick={closeNewsletter} style={{ position: "absolute", top: 14, right: 14, background: "none", border: "none", color: "rgba(240,237,232,0.4)", fontSize: 20, cursor: "pointer" }}>×</button>
-            {!newsletterSent ? (
-              <>
-                <div style={{ fontSize: 40, marginBottom: 10 }}>🌍🔥</div>
-                <div style={{ fontWeight: 900, fontSize: 22, marginBottom: 8, lineHeight: 1.3 }}>Don't miss the best deals in Ghana!</div>
-                <div style={{ fontSize: 14, color: "rgba(240,237,232,0.6)", marginBottom: 20, lineHeight: 1.5 }}>Get fresh listings, hot deals & seller tips straight to your inbox — every week, for free.</div>
-                <div style={{ display: "flex", gap: 8, marginBottom: 10 }}>
-                  <input type="email" placeholder="your@email.com" value={newsletterEmail} onChange={e => setNewsletterEmail(e.target.value)} style={{ flex: 1, background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.15)", borderRadius: 10, padding: "12px 14px", color: "#F0EDE8", fontSize: 14, outline: "none" }} />
-                </div>
-                <button onClick={submitNewsletter} style={{ width: "100%", background: "#E8533A", border: "none", color: "#fff", padding: "13px", borderRadius: 10, fontSize: 14, fontWeight: 700, cursor: "pointer" }}>Sign me up 🎉</button>
-                <div style={{ fontSize: 11, color: "rgba(240,237,232,0.35)", marginTop: 12 }}>No spam. Unsubscribe anytime.</div>
-              </>
-            ) : (
-              <>
-                <div style={{ fontSize: 40, marginBottom: 10 }}>✅</div>
-                <div style={{ fontWeight: 900, fontSize: 20 }}>You're in! Welcome to Makola Digital 🌍</div>
-              </>
-            )}
-          </div>
-        </div>
-      )}
     </div>
   );
 }
