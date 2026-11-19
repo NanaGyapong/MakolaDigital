@@ -228,6 +228,42 @@ export default function MakolaDigital() {
         </div>
       )}
 
+      {/* CHRISTMAS BANNER */}
+      {(() => {
+        const now = new Date();
+        const christmas = new Date("2026-12-25T00:00:00");
+        const diff = christmas - now;
+        const days = Math.ceil(diff / (1000 * 60 * 60 * 24));
+        if (days < 1 || days > 40) return null;
+        return (
+          <div onClick={() => router.push("/search?q=christmas")} style={{ margin: isMobile ? "0 16px 20px" : "0 32px 20px", background: "linear-gradient(135deg, #1a0a00 0%, #2d1200 50%, #1a0a00 100%)", border: "1px solid rgba(232,83,58,0.4)", borderRadius: 16, padding: isMobile ? "16px" : "20px 28px", cursor: "pointer", position: "relative", overflow: "hidden" }}>
+            <div style={{ position: "absolute", top: 0, right: 0, fontSize: isMobile ? 60 : 80, opacity: 0.12, lineHeight: 1, pointerEvents: "none" }}>🎄</div>
+            <div style={{ position: "relative" }}>
+              <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 6 }}>
+                <span style={{ fontSize: isMobile ? 20 : 24 }}>🎄</span>
+                <span style={{ background: "linear-gradient(90deg, #E8533A, #C47F17)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", fontWeight: 900, fontSize: isMobile ? 15 : 17 }}>Christmas Shopping in Ghana</span>
+              </div>
+              <div style={{ fontSize: isMobile ? 12 : 13, color: "rgba(240,237,232,0.7)", marginBottom: 12, lineHeight: 1.5 }}>
+                Find Christmas gifts from verified Ghanaian sellers — electronics, fashion, beauty &amp; more
+              </div>
+              <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: 10 }}>
+                <div style={{ display: "flex", gap: isMobile ? 8 : 12 }}>
+                  {[{ n: days.toString(), l: "Days" }, { n: "24", l: "Hours" }, { n: "00", l: "Mins" }].map((t, i) => (
+                    <div key={i} style={{ textAlign: "center" }}>
+                      <div style={{ background: "rgba(232,83,58,0.2)", border: "1px solid rgba(232,83,58,0.3)", borderRadius: 8, padding: isMobile ? "6px 10px" : "8px 14px", fontWeight: 900, fontSize: isMobile ? 18 : 22, color: "#E8533A", fontVariantNumeric: "tabular-nums", minWidth: isMobile ? 36 : 48 }}>{t.n}</div>
+                      <div style={{ fontSize: 9, color: "rgba(240,237,232,0.4)", marginTop: 3, textTransform: "uppercase", letterSpacing: "0.05em" }}>{t.l}</div>
+                    </div>
+                  ))}
+                </div>
+                <button style={{ background: "#E8533A", border: "none", color: "#fff", padding: isMobile ? "10px 18px" : "11px 22px", borderRadius: 10, fontSize: isMobile ? 13 : 14, fontWeight: 700, cursor: "pointer", whiteSpace: "nowrap" }}>
+                  Shop Christmas Gifts →
+                </button>
+              </div>
+            </div>
+          </div>
+        );
+      })()}
+
       {/* STATS */}
       <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", borderTop: "1px solid rgba(255,255,255,0.06)", borderBottom: "1px solid rgba(255,255,255,0.06)", background: "rgba(255,255,255,0.02)" }}>
         {[{v:totalListings.toString(),l:"Listings"},{v:"54",l:"Countries"},{v:totalSellers.toString(),l:"Sellers"},{v:totalMembers.toString(),l:"Members"}].map((s, i) => (
