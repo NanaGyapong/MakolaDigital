@@ -274,7 +274,20 @@ export default function ListingPage() {
               <div style={{ width: 40, height: 40, borderRadius: "50%", background: "linear-gradient(135deg, #E8533A, #C47F17)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 18 }}>👤</div>
               <div>
                 <div style={{ fontWeight: 700, fontSize: 14 }}>{listing.type === "job" && listing.title.includes(" — ") ? listing.title.split(" — ").pop() : listing.seller_name}</div>
-                <div style={{ fontSize: 11, color: "rgba(240,237,232,0.4)" }}>{listing.type === "job" ? "Hiring company · Makola Digital" : "Verified seller · Makola Digital"}</div>
+                <div style={{ fontSize: 11, color: "rgba(240,237,232,0.4)", display: "flex", alignItems: "center", gap: 6 }}>
+                  {listing.type === "job" ? "Hiring company · Makola Digital" : (
+                    <>
+                      {listing.seller_kyc_status === "approved"
+                        ? <span style={{ background: "rgba(45,158,107,0.15)", border: "1px solid rgba(45,158,107,0.35)", color: "#2D9E6B", fontSize: 9, fontWeight: 700, padding: "2px 7px", borderRadius: 10 }}>✓ Verified Seller</span>
+                        : <span style={{ color: "rgba(240,237,232,0.4)", fontSize: 11 }}>Seller · Makola Digital</span>
+                      }
+                      {listing.seller_joined_at && (() => {
+                        const yrs = Math.floor((new Date() - new Date(listing.seller_joined_at)) / (365.25*24*60*60*1000));
+                        return yrs >= 1 ? <span style={{ background: "rgba(59,125,216,0.12)", border: "1px solid rgba(59,125,216,0.3)", color: "#3B7DD8", fontSize: 9, fontWeight: 600, padding: "2px 7px", borderRadius: 10 }}>{yrs}yr{yrs>1?"s":""} on Makola</span> : null;
+                      })()}
+                    </>
+                  )}
+                </div>
               <button onClick={() => router.push("/seller/" + listing.seller_id)} style={{ background: "none", border: "none", color: "#E8533A", fontSize: 12, cursor: "pointer", padding: 0, marginTop: 4, textDecoration: "underline" }}>View all listings →</button>
               </div>
             </div>
