@@ -86,6 +86,31 @@ export async function sendBuyerRecommendations() {
           <a href="https://makoladigital.online/sell" style="display:inline-block;background:rgba(255,255,255,0.06);color:#F0EDE8;text-decoration:none;padding:12px 24px;border-radius:10px;font-size:13px;border:1px solid rgba(255,255,255,0.1)">Sell something today →</a>
         </td></tr>
 
+        <!-- APP STORE -->
+        <tr><td style="background:#0D0D0D;padding:20px 32px;text-align:center;border-top:1px solid rgba(255,255,255,0.06)">
+          <div style="color:rgba(240,237,232,0.5);font-size:12px;margin-bottom:14px">📱 Get the Makola Digital App</div>
+          <table cellpadding="0" cellspacing="0" style="margin:0 auto">
+            <tr>
+              <td style="padding-right:8px">
+                <a href="https://play.google.com/store/apps/details?id=com.makoladigital.app" style="display:inline-block;background:#1A1A1A;border:1px solid rgba(255,255,255,0.12);border-radius:10px;padding:10px 18px;text-decoration:none">
+                  <table cellpadding="0" cellspacing="0"><tr>
+                    <td style="padding-right:8px;font-size:18px;color:#2D9E6B">        <!-- FOOTER -->#9654;</td>
+                    <td><div style="color:rgba(240,237,232,0.5);font-size:9px;text-transform:uppercase;letter-spacing:0.5px">Available on</div><div style="color:#F0EDE8;font-size:13px;font-weight:700;margin-top:1px">Google Play</div></td>
+                  </tr></table>
+                </a>
+              </td>
+              <td>
+                <span style="display:inline-block;background:#1A1A1A;border:1px solid rgba(255,255,255,0.08);border-radius:10px;padding:10px 18px;opacity:0.55">
+                  <table cellpadding="0" cellspacing="0"><tr>
+                    <td style="padding-right:8px;font-size:18px">        <!-- FOOTER -->#127822;</td>
+                    <td><div style="color:rgba(240,237,232,0.5);font-size:9px;text-transform:uppercase;letter-spacing:0.5px">Coming soon to</div><div style="color:#F0EDE8;font-size:13px;font-weight:700;margin-top:1px">App Store</div></td>
+                  </tr></table>
+                </span>
+              </td>
+            </tr>
+          </table>
+        </td></tr>
+
         <!-- FOOTER -->
         <tr><td style="background:#0A0A0A;border-radius:0 0 16px 16px;padding:20px 32px;text-align:center">
           <div style="color:rgba(240,237,232,0.3);font-size:11px;line-height:1.8">
