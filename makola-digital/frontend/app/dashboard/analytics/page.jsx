@@ -51,12 +51,16 @@ export default function SellerDashboard() {
   const [savingAvatar, setSavingAvatar] = useState(false);
   const [loginHistory, setLoginHistory] = useState([]);
   const [stats, setStats] = useState({ total: 0, active: 0, pending: 0, views: 0 });
+  const [unreadCount, setUnreadCount] = useState(0);
 
   useEffect(() => {
     const token = localStorage.getItem("makola_token");
     if (!token) { router.push("/auth/login"); return; }
 
     // Fetch seller's listings
+    fetch(`${API}/messages/unread-count`, { headers: { Authorization: `Bearer ${token}` } })
+      .then(r => r.json()).then(d => setUnreadCount(d.count || 0)).catch(() => {});
+
     fetch(`${API}/auth/login-history`, { headers: { Authorization: `Bearer ${token}` } })
       .then(r => r.json())
       .then(data => { if (data.history) setLoginHistory(data.history); })
@@ -109,7 +113,10 @@ export default function SellerDashboard() {
           <span style={{ fontWeight: 700, fontSize: 16 }}>Makola<span style={{ color: "#E8533A" }}>Digital</span></span>
         </div>
         <div style={{ display: "flex", gap: 8 }}>
-          <button onClick={() => router.push("/dashboard/inbox")} style={{ background: "rgba(255,255,255,0.06)", border: "none", color: "#F0EDE8", padding: "8px 16px", borderRadius: 8, fontSize: 13, fontWeight: 700, cursor: "pointer" }}>💬 Inbox</button>
+          <button onClick={() => router.push("/dashboard/inbox")} style={{ background: "rgba(255,255,255,0.06)", border: "none", color: "#F0EDE8", padding: "8px 16px", borderRadius: 8, fontSize: 13, fontWeight: 700, cursor: "pointer", position: "relative" }}>
+              💬 Inbox
+              {unreadCount > 0 && <span style={{ position: "absolute", top: -4, right: -4, background: "#E8533A", color: "#fff", borderRadius: "50%", width: 16, height: 16, fontSize: 9, fontWeight: 900, display: "flex", alignItems: "center", justifyContent: "center" }}>{unreadCount > 9 ? "9+" : unreadCount}</span>}
+            </button>
           <button onClick={() => router.push("/catalogue")} style={{ background: "rgba(255,255,255,0.06)", border: "none", color: "#F0EDE8", padding: "8px 16px", borderRadius: 8, fontSize: 13, fontWeight: 700, cursor: "pointer" }}>📋 Catalogue</button>
           <button onClick={() => router.push("/sell")} style={{ background: "#E8533A", border: "none", color: "#fff", padding: "8px 16px", borderRadius: 8, fontSize: 13, fontWeight: 700, cursor: "pointer" }}>+ New Listing</button>
           <button onClick={() => { localStorage.removeItem("makola_token"); localStorage.removeItem("makola_refresh"); router.push("/"); }} style={{ background: "rgba(255,255,255,0.06)", border: "none", color: "#F0EDE8", padding: "8px 14px", borderRadius: 8, fontSize: 13, cursor: "pointer" }}>Log out</button>

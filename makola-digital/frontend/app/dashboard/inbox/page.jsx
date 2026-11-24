@@ -13,6 +13,9 @@ export default function InboxPage() {
   const [sending, setSending] = useState(false);
 
   const token = typeof window !== "undefined" ? localStorage.getItem("makola_token") : null;
+  const myId = (() => {
+    try { return JSON.parse(atob((token || "").split(".")[1])).id; } catch { return null; }
+  })();
 
   useEffect(() => {
     if (!token) { router.push("/auth/login"); return; }
@@ -32,6 +35,21 @@ export default function InboxPage() {
   }, {});
 
   const threadList = Object.values(threads);
+
+  const markThreadRead = async (thread) => {
+    const unreadMsgs = thread.messages.filter(m => !m.is_read && m.receiver_id === myId);
+    await Promise.all(unreadMsgs.map(m =>
+      fetch(`${API}/messages/${m.id}/read`, {
+        method: "PATCH",
+        headers: { Authorization: `Bearer ${token}` }
+      }).catch(() => {})
+    ));
+    if (unreadMsgs.length > 0) {
+      setMessages(prev => prev.map(m =>
+        unreadMsgs.find(u => u.id === m.id) ? { ...m, is_read: true } : m
+      ));
+    }
+  };
 
   const sendReply = async () => {
     if (!reply.trim() || !selected) return;
@@ -86,7 +104,7 @@ export default function InboxPage() {
             </div>
           ) : (
             threadList.map((thread, i) => (
-              <div key={i} onClick={() => setSelected(thread)} style={{ padding: "14px 20px", borderBottom: "1px solid rgba(255,255,255,0.05)", cursor: "pointer", background: selected === thread ? "rgba(232,83,58,0.08)" : "transparent", borderLeft: selected === thread ? "3px solid #E8533A" : "3px solid transparent" }}>
+              <div key={i} onClick={() => { setSelected(thread); markThreadRead(thread); }} style={{ padding: "14px 20px", borderBottom: "1px solid rgba(255,255,255,0.05)", cursor: "pointer", background: selected === thread ? "rgba(232,83,58,0.08)" : "transparent", borderLeft: selected === thread ? "3px solid #E8533A" : "3px solid transparent" }}>
                 <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 4 }}>
                   <div style={{ fontWeight: 700, fontSize: 14 }}>{thread.other_name}</div>
                   {thread.unread > 0 && <span style={{ background: "#E8533A", color: "#fff", borderRadius: "50%", width: 18, height: 18, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 10, fontWeight: 700 }}>{thread.unread}</span>}
@@ -110,13 +128,20 @@ export default function InboxPage() {
             {/* Messages */}
             <div style={{ flex: 1, overflowY: "auto", padding: "20px 24px", display: "flex", flexDirection: "column", gap: 12 }}>
               {[...selected.messages].reverse().map((m, i) => {
-                const isMe = m.sender_id !== selected.messages[0].receiver_id;
+                const isMe = m.sender_id === myId;
                 return (
                   <div key={i} style={{ display: "flex", justifyContent: isMe ? "flex-end" : "flex-start" }}>
                     <div style={{ maxWidth: "70%", background: isMe ? "rgba(232,83,58,0.15)" : "rgba(255,255,255,0.06)", border: `1px solid ${isMe ? "rgba(232,83,58,0.3)" : "rgba(255,255,255,0.09)"}`, borderRadius: 12, padding: "10px 14px" }}>
                       {m.type === "offer" && <div style={{ fontSize: 11, fontWeight: 700, color: "#2D9E6B", marginBottom: 4 }}>💰 OFFER</div>}
                       <div style={{ fontSize: 14, lineHeight: 1.5 }}>{m.body}</div>
-                      <div style={{ fontSize: 10, color: "rgba(240,237,232,0.4)", marginTop: 6 }}>{new Date(m.created_at).toLocaleString("en-GB", { day: "numeric", month: "short", hour: "2-digit", minute: "2-digit" })}</div>
+                      <div style={{ fontSize: 10, color: "rgba(240,237,232,0.4)", marginTop: 6, display: "flex", justifyContent: "space-between", alignItems: "center", gap: 8 }}>
+                        <span>{new Date(m.created_at).toLocaleString("en-GB", { day: "numeric", month: "short", hour: "2-digit", minute: "2-digit" })}</span>
+                        {isMe && (
+                          <span style={{ color: m.is_read ? "#2D9E6B" : "rgba(240,237,232,0.3)", fontSize: 12, fontWeight: 700 }} title={m.is_read ? "Seen" : "Delivered"}>
+                            {m.is_read ? "✓✓" : "✓"}
+                          </span>
+                        )}
+                      </div>
                     </div>
                   </div>
                 );

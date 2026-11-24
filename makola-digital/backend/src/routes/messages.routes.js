@@ -61,4 +61,18 @@ router.patch("/:id/read", authenticate, async (req, res) => {
   }
 });
 
+
+// Get unread message count
+router.get("/unread-count", authenticate, async (req, res) => {
+  try {
+    const result = await db.query(
+      "SELECT COUNT(*) as count FROM messages WHERE receiver_id = $1 AND is_read = false",
+      [req.user.id]
+    );
+    res.json({ count: parseInt(result.rows[0].count) });
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+});
+
 export default router;
