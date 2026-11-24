@@ -411,6 +411,20 @@ export default function MakolaDigital() {
                       return yrs >= 1 ? <span style={{ background: "rgba(59,125,216,0.12)", border: "1px solid rgba(59,125,216,0.3)", color: "#3B7DD8", fontSize: 9, fontWeight: 600, padding: "2px 7px", borderRadius: 10 }}>{yrs}yr{yrs > 1 ? "s" : ""} on Makola</span> : null;
                     })()}
                   </div>
+                  {/* WhatsApp share */}
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      const url = "https://makoladigital.online/listing/" + l.id;
+                      const price = l.price ? (l.price_currency || "GHS") + " " + Number(l.price).toLocaleString() : "Price on request";
+                      const location = l.city || l.country || "Ghana";
+                      const msg = "🛍️ *" + l.title + "*\n💰 " + price + "\n📍 " + location + "\n\nFound on Makola Digital 👉 " + url;
+                      window.open("https://wa.me/?text=" + encodeURIComponent(msg), "_blank");
+                    }}
+                    style={{ width: "100%", background: "rgba(37,211,102,0.08)", border: "none", borderTop: "1px solid rgba(37,211,102,0.15)", color: "#25D366", padding: "9px", cursor: "pointer", fontSize: 11, fontWeight: 700, display: "flex", alignItems: "center", justifyContent: "center", gap: 5 }}
+                  >
+                    <span style={{ fontSize: 13 }}>💬</span> Share on WhatsApp
+                  </button>
                 </div>
               </div>
             ))}

@@ -395,10 +395,40 @@ export default function ListingPage() {
                 <button onClick={() => setShowReport(true)} style={{ width: "100%", background: "none", border: "1px solid rgba(255,255,255,0.08)", color: "rgba(240,237,232,0.35)", padding: "8px", borderRadius: 10, cursor: "pointer", fontSize: 11 }}>🚩 Report this listing</button>
               )}
             </div>
-            <div style={{ marginBottom: 16 }}><div style={{ fontSize: 12, color: "rgba(240,237,232,0.5)", marginBottom: 8, fontWeight: 600 }}>SHARE THIS LISTING</div><div style={{ display: "flex", gap: 8 }}><button onClick={() => { const url = window.location.href; const text = listing.title + " - " + listing.price_currency + " " + Number(listing.price).toLocaleString() + " | Makola Digital"; window.open("https://wa.me/?text=" + encodeURIComponent(text + " " + url), "_blank"); }} style={{ flex: 1, background: "rgba(37,211,102,0.12)", border: "1px solid rgba(37,211,102,0.3)", color: "#25D366", padding: "10px", borderRadius: 10, cursor: "pointer", fontSize: 13, fontWeight: 700 }}>WhatsApp</button><button onClick={() => { navigator.clipboard.writeText(window.location.href); alert("Link copied!"); }} style={{ flex: 1, background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.12)", color: "#F0EDE8", padding: "10px", borderRadius: 10, cursor: "pointer", fontSize: 13, fontWeight: 700 }}>Copy Link</button>
-                <button onClick={() => { const url = window.location.href; window.open("https://www.facebook.com/sharer/sharer.php?u=" + encodeURIComponent(url), "_blank", "width=600,height=400"); }} style={{ flex: 1, background: "rgba(24,119,242,0.12)", border: "1px solid rgba(24,119,242,0.3)", color: "#1877F2", padding: "10px", borderRadius: 10, cursor: "pointer", fontSize: 13, fontWeight: 700 }}>Facebook</button>
-                <button onClick={() => { const url = window.location.href; const text = listing.title + " - " + listing.price_currency + " " + Number(listing.price).toLocaleString() + " | Makola Digital"; window.open("https://x.com/intent/tweet?text=" + encodeURIComponent(text) + "&url=" + encodeURIComponent(url), "_blank", "width=600,height=400"); }} style={{ flex: 1, background: "rgba(0,0,0,0.2)", border: "1px solid rgba(255,255,255,0.12)", color: "#F0EDE8", padding: "10px", borderRadius: 10, cursor: "pointer", fontSize: 13, fontWeight: 700 }}>X</button>
-              </div></div>
+            <div style={{ marginBottom: 16 }}>
+                <div style={{ fontSize: 12, color: "rgba(240,237,232,0.5)", marginBottom: 8, fontWeight: 600 }}>SHARE THIS LISTING</div>
+                <div style={{ display: "flex", gap: 8", flexWrap: "wrap" }}>
+                  <button onClick={() => {
+                    const url = "https://makoladigital.online/listing/" + listing.id;
+                    const price = listing.price ? listing.price_currency + " " + Number(listing.price).toLocaleString() : "Price on request";
+                    const location = listing.city || listing.country || "Ghana";
+                    const msg = "🛍️ *" + listing.title + "*
+💰 " + price + "
+📍 " + location + "
+
+Found on Makola Digital — Ghana's free marketplace
+👉 " + url;
+                    window.open("https://wa.me/?text=" + encodeURIComponent(msg), "_blank");
+                  }} style={{ flex: 1, minWidth: 120, background: "rgba(37,211,102,0.12)", border: "1px solid rgba(37,211,102,0.3)", color: "#25D366", padding: "11px 10px", borderRadius: 10, cursor: "pointer", fontSize: 13, fontWeight: 700, display: "flex", alignItems: "center", justifyContent: "center", gap: 6 }}>
+                    <span style={{ fontSize: 16 }}>💬</span> WhatsApp
+                  </button>
+                  <button onClick={() => {
+                    const url = "https://makoladigital.online/listing/" + listing.id;
+                    window.open("https://www.facebook.com/sharer/sharer.php?u=" + encodeURIComponent(url), "_blank", "width=600,height=400");
+                  }} style={{ flex: 1, minWidth: 100, background: "rgba(24,119,242,0.12)", border: "1px solid rgba(24,119,242,0.3)", color: "#1877F2", padding: "11px 10px", borderRadius: 10, cursor: "pointer", fontSize: 13, fontWeight: 700, display: "flex", alignItems: "center", justifyContent: "center", gap: 6 }}>
+                    <span style={{ fontSize: 16 }}>📘</span> Facebook
+                  </button>
+                  <button onClick={() => {
+                    const url = "https://makoladigital.online/listing/" + listing.id;
+                    const copied = navigator.clipboard?.writeText(url);
+                    const btn = document.activeElement;
+                    btn.textContent = "✓ Copied!";
+                    setTimeout(() => { btn.textContent = "🔗 Copy Link"; }, 2000);
+                  }} style={{ flex: 1, minWidth: 100, background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.12)", color: "#F0EDE8", padding: "11px 10px", borderRadius: 10, cursor: "pointer", fontSize: 13, fontWeight: 700, display: "flex", alignItems: "center", justifyContent: "center", gap: 6 }}>
+                    🔗 Copy Link
+                  </button>
+                </div>
+              </div>
               🔒 Messages are sent through Makola Digital's secure platform.
             </div>
           </div>
