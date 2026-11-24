@@ -61,6 +61,20 @@ router.post("/refresh", auth.refreshToken);
 
 router.post("/logout", authenticate, auth.logout);
 
+// Get current user (used by admin layout to verify role)
+router.get("/me", authenticate, async (req, res) => {
+  try {
+    const result = await db.query(
+      "SELECT id, email, full_name, display_name, role FROM users WHERE id = $1",
+      [req.user.id]
+    );
+    if (!result.rows.length) return res.status(404).json({ message: "User not found" });
+    res.json(result.rows[0]);
+  } catch (err) {
+    res.status(500).json({ message: "Server error" });
+  }
+});
+
 router.post("/forgot-password",
   strictLimiter,
   [body("email").isEmail().normalizeEmail()],

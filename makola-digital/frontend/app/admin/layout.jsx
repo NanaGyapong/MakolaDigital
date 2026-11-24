@@ -1,48 +1,48 @@
 "use client";
 import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 
-const ADMIN_PASSWORD = "Florence2026$$@makola";
+const API = process.env.NEXT_PUBLIC_API_URL;
 
 export default function AdminLayout({ children }) {
+  const router = useRouter();
   const [authenticated, setAuthenticated] = useState(false);
-  const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
+  const [checking, setChecking] = useState(true);
 
   useEffect(() => {
-    const auth = sessionStorage.getItem("makola_admin_auth");
-    if (auth === "true") setAuthenticated(true);
+    const verify = async () => {
+      const token = localStorage.getItem("makola_token");
+      if (!token) {
+        router.replace("/auth/login?redirect=/admin/dashboard");
+        return;
+      }
+      try {
+        const res = await fetch(`${API}/auth/me`, {
+          headers: { Authorization: `Bearer ${token}` }
+        });
+        if (!res.ok) throw new Error("Unauthorized");
+        const data = await res.json();
+        if (data.role !== "admin") {
+          router.replace("/");
+          return;
+        }
+        setAuthenticated(true);
+      } catch {
+        router.replace("/auth/login?redirect=/admin/dashboard");
+      } finally {
+        setChecking(false);
+      }
+    };
+    verify();
   }, []);
 
-  const handleLogin = () => {
-    if (password === ADMIN_PASSWORD) {
-      sessionStorage.setItem("makola_admin_auth", "true");
-      setAuthenticated(true);
-    } else {
-      setError("Invalid password");
-    }
-  };
-
-  if (!authenticated) return (
+  if (checking) return (
     <div style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100vh", background: "#0A0A0A" }}>
-      <div style={{ background: "#111", border: "1px solid rgba(255,255,255,0.1)", borderRadius: 16, padding: 40, width: 360, textAlign: "center" }}>
-        <div style={{ fontSize: 40, marginBottom: 16 }}>🛡️</div>
-        <h2 style={{ color: "#F0EDE8", marginBottom: 8 }}>Admin Access</h2>
-        <p style={{ color: "rgba(240,237,232,0.5)", fontSize: 14, marginBottom: 24 }}>Makola Digital · Restricted Area</p>
-        <input
-          type="password"
-          value={password}
-          onChange={e => setPassword(e.target.value)}
-          onKeyDown={e => e.key === "Enter" && handleLogin()}
-          placeholder="Enter admin password"
-          style={{ width: "100%", padding: "12px 16px", borderRadius: 10, border: "1px solid rgba(255,255,255,0.1)", background: "rgba(255,255,255,0.05)", color: "#F0EDE8", fontSize: 15, marginBottom: 12, boxSizing: "border-box", outline: "none" }}
-        />
-        {error && <p style={{ color: "#E8533A", fontSize: 13, marginBottom: 12 }}>{error}</p>}
-        <button onClick={handleLogin} style={{ width: "100%", padding: "12px", background: "#E8533A", border: "none", borderRadius: 10, color: "#fff", fontSize: 15, fontWeight: 700, cursor: "pointer" }}>
-          Access Dashboard →
-        </button>
-      </div>
+      <div style={{ color: "rgba(240,237,232,0.4)", fontSize: 14 }}>Verifying access...</div>
     </div>
   );
+
+  if (!authenticated) return null;
 
   return <>{children}</>;
 }
