@@ -1,12 +1,14 @@
 "use client";
 "use client";
 import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { authService } from "@/lib/auth.service";
 
-export default function LoginPage() {
+function LoginContent() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const redirectTo = searchParams.get("redirect") || "/dashboard";
   const [form, setForm] = useState({ email: "", password: "", remember: true });
   const [showPw, setShowPw] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -28,7 +30,7 @@ export default function LoginPage() {
         setOtpRequired(true);
         return;
       }
-      router.push('/dashboard');
+      router.push(redirectTo);
     } catch (err) {
       setError(err.message || "Invalid email or password");
     } finally { setLoading(false); }
@@ -47,7 +49,7 @@ export default function LoginPage() {
       if (res.ok) {
         localStorage.setItem('makola_token', data.accessToken);
         localStorage.setItem('makola_refresh', data.refreshToken);
-        router.push('/dashboard');
+        router.push(redirectTo);
       } else { setError(data.message); }
     } catch(e) { setError('Verification failed'); }
     setOtpLoading(false);
@@ -119,5 +121,13 @@ export default function LoginPage() {
         </form>
       </div>
     </div>
+  );
+}
+
+export default function LoginPage() {
+  return (
+    <Suspense fallback={<div style={{ background: "#0A0A0A", minHeight: "100vh" }} />}>
+      <LoginContent />
+    </Suspense>
   );
 }
