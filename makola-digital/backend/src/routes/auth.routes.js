@@ -111,11 +111,37 @@ router.patch("/avatar", authenticate, async (req, res) => {
   try {
     const { avatarUrl } = req.body;
     // Only allow https:// URLs from known image hosts (Cloudinary, etc.)
-    if (!avatarUrl || !/^https:\/\//.test(avatarUrl) || avatarUrl.length > 500) {
-      return res.status(400).json({ message: "Invalid avatar URL" });
+    const isEmoji = avatarUrl && avatarUrl.length <= 10;
+    const isUrl = avatarUrl && /^https:\/\//.test(avatarUrl) && avatarUrl.length <= 500;
+    if (!isEmoji && !isUrl) {
+      return res.status(400).json({ message: "Invalid avatar" });
     }
     await db.query("UPDATE users SET avatar_url=$1 WHERE id=$2", [avatarUrl, req.user.id]);
     res.json({ message: "Avatar updated successfully", avatarUrl });
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+});
+
+
+// Update profile (display name + city)
+router.patch("/profile", authenticate, async (req, res) => {
+  try {
+    const { displayName, city } = req.body;
+    const fields = [];
+    const vals = [];
+    if (displayName && displayName.trim().length > 0 && displayName.length <= 60) {
+      fields.push(`display_name=$${fields.length + 1}`);
+      vals.push(displayName.trim());
+    }
+    if (city && city.trim().length > 0 && city.length <= 100) {
+      fields.push(`city=$${fields.length + 1}`);
+      vals.push(city.trim());
+    }
+    if (fields.length === 0) return res.status(400).json({ message: "Nothing to update" });
+    vals.push(req.user.id);
+    await db.query(`UPDATE users SET ${fields.join(", ")} WHERE id=$${vals.length}`, vals);
+    res.json({ message: "Profile updated" });
   } catch (err) {
     res.status(500).json({ message: err.message });
   }

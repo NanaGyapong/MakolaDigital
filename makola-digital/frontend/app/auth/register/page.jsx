@@ -40,6 +40,7 @@ export default function RegisterPage() {
     try {
       await authService.register({ fullName: form.accountType === "seller" ? form.firstName : `${form.firstName} ${form.lastName}`, displayName:form.displayName, email:form.email, phone:`${form.dialCode}${form.phone}`, password:form.password, country:form.country, accountType:form.accountType });
       sessionStorage.setItem("verify_email", form.email);
+      sessionStorage.setItem("account_type", form.accountType);
       router.push("/auth/verify-email");
     } catch (err) { setError(err.message); }
     finally { setLoading(false); }

@@ -29,7 +29,16 @@ function LoginContent() {
         setOtpRequired(true);
         return;
       }
-      router.push(redirectTo);
+      // Show onboarding wizard for new sellers who haven't completed it
+      const token = localStorage.getItem("makola_token");
+      let isSeller = false;
+      try { const p = JSON.parse(atob(token.split(".")[1])); isSeller = p.role === "seller" || p.role === "individual_seller"; } catch {}
+      const onboarded = localStorage.getItem("makola_onboarded");
+      if (isSeller && !onboarded && redirectTo === "/dashboard") {
+        router.push("/onboarding");
+      } else {
+        router.push(redirectTo);
+      }
     } catch (err) {
       setError(err.message || "Invalid email or password");
     } finally { setLoading(false); }
@@ -48,7 +57,16 @@ function LoginContent() {
       if (res.ok) {
         localStorage.setItem('makola_token', data.accessToken);
         localStorage.setItem('makola_refresh', data.refreshToken);
-        router.push(redirectTo);
+        // Show onboarding wizard for new sellers
+        const tk = data.accessToken;
+        let isSeller = false;
+        try { const p = JSON.parse(atob(tk.split(".")[1])); isSeller = p.role === "seller" || p.role === "individual_seller"; } catch {}
+        const onboarded = localStorage.getItem("makola_onboarded");
+        if (isSeller && !onboarded && redirectTo === "/dashboard") {
+          router.push("/onboarding");
+        } else {
+          router.push(redirectTo);
+        }
       } else { setError(data.message); }
     } catch(e) { setError('Verification failed'); }
     setOtpLoading(false);

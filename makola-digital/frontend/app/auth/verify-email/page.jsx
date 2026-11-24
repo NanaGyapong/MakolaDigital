@@ -36,9 +36,16 @@ export default function VerifyEmailPage() {
     if (code.length < 6) { setError("Please enter the full 6-digit code"); return; }
     setError(""); setLoading(true);
     try {
-      await authService.verifyEmail(email, code);
+      const result = await authService.verifyEmail(email, code);
       sessionStorage.removeItem("verify_email");
-      router.push("/auth/kyc");
+      // Store that this is a brand new seller for onboarding
+      const accountType = sessionStorage.getItem("account_type") || "";
+      sessionStorage.removeItem("account_type");
+      if (accountType === "seller" || accountType === "individual_seller") {
+        router.push("/onboarding");
+      } else {
+        router.push("/");
+      }
     } catch (err) { setError(err.message || "Invalid or expired code"); }
     finally { setLoading(false); }
   };

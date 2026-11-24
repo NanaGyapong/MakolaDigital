@@ -189,7 +189,14 @@ export default function SellPage() {
       });
       const data = await res.json();
       console.log("Submit response:", res.status, data);
-      if (res.ok) { router.push("/dashboard/analytics?listed=true"); }
+      if (res.ok) {
+        const params = new URLSearchParams(window.location.search);
+        if (params.get("onboarding") === "1") {
+          router.push("/onboarding?step=4");
+        } else {
+          router.push("/dashboard/analytics?listed=true");
+        }
+      }
       else setError(data.message || "Failed to create listing. Status: " + res.status);
     } catch (e) { console.error("Submit error:", e); setError("Network error: " + e.message); }
     setLoading(false);
