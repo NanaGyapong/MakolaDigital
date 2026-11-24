@@ -397,17 +397,12 @@ export default function ListingPage() {
             </div>
             <div style={{ marginBottom: 16 }}>
                 <div style={{ fontSize: 12, color: "rgba(240,237,232,0.5)", marginBottom: 8, fontWeight: 600 }}>SHARE THIS LISTING</div>
-                <div style={{ display: "flex", gap: 8", flexWrap: "wrap" }}>
+                <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
                   <button onClick={() => {
                     const url = "https://makoladigital.online/listing/" + listing.id;
                     const price = listing.price ? listing.price_currency + " " + Number(listing.price).toLocaleString() : "Price on request";
                     const location = listing.city || listing.country || "Ghana";
-                    const msg = "🛍️ *" + listing.title + "*
-💰 " + price + "
-📍 " + location + "
-
-Found on Makola Digital — Ghana's free marketplace
-👉 " + url;
+                    const msg = `🛍️ *${listing.title}*\n💰 ${price}\n📍 ${location}\n\nFound on Makola Digital — Ghana's free marketplace\n👉 ${url}`;
                     window.open("https://wa.me/?text=" + encodeURIComponent(msg), "_blank");
                   }} style={{ flex: 1, minWidth: 120, background: "rgba(37,211,102,0.12)", border: "1px solid rgba(37,211,102,0.3)", color: "#25D366", padding: "11px 10px", borderRadius: 10, cursor: "pointer", fontSize: 13, fontWeight: 700, display: "flex", alignItems: "center", justifyContent: "center", gap: 6 }}>
                     <span style={{ fontSize: 16 }}>💬</span> WhatsApp
