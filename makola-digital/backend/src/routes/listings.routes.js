@@ -75,7 +75,8 @@ router.post("/", authenticate, async (req, res) => {
 router.get("/", async (req, res) => {
   try {
     const { status, type, limit = 20, offset = 0 } = req.query;
-    const statusFilter = status || "active";
+    const ALLOWED_STATUSES = ["active", "inactive", "pending", "sold", "expired"];
+    const statusFilter = ALLOWED_STATUSES.includes(status) ? status : "active";
     let query = `SELECT l.*, COALESCE(u.display_name, u.full_name, u.email) as seller_name, u.created_at as seller_joined_at, u.kyc_status as seller_kyc_status, c.name as category_name, (SELECT url FROM listing_images WHERE listing_id = l.id AND is_primary ORDER BY sort_order LIMIT 1) as primary_image FROM listings l JOIN users u ON u.id = l.seller_id LEFT JOIN categories c ON c.id = l.category_id WHERE l.status = '${statusFilter}'`;
     const params = [];
     if (type) { params.push(type); query += ` AND l.type = $${params.length}`; }
