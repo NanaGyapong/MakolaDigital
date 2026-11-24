@@ -42,7 +42,13 @@ app.use('/api/', generalLimiter);
 const PORT = process.env.PORT || 4000;
 
 app.set("trust proxy", 1);
-app.use(helmet({ contentSecurityPolicy: false }));
+app.use(helmet({
+  contentSecurityPolicy: false,
+  hsts: { maxAge: 31536000, includeSubDomains: true },
+  referrerPolicy: { policy: "strict-origin-when-cross-origin" },
+  noSniff: true,
+  xssFilter: true,
+}));
 app.use(cors({
   origin: [
     "https://makoladigital.online",

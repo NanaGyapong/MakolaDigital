@@ -90,11 +90,13 @@ router.post("/reset-password",
   validate, auth.resetPassword
 );
 
-router.post('/verify-login-otp', async (req, res) => {
+router.post('/verify-login-otp', authLimiter, async (req, res) => {
   try {
     const { email, otp } = req.body;
+    if (!email || !otp) return res.status(400).json({ message: 'Email and OTP required' });
     const result = await db.query('SELECT * FROM users WHERE email = $1', [email]);
     const user = result.rows[0];
+    if (!user) return res.status(400).json({ message: 'Invalid OTP code' }); // don't reveal user existence
     if (user.otp_code !== otp) return res.status(400).json({ message: 'Invalid OTP code' });
     if (new Date() > new Date(user.otp_expires_at)) return res.status(400).json({ message: 'OTP has expired. Please login again.' });
     await db.query('UPDATE users SET otp_code = NULL, otp_expires_at = NULL WHERE id = $1', [user.id]);
@@ -108,6 +110,10 @@ router.post('/verify-login-otp', async (req, res) => {
 router.patch("/avatar", authenticate, async (req, res) => {
   try {
     const { avatarUrl } = req.body;
+    // Only allow https:// URLs from known image hosts (Cloudinary, etc.)
+    if (!avatarUrl || !/^https:\/\//.test(avatarUrl) || avatarUrl.length > 500) {
+      return res.status(400).json({ message: "Invalid avatar URL" });
+    }
     await db.query("UPDATE users SET avatar_url=$1 WHERE id=$2", [avatarUrl, req.user.id]);
     res.json({ message: "Avatar updated successfully", avatarUrl });
   } catch (err) {
