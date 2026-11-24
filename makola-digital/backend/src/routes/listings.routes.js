@@ -2,6 +2,7 @@ import { Router } from "express";
 import { db } from "../config/db.js";
 import { authenticate, requireRole } from "../middleware/auth.js";
 import { v4 as uuid } from "uuid";
+import { sendPushNotification } from "./push.routes.js";
 
 const router = Router();
 
@@ -65,6 +66,26 @@ router.post("/", authenticate, async (req, res) => {
         </div>`
       });
     } catch(e) { console.error('listing notification email:', e.message); }
+    // Push "new listing in your area" to users in same city
+    if (city) {
+      db.query(
+        `SELECT DISTINCT ps.user_id FROM push_subscriptions ps
+         JOIN users u ON u.id = ps.user_id
+         WHERE u.id != $1
+         LIMIT 100`,
+        [req.user.id]
+      ).then(async (subs) => {
+        const shortTitle = title?.length > 40 ? title.slice(0, 40) + "…" : title;
+        for (const sub of subs.rows) {
+          sendPushNotification(
+            sub.user_id,
+            "🆕 New listing in " + city + "!",
+            shortTitle,
+            "/search?city=" + encodeURIComponent(city)
+          );
+        }
+      }).catch(() => {});
+    }
     res.status(201).json({ message: 'Listing submitted for review', listingId });
   } catch (err) {
     console.error("create listing:", err);
@@ -174,6 +195,29 @@ router.get("/:id", async (req, res) => {
     );
     if (!result.rows[0]) return res.status(404).json({ message: "Listing not found" });
     db.query("UPDATE listings SET views_count = views_count + 1 WHERE id = $1", [req.params.id]).catch(() => {});
+    // Push notification to seller — throttled: once per hour per listing
+    const listing = result.rows[0];
+    if (listing?.seller_id) {
+      const throttleKey = `view_push_${req.params.id}`;
+      db.query(
+        `SELECT id FROM push_throttle WHERE key = $1 AND created_at > NOW() - INTERVAL '1 hour' LIMIT 1`,
+        [throttleKey]
+      ).then(async (t) => {
+        if (t.rows.length === 0) {
+          await db.query(
+            `INSERT INTO push_throttle (key) VALUES ($1) ON CONFLICT (key) DO UPDATE SET created_at = NOW()`,
+            [throttleKey]
+          ).catch(() => {});
+          const shortTitle = listing.title?.length > 40 ? listing.title.slice(0, 40) + "…" : listing.title;
+          sendPushNotification(
+            listing.seller_id,
+            "👀 Someone is viewing your listing!",
+            shortTitle + " — make sure your details are up to date.",
+            "/dashboard"
+          );
+        }
+      }).catch(() => {});
+    }
     const images = await db.query("SELECT url, is_primary, sort_order FROM listing_images WHERE listing_id = $1 ORDER BY sort_order", [req.params.id]);
     res.json({ listing: result.rows[0], images: images.rows });
   } catch (err) {

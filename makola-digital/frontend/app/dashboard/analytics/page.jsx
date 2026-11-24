@@ -25,7 +25,7 @@ export default function SellerDashboard() {
   const toggleSoldOut = async (id, currentState) => {
     const token = localStorage.getItem('makola_token');
     const newState = !currentState;
-    await fetch(`${process.env.NEXT_PUBLIC_API_URL}/listings/' + id + '/sold-out`, {
+    await fetch(`${process.env.NEXT_PUBLIC_API_URL}/listings/${id}/sold-out`, {
       method: 'PATCH',
       headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + token },
       body: JSON.stringify({ isSoldOut: newState })
