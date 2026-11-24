@@ -2,6 +2,7 @@ import express from "express";
 import rateLimit from "express-rate-limit";
 import { sendWeeklyAnalytics } from "./jobs/weekly-analytics.js";
 import pushRoutes from "./routes/push.routes.js";
+import activityRoutes from "./routes/activity.routes.js";
 import { sendBuyerRecommendations } from "./jobs/buyer-recommendations.js";
 import cors from "cors";
 import helmet from "helmet";
@@ -100,6 +101,7 @@ app.use("/api/v1/reviews", reviewsRoutes);
 app.use("/api/v1/disputes", disputesRoutes);
 app.use("/api/v1/messages", messagesRoutes);
 app.use("/api/v1/push", pushRoutes);
+app.use("/api/v1/activity", activityRoutes);
 
 app.get('/api/v1/admin/users', async (req, res) => {
   try {

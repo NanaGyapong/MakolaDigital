@@ -1,20 +1,83 @@
 import { db } from "../config/db.js";
 import { Resend } from "resend";
+
 export async function sendBuyerRecommendations() {
   try {
     const resend = new Resend(process.env.RESEND_API_KEY);
     const buyers = await db.query("SELECT id, email, COALESCE(display_name, full_name) as full_name FROM users WHERE email IS NOT NULL");
-    const listings = await db.query(`
+
+    // Fetch all active listings with images once
+    const allListings = await db.query(`
       SELECT l.*, COALESCE(u.display_name, u.full_name) as seller_name,
-      (SELECT url FROM listing_images WHERE listing_id = l.id AND is_primary ORDER BY sort_order) as image
+      (SELECT url FROM listing_images WHERE listing_id = l.id AND is_primary ORDER BY sort_order LIMIT 1) as image
       FROM listings l
       JOIN users u ON u.id = l.seller_id
       WHERE l.status = 'active'
       ORDER BY l.created_at DESC
+      LIMIT 200
     `);
-    const top10 = listings.rows.slice(0, 10);
+    const pool = allListings.rows;
+
     for (const buyer of buyers.rows) {
       const firstName = buyer.full_name ? buyer.full_name.split(' ')[0] : 'there';
+
+      // Get this user's top interests from last 30 days
+      let interests = [];
+      try {
+        const actResult = await db.query(
+          `SELECT value, type, COUNT(*) as score
+           FROM user_activity
+           WHERE user_id=$1 AND created_at > NOW() - INTERVAL '30 days'
+           GROUP BY value, type
+           ORDER BY score DESC
+           LIMIT 10`,
+          [buyer.id]
+        );
+        interests = actResult.rows;
+      } catch(e) {
+        // user_activity table may not exist yet — fall back to latest
+      }
+
+      let top10;
+      if (interests.length > 0) {
+        // Score each listing based on how well it matches interests
+        const scored = pool.map(l => {
+          let score = 0;
+          const title = (l.title || '').toLowerCase();
+          const category = (l.category_name || l.category || '').toLowerCase();
+          const city = (l.city || '').toLowerCase();
+          for (const interest of interests) {
+            const v = interest.value.toLowerCase();
+            const w = parseInt(interest.score) || 1;
+            if (interest.type === 'view') {
+              // viewed a listing in same category — boost category matches
+              if (category.includes(v) || v.includes(category)) score += w * 3;
+            } else {
+              // searched for this term — match title or category
+              if (title.includes(v)) score += w * 4;
+              if (category.includes(v) || v.includes(category)) score += w * 2;
+              if (city.includes(v)) score += w * 1;
+            }
+          }
+          return { ...l, _score: score };
+        });
+
+        // Sort: matched first (by score desc), then recents fill the rest
+        const matched = scored.filter(l => l._score > 0).sort((a, b) => b._score - a._score);
+        const unmatched = scored.filter(l => l._score === 0);
+        top10 = [...matched, ...unmatched].slice(0, 10);
+      } else {
+        top10 = pool.slice(0, 10);
+      }
+
+      const isPersonalised = interests.length > 0;
+      const subjectLine = isPersonalised
+        ? `${firstName}, listings picked just for you 🎯`
+        : `${firstName}, 10 fresh listings just for you! 🛍️`;
+      const subheading = isPersonalised
+        ? `Based on what you've been browsing — here are listings we think you'll love:`
+        : `Here are the 10 most recent listings on Makola Digital — fresh and just posted!`;
+
       const listingCards = top10.map(l => `
         <tr>
           <td style="padding:0 0 16px 0">
@@ -29,12 +92,12 @@ export async function sendBuyerRecommendations() {
               </tr>
               <tr>
                 <td style="padding:16px">
-                  <div style="font-size:10px;color:rgba(240,237,232,0.3);text-transform:uppercase;letter-spacing:1px;margin-bottom:6px">${l.type?.toUpperCase()} · ${l.category_name || ''}</div>
+                  <div style="font-size:10px;color:rgba(240,237,232,0.3);text-transform:uppercase;letter-spacing:1px;margin-bottom:6px">${(l.type||'').toUpperCase()} · ${l.category_name || ''}</div>
                   <div style="font-weight:700;font-size:15px;color:#F0EDE8;margin-bottom:6px">${l.title}</div>
                   <div style="font-size:12px;color:rgba(240,237,232,0.4);margin-bottom:12px">📍 ${l.city || l.country || 'Ghana'} · by ${l.seller_name}</div>
                   <table width="100%" cellpadding="0" cellspacing="0">
                     <tr>
-                      <td style="font-size:20px;font-weight:900;color:#E8533A">${l.price ? l.price_currency + ' ' + Number(l.price).toLocaleString() : 'Price on request'}</td>
+                      <td style="font-size:20px;font-weight:900;color:#E8533A">${l.price ? (l.price_currency||'GHS') + ' ' + Number(l.price).toLocaleString() : 'Price on request'}</td>
                       <td align="right"><a href="https://makoladigital.online/listing/${l.id}" style="background:#E8533A;color:#fff;text-decoration:none;padding:8px 16px;border-radius:8px;font-size:12px;font-weight:700;display:inline-block">View →</a></td>
                     </tr>
                   </table>
@@ -48,7 +111,7 @@ export async function sendBuyerRecommendations() {
       await resend.emails.send({
         from: "Makola Digital <hello@makoladigital.online>",
         to: buyer.email,
-        subject: `${firstName}, 10 fresh listings just for you! 🛍️`,
+        subject: subjectLine,
         html: `<!DOCTYPE html>
 <html>
 <head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"></head>
@@ -63,13 +126,13 @@ export async function sendBuyerRecommendations() {
             <span style="color:#fff;font-size:18px;font-weight:900;letter-spacing:-0.5px">M</span>
           </div>
           <div style="color:#F0EDE8;font-size:20px;font-weight:900;letter-spacing:-0.5px">Makola<span style="color:#E8533A">Digital</span></div>
-          <div style="color:rgba(240,237,232,0.4);font-size:11px;margin-top:4px;letter-spacing:2px;text-transform:uppercase">10 Latest Listings</div>
+          <div style="color:rgba(240,237,232,0.4);font-size:11px;margin-top:4px;letter-spacing:2px;text-transform:uppercase">${isPersonalised ? '🎯 Picked For You' : '10 Latest Listings'}</div>
         </td></tr>
 
         <!-- GREETING -->
         <tr><td style="background:#111111;padding:24px 32px">
           <p style="color:#F0EDE8;font-size:16px;margin:0 0 8px">Hey ${firstName}! 👋</p>
-          <p style="color:rgba(240,237,232,0.6);font-size:14px;margin:0;line-height:1.6">Here are the 10 most recent listings on Makola Digital — fresh and just posted!</p>
+          <p style="color:rgba(240,237,232,0.6);font-size:14px;margin:0;line-height:1.6">${subheading}</p>
         </td></tr>
 
         <!-- LISTINGS -->
@@ -94,7 +157,7 @@ export async function sendBuyerRecommendations() {
               <td style="padding-right:8px">
                 <a href="https://play.google.com/store/apps/details?id=com.makoladigital.app" style="display:inline-block;background:#1A1A1A;border:1px solid rgba(255,255,255,0.12);border-radius:10px;padding:10px 18px;text-decoration:none">
                   <table cellpadding="0" cellspacing="0"><tr>
-                    <td style="padding-right:8px;font-size:18px;color:#2D9E6B">        <!-- FOOTER -->#9654;</td>
+                    <td style="padding-right:8px;font-size:18px;color:#2D9E6B">&#9654;</td>
                     <td><div style="color:rgba(240,237,232,0.5);font-size:9px;text-transform:uppercase;letter-spacing:0.5px">Available on</div><div style="color:#F0EDE8;font-size:13px;font-weight:700;margin-top:1px">Google Play</div></td>
                   </tr></table>
                 </a>
@@ -102,7 +165,7 @@ export async function sendBuyerRecommendations() {
               <td>
                 <span style="display:inline-block;background:#1A1A1A;border:1px solid rgba(255,255,255,0.08);border-radius:10px;padding:10px 18px;opacity:0.55">
                   <table cellpadding="0" cellspacing="0"><tr>
-                    <td style="padding-right:8px;font-size:18px">        <!-- FOOTER -->#127822;</td>
+                    <td style="padding-right:8px;font-size:18px">&#127822;</td>
                     <td><div style="color:rgba(240,237,232,0.5);font-size:9px;text-transform:uppercase;letter-spacing:0.5px">Coming soon to</div><div style="color:#F0EDE8;font-size:13px;font-weight:700;margin-top:1px">App Store</div></td>
                   </tr></table>
                 </span>
@@ -128,7 +191,7 @@ export async function sendBuyerRecommendations() {
 </html>`
       });
     }
-    console.log("Buyer recommendations sent to", buyers.rows.length, "users");
+    console.log("Personalised recommendations sent to", buyers.rows.length, "users");
   } catch (err) {
     console.error("Buyer recommendations error:", err);
   }

@@ -4,6 +4,18 @@ import { useRouter, useParams } from "next/navigation";
 
 const API = process.env.NEXT_PUBLIC_API_URL;
 
+const trackActivity = async (type, value) => {
+  try {
+    const token = localStorage.getItem("token");
+    if (!token || !value) return;
+    await fetch(`${API}/activity`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json", "Authorization": `Bearer ${token}` },
+      body: JSON.stringify({ type, value: String(value).trim() })
+    });
+  } catch(e) { /* silent fail */ }
+};
+
 const SAFETY_TIPS = {
   product: "🛡️ Safety tip: Always inspect the product in person before making payment. Meet in a safe public place. Makola Digital is not responsible for transactions made outside the platform.",
   service: "🛡️ Safety tip: Verify the service provider's credentials and reviews before hiring. Request a written agreement for large jobs. Never pay the full amount upfront.",
@@ -66,6 +78,9 @@ export default function ListingPage() {
         setListing(data.listing);
         setImages(data.images || []);
         setLoading(false);
+        // Track this listing view for personalised recommendations
+        const cat = data.listing?.category_name || data.listing?.category || data.listing?.type;
+        if (cat) trackActivity("view", cat);
       })
       .catch(() => setLoading(false));
 

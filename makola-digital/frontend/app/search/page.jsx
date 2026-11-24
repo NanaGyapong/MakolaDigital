@@ -4,6 +4,19 @@ import { useRouter, useSearchParams } from "next/navigation";
 
 const API = process.env.NEXT_PUBLIC_API_URL;
 
+const trackActivity = async (type, value) => {
+  try {
+    const token = localStorage.getItem("token");
+    if (!token || !value) return;
+    await fetch(`${API}/activity`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json", "Authorization": `Bearer ${token}` },
+      body: JSON.stringify({ type, value: String(value).trim() })
+    });
+  } catch(e) { /* silent fail */ }
+};
+
+
 const TYPES = ["All", "Products", "Services", "Jobs", "Rentals"];
 const CATEGORIES = {
   Products: ["Electronics", "Vehicles", "Fashion", "Food & Agriculture", "Home & Garden"],
@@ -122,6 +135,7 @@ function SearchContent() {
 
   const handleSearch = (e) => {
     e.preventDefault();
+    if (query.trim()) trackActivity("search", query.trim());
     search();
   };
 
