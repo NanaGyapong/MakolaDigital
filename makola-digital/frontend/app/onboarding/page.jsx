@@ -1,12 +1,12 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useState, useEffect, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 
 const API = process.env.NEXT_PUBLIC_API_URL;
 
 const AVATARS = ["👨🏿‍💼","👩🏿‍💼","👨🏾‍💼","👩🏾‍💼","🧑🏿‍💻","👨🏿‍🔧","👩🏿‍🔧","🧑🏾‍💼","👨🏽‍💼","👩🏽‍💼","🧑🏽‍💻","👨🏿‍🍳","👩🏿‍🍳","🧑🏿‍🌾","👨🏿‍🎨","👩🏿‍🎨"];
 
-export default function OnboardingPage() {
+function OnboardingContent() {
   const router = useRouter();
   const [step, setStep] = useState(1); // 1=welcome, 2=profile, 3=first-listing, 4=kyc-prompt, 5=done
   const [user, setUser] = useState(null);
@@ -207,4 +207,12 @@ export default function OnboardingPage() {
   );
 
   return null;
+}
+
+export default function OnboardingPage() {
+  return (
+    <Suspense fallback={<div style={{ background: "#0A0A0A", minHeight: "100vh" }} />}>
+      <OnboardingContent />
+    </Suspense>
+  );
 }
