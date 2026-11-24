@@ -43,7 +43,7 @@ export default function FoodPage() {
           <div style={{ width: 28, height: 28, borderRadius: 8, background: "linear-gradient(135deg, #E8533A, #C47F17)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 14 }}>🌍</div>
           <span style={{ fontWeight: 700, fontSize: 16 }}>Makola<span style={{ color: "#E8533A" }}>Digital</span> <span style={{ fontSize: 10, background: "rgba(196,127,23,0.2)", color: "#C47F17", padding: "2px 6px", borderRadius: 6, fontWeight: 700 }}>FOOD</span></span>
         </div>
-        <button onClick={() => router.push("/sell")} style={{ background: "#E8533A", border: "none", color: "#fff", padding: "6px 14px", borderRadius: 8, fontSize: 12, fontWeight: 700, cursor: "pointer" }}>+ List Food</button>
+        <button onClick={() => router.push("/sell/food")} style={{ background: "#E8533A", border: "none", color: "#fff", padding: "6px 14px", borderRadius: 8, fontSize: 12, fontWeight: 700, cursor: "pointer" }}>+ List Food</button>
       </nav>
 
       {/* Hero */}
@@ -78,7 +78,7 @@ export default function FoodPage() {
             <div style={{ fontSize: 48, marginBottom: 12 }}>🍛</div>
             <div style={{ fontSize: 16, fontWeight: 700, marginBottom: 8 }}>No food listings yet</div>
             <div style={{ fontSize: 13, color: "rgba(240,237,232,0.5)", marginBottom: 20 }}>Be the first food vendor on Makola Digital!</div>
-            <button onClick={() => router.push("/sell")} style={{ background: "#E8533A", border: "none", color: "#fff", padding: "12px 24px", borderRadius: 10, fontSize: 14, fontWeight: 700, cursor: "pointer" }}>List Your Food →</button>
+            <button onClick={() => router.push("/sell/food")} style={{ background: "#E8533A", border: "none", color: "#fff", padding: "12px 24px", borderRadius: 10, fontSize: 14, fontWeight: 700, cursor: "pointer" }}>List Your Food →</button>
           </div>
         ) : (
           <div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr 1fr" : "repeat(auto-fill, minmax(240px, 1fr))", gap: 12 }}>
@@ -107,7 +107,7 @@ export default function FoodPage() {
       <div style={{ margin: "16px", background: "rgba(232,83,58,0.08)", border: "1px solid rgba(232,83,58,0.2)", borderRadius: 14, padding: "16px", textAlign: "center" }}>
         <div style={{ fontSize: 14, fontWeight: 800, marginBottom: 4 }}>Are you a food vendor? 🍛</div>
         <div style={{ fontSize: 12, color: "rgba(240,237,232,0.5)", marginBottom: 12 }}>List your food, drinks or snacks for free and reach buyers near you!</div>
-        <button onClick={() => router.push("/sell")} style={{ background: "#E8533A", border: "none", color: "#fff", padding: "10px 24px", borderRadius: 10, fontSize: 13, fontWeight: 700, cursor: "pointer" }}>Start Selling Food Free →</button>
+        <button onClick={() => router.push("/sell/food")} style={{ background: "#E8533A", border: "none", color: "#fff", padding: "10px 24px", borderRadius: 10, fontSize: 13, fontWeight: 700, cursor: "pointer" }}>Start Selling Food Free →</button>
       </div>
     </div>
   );
