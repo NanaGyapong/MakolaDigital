@@ -32,6 +32,8 @@ const SUBCATEGORIES = {
 const COUNTRIES = ["All Countries", "Ghana", "Nigeria", "Kenya", "South Africa", "Cameroon", "Ivory Coast", "Senegal", "Tanzania", "Uganda", "Rwanda", "Ethiopia", "Egypt", "Morocco", "United Kingdom", "United States", "Canada"];
 const CURRENCIES = ["GHS", "NGN", "USD", "GBP"];
 
+const GHANA_CITIES = ["Accra", "Kumasi", "Tema", "Takoradi", "Cape Coast", "Tamale", "Sunyani", "Koforidua", "Ho", "Bolgatanga"];
+
 function SearchContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -41,11 +43,14 @@ function SearchContent() {
   const [category, setCategory] = useState(searchParams.get("category") || "");
   const [subcategory, setSubcategory] = useState("");
   const [nearMe, setNearMe] = useState(false);
+  const [city, setCity] = useState("");
   const handleNearMe = () => {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(pos => {
         setNearMe(true);
         setCountry("Ghana");
+        setCity("Accra");
+        setPage(1);
       }, () => alert("Location access denied"));
     }
   };
@@ -93,6 +98,7 @@ function SearchContent() {
       // Client-side filtering
       if (query) results = results.filter(l => l.title?.toLowerCase().includes(query.toLowerCase()) || l.description?.toLowerCase().includes(query.toLowerCase()) || l.location_text?.toLowerCase().includes(query.toLowerCase()));
       if (country !== "All Countries") results = results.filter(l => l.city?.toLowerCase().includes(country.toLowerCase()) || l.country?.toLowerCase().includes(country.toLowerCase().slice(0, 2)));
+      if (city) results = results.filter(l => l.city?.toLowerCase().includes(city.toLowerCase()) || l.location_text?.toLowerCase().includes(city.toLowerCase()));
       if (category) results = results.filter(l => l.category_name?.toLowerCase() === category.toLowerCase());
       if (subcategory) results = results.filter(l => l.title?.toLowerCase().includes(subcategory.toLowerCase()) || l.description?.toLowerCase().includes(subcategory.toLowerCase()));
       if (minPrice) results = results.filter(l => Number(l.price) >= Number(minPrice));
@@ -111,7 +117,7 @@ function SearchContent() {
     setLoading(false);
   };
 
-  useEffect(() => { search(); }, [type, country, page, category, subcategory, carMake]);
+  useEffect(() => { search(); }, [type, country, city, page, category, subcategory, carMake]);
   useEffect(() => { search(); }, []);
 
   const handleSearch = (e) => {
@@ -166,9 +172,20 @@ function SearchContent() {
       )}
 
       <div style={{ fontWeight: 800, marginBottom: 12, marginTop: 20, fontSize: 14 }}>Location</div>
-      <select value={country} onChange={e => setCountry(e.target.value)} style={{ width: "100%", background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.09)", borderRadius: 8, padding: "9px 12px", color: "#F0EDE8", fontSize: 13, outline: "none", marginBottom: 16 }}>
+      <select value={country} onChange={e => { setCountry(e.target.value); setCity(""); setPage(1); }} style={{ width: "100%", background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.09)", borderRadius: 8, padding: "9px 12px", color: "#F0EDE8", fontSize: 13, outline: "none", marginBottom: 10 }}>
         {COUNTRIES.map(c => <option key={c} value={c}>{c}</option>)}
       </select>
+      {(country === "Ghana" || country === "All Countries") && (
+        <div style={{ marginBottom: 16 }}>
+          <div style={{ fontSize: 11, color: "rgba(240,237,232,0.4)", marginBottom: 6, fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.06em" }}>City</div>
+          <div style={{ display: "flex", flexWrap: "wrap", gap: 5 }}>
+            <button onClick={() => { setCity(""); setPage(1); }} style={{ background: !city ? "#E8533A" : "rgba(255,255,255,0.06)", border: !city ? "none" : "1px solid rgba(255,255,255,0.1)", color: !city ? "#fff" : "rgba(240,237,232,0.75)", padding: "5px 12px", borderRadius: 20, fontSize: 11, fontWeight: !city ? 700 : 400, cursor: "pointer", whiteSpace: "nowrap" }}>All cities</button>
+            {GHANA_CITIES.map(c => (
+              <button key={c} onClick={() => { setCity(city === c ? "" : c); setCountry("Ghana"); setPage(1); }} style={{ background: city === c ? "#E8533A" : "rgba(255,255,255,0.06)", border: city === c ? "none" : "1px solid rgba(255,255,255,0.1)", color: city === c ? "#fff" : "rgba(240,237,232,0.75)", padding: "5px 12px", borderRadius: 20, fontSize: 11, fontWeight: city === c ? 700 : 400, cursor: "pointer", whiteSpace: "nowrap" }}>{c}</button>
+            ))}
+          </div>
+        </div>
+      )}
 
       <div style={{ fontWeight: 800, marginBottom: 12, fontSize: 14 }}>Price range</div>
       <select value={currency} onChange={e => setCurrency(e.target.value)} style={{ width: "100%", background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.09)", borderRadius: 8, padding: "8px 12px", color: "#F0EDE8", fontSize: 13, outline: "none", marginBottom: 8 }}>
@@ -183,7 +200,7 @@ function SearchContent() {
 
       <button onClick={handleNearMe} style={{ width: "100%", background: nearMe ? "rgba(45,158,107,0.15)" : "rgba(255,255,255,0.04)", border: "1px solid " + (nearMe ? "rgba(45,158,107,0.4)" : "rgba(255,255,255,0.1)"), color: nearMe ? "#2D9E6B" : "#F0EDE8", padding: "8px", borderRadius: 10, fontSize: 13, cursor: "pointer", marginBottom: 8, fontWeight: nearMe ? 700 : 400 }}>📍 Near Me</button>
       {(query || type !== "All" || category || country !== "All Countries" || minPrice || maxPrice) && (
-        <button onClick={() => { setQuery(""); setType("All"); setCategory(""); setCountry("All Countries"); setMinPrice(""); setMaxPrice(""); setNearMe(false); }} style={{ width: "100%", background: "none", border: "1px solid rgba(255,255,255,0.1)", color: "rgba(240,237,232,0.5)", padding: "8px", borderRadius: 10, fontSize: 13, cursor: "pointer", marginTop: 8 }}>Clear all filters</button>
+        <button onClick={() => { setQuery(""); setType("All"); setCategory(""); setCountry("All Countries"); setMinPrice(""); setMaxPrice(""); setNearMe(false); setCity(""); }} style={{ width: "100%", background: "none", border: "1px solid rgba(255,255,255,0.1)", color: "rgba(240,237,232,0.5)", padding: "8px", borderRadius: 10, fontSize: 13, cursor: "pointer", marginTop: 8 }}>Clear all filters</button>
       )}
     </div>
   );
@@ -235,6 +252,9 @@ function SearchContent() {
               <button onClick={() => setCountry("Ghana")} style={{ background: country === "Ghana" ? "#E8533A" : "rgba(255,255,255,0.06)", border: country === "Ghana" ? "none" : "1px solid rgba(255,255,255,0.1)", color: country === "Ghana" ? "#fff" : "rgba(240,237,232,0.7)", padding: "6px 16px", borderRadius: 20, fontSize: 12, fontWeight: country === "Ghana" ? 700 : 400, cursor: "pointer", whiteSpace: "nowrap", flexShrink: 0 }}>🇬🇭 Ghana</button>
               <button onClick={() => setCountry("Nigeria")} style={{ background: country === "Nigeria" ? "#E8533A" : "rgba(255,255,255,0.06)", border: country === "Nigeria" ? "none" : "1px solid rgba(255,255,255,0.1)", color: country === "Nigeria" ? "#fff" : "rgba(240,237,232,0.7)", padding: "6px 16px", borderRadius: 20, fontSize: 12, fontWeight: country === "Nigeria" ? 700 : 400, cursor: "pointer", whiteSpace: "nowrap", flexShrink: 0 }}>🇳🇬 Nigeria</button>
               <button onClick={() => setCountry("United Kingdom")} style={{ background: country === "United Kingdom" ? "#E8533A" : "rgba(255,255,255,0.06)", border: country === "United Kingdom" ? "none" : "1px solid rgba(255,255,255,0.1)", color: country === "United Kingdom" ? "#fff" : "rgba(240,237,232,0.7)", padding: "6px 16px", borderRadius: 20, fontSize: 12, fontWeight: country === "United Kingdom" ? 700 : 400, cursor: "pointer", whiteSpace: "nowrap", flexShrink: 0 }}>🇬🇧 UK</button>
+              {["Accra", "Kumasi", "Tema", "Takoradi"].map(c => (
+                <button key={c} onClick={() => { setCity(city === c ? "" : c); setCountry("Ghana"); setPage(1); }} style={{ background: city === c ? "#E8533A" : "rgba(255,255,255,0.06)", border: city === c ? "none" : "1px solid rgba(255,255,255,0.1)", color: city === c ? "#fff" : "rgba(240,237,232,0.7)", padding: "6px 16px", borderRadius: 20, fontSize: 12, fontWeight: city === c ? 700 : 400, cursor: "pointer", whiteSpace: "nowrap", flexShrink: 0 }}>📍 {c}</button>
+              ))}
             </div>
           )}
           {/* Car make chips — shown when Vehicles category is selected */}
