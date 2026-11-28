@@ -4,6 +4,19 @@ import { useRouter, useSearchParams } from "next/navigation";
 
 const API = process.env.NEXT_PUBLIC_API_URL;
 
+const trackActivity = async (type, value) => {
+  try {
+    const token = localStorage.getItem("token");
+    if (!token || !value) return;
+    await fetch(`${API}/activity`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json", "Authorization": `Bearer ${token}` },
+      body: JSON.stringify({ type, value: String(value).trim() })
+    });
+  } catch(e) { /* silent fail */ }
+};
+
+
 const TYPES = ["All", "Products", "Services", "Jobs", "Rentals"];
 const CATEGORIES = {
   Products: ["Electronics", "Vehicles", "Fashion", "Food & Agriculture", "Home & Garden"],
@@ -122,6 +135,7 @@ function SearchContent() {
 
   const handleSearch = (e) => {
     e.preventDefault();
+    if (query.trim()) trackActivity("search", query.trim());
     search();
   };
 
@@ -331,8 +345,8 @@ function SearchContent() {
                     <div style={{ fontSize: 10, color: "rgba(240,237,232,0.4)", textTransform: "uppercase", marginBottom: 4, letterSpacing: "0.05em" }}>{l.type}</div>
                     <div style={{ fontSize: 13, fontWeight: 700, marginBottom: 6, lineHeight: 1.3, overflow: "hidden", display: "-webkit-box", WebkitLineClamp: 2, WebkitBoxOrient: "vertical" }}>{l.title}</div>
                     <div style={{ fontSize: 15, fontWeight: 700, color: "#E8533A", marginBottom: 4 }}>
-                      {l.price_currency} {Number(l.price).toLocaleString()}
-                      {l.is_negotiable && <span style={{ fontSize: 10, color: "#2D9E6B", fontWeight: 400, marginLeft: 6 }}>· Neg.</span>}
+                      {(!l.price || Number(l.price) === 0) ? (l.type === "job" ? "Competitive" : "Price on request") : l.price_currency + " " + Number(l.price).toLocaleString()}
+                      {l.price && Number(l.price) > 0 && l.is_negotiable && <span style={{ fontSize: 10, color: "#2D9E6B", fontWeight: 400, marginLeft: 6 }}>· Neg.</span>}
                     </div>
                     <div style={{ fontSize: 11, color: "rgba(240,237,232,0.45)", marginBottom: 4 }}>📍 {l.location_text || l.city || l.country}</div>
                     {/* Seller trust badges */}
@@ -345,6 +359,20 @@ function SearchContent() {
                         return yrs >= 1 ? <span style={{ background: "rgba(59,125,216,0.12)", border: "1px solid rgba(59,125,216,0.3)", color: "#3B7DD8", fontSize: 9, fontWeight: 600, padding: "2px 7px", borderRadius: 10 }}>{yrs}yr{yrs > 1 ? "s" : ""} on Makola</span> : null;
                       })()}
                     </div>
+                    {/* WhatsApp share button */}
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        const url = "https://makoladigital.online/listing/" + l.id;
+                        const price = l.price ? (l.price_currency || "GHS") + " " + Number(l.price).toLocaleString() : "Price on request";
+                        const location = l.city || l.country || "Ghana";
+                        const msg = "🛍️ *" + l.title + "*\n💰 " + price + "\n📍 " + location + "\n\nFound on Makola Digital 👉 " + url;
+                        window.open("https://wa.me/?text=" + encodeURIComponent(msg), "_blank");
+                      }}
+                      style={{ width: "100%", background: "rgba(37,211,102,0.08)", border: "none", borderTop: "1px solid rgba(37,211,102,0.15)", color: "#25D366", padding: "9px", cursor: "pointer", fontSize: 12, fontWeight: 700, display: "flex", alignItems: "center", justifyContent: "center", gap: 5 }}
+                    >
+                      <span style={{ fontSize: 14 }}>💬</span> Share on WhatsApp
+                    </button>
                   </div>
                 </div>
               ))}

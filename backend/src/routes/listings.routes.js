@@ -166,7 +166,7 @@ router.get("/sellers/:id", async (req, res) => {
 router.get("/:id", async (req, res) => {
   try {
     const result = await db.query(
-      "SELECT l.*, u.full_name as seller_name FROM listings l JOIN users u ON u.id = l.seller_id WHERE l.id = $1",
+      "SELECT l.*, COALESCE(u.display_name, u.full_name, u.email) as seller_name, u.kyc_status as seller_kyc_status, u.created_at as seller_joined_at FROM listings l JOIN users u ON u.id = l.seller_id WHERE l.id = $1",
       [req.params.id]
     );
     if (!result.rows[0]) return res.status(404).json({ message: "Listing not found" });
